@@ -1,0 +1,54 @@
+			Cross-building with pbuilder
+			============================
+
+pdebuild-cross uses the pbuilder infrastructure to make cross-building 
+environments containing a base system and the necessary cross-tools
+inside a disposable chroot.
+
+It primarily consists of a replacement dependency resolver and a set
+of hook scripts for pbuilder which ensure the environment is correctly
+set up and the cross-dependencies are installed after the native
+dependencies.
+ 
+pdebuild-cross-create uses multistrap to make the chroots as it
+provides the flexibility to get the base packages from one place and
+the tools from another. For a long  time this was necessary, but even
+once cross-toolchains are available in the  base repository it is still
+often useful to get an updated, or modified, toolchain and use that.
+
+pdebuild-cross-create could easily be modified to use debootstrap
+instead if  preferred, at the cost of reduced flexibility.
+
+pdebuild-cross-update adds xapt wherever available.
+
+PBUILDER CROSS-CHROOT MODEL
+===========================
+
+The Debian pbuilder package exists to ensure package dependencies are
+complete  and to provide an environment to automate package building on
+all supported  Debian architectures without cluttering the build machine
+with every library  and dev package in the entire archive. This is
+particularly useful when  building GUI packages that can have two dozen
+dependencies or more. In cross-building, this separation between the
+build system packages and the chroot packages becomes even more useful
+because cross-building often involves not only installing the library
+and -dev package for the build architecture (e.g. i386/amd64) but also
+building and installing the same library and -dev package (with
+dependencies) in the TARGET architecture, e.g. armel, with xapt and
+dpkg-cross. The chaos that could result from trying to upgrade the
+packages on a buildd system with a duplicate set of cross dependencies
+is truly scary.
+
+In the pbuilder model, a cross-build chroot is the SAME architecture as
+the buildd - i386 on i386 etc. Packages are then cross-built for the
+target architecture, just as outside the chroot. This model
+concentrates on dependencies rather than the cross-building process.
+
+A cross-build chroot is similar in size to a normal Debian pbuilder
+chroot, mainly because it is a full build environment, not an
+installation environment.
+
+Changes to the chroot can be discarded, just as with pbuilder, allowing
+dependencies to be tested. The main benefit is that packages can be
+built without having to install long chains of cross dependencies via
+xapt, xdeb or dpkg-cross on the main system.

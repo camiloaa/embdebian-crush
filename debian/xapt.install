@@ -1,0 +1,5 @@
+xapt/xapt ./usr/sbin
+xapt/embuilddeps ./usr/sbin
+doc/xapt/man/ ./usr/share/
+xapt/debian.conf ./etc/xapt.d/
+bash/xapt ./etc/bash_completion.d/

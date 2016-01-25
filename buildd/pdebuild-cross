@@ -1,0 +1,70 @@
+#!/bin/sh
+
+set -e
+
+#  Copyright 2010 Neil Williams <codehelp@debian.org>
+#
+#  This package is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+. gettext.sh
+TEXTDOMAIN="xapt"
+export TEXTDOMAIN
+TEXTDOMAINDIR="/usr/share/locale/"
+export TEXTDOMAINDIR
+# use parsechangelog to ensure we're in a debian source tree
+if ! dpkg-parsechangelog >/dev/null 2>&1 ; then 
+  eval_gettext "You must run this from inside a debian source tree (debian/changelog not found)"; echo
+fi
+SRC=`dpkg-parsechangelog |grep '^Source: '|sed -e 's/^Source: //'`
+VER=`dpkg-parsechangelog |grep '^Version: '|sed -e 's/^Version: //'`
+
+cfg="/etc/pdebuild-cross/pdebuild-cross.rc"
+if [ ! -f $cfg ]; then
+	eval_gettext "\$cfg does not exist!"; echo
+	exit 1
+fi
+. $cfg
+
+if [ ! -d $BUILDPLACE ]; then
+	mkdir -p $BUILDPLACE
+fi
+
+if [ ! -f $BASETGZ ]; then
+	eval_gettext "Need to create a new pbuilder crossbuilding chroot first."; echo
+	eval_gettext "Use pdebuild-cross-create to create one."; echo
+	exit 1
+fi
+
+if [ -z "$CROSSARCH" ]; then
+	# get crossarch from dpkg-cross - check if it is not None
+	if [ -f /etc/dpkg-cross/cross-compile ]; then
+		DEFARCH=`grep "^default_arch" /etc/dpkg-cross/cross-compile|sed -e 's/default_arch *= *\(.*\)/\1/'`
+		if [ -z "$DEFARCH" -o "$DEFARCH" != "None" ]; then
+			eval_gettext "No CROSSARCH set in '\$cfg' and no dpkg-cross default: using armel."; echo
+			CROSSARCH="armel"
+		else
+			CROSSARCH="$DEFARCH"
+		fi
+	else
+		eval_gettext "No CROSSARCH set in '\$cfg' and no dpkg-cross default: you must set a target architecture"; echo
+		exit 1
+	fi
+fi
+
+pdebuild --configfile $cfg
+CHG=`find $BUILDRESULT -name "${SRC}_${VER}*_${CROSSARCH}.changes"`
+eval_gettext "Build result is in: \$CHG"; echo
+if [ -x /usr/bin/dcmd ]; then
+	dcmd ls $CHG
+fi

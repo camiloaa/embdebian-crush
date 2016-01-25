@@ -1,0 +1,34 @@
+=pod
+
+=head1 Name
+
+pdebuild-cross-create - pbuilder wrapper to create a crossbuild chroot
+
+=head1 Synopsis
+
+ pdebuild-cross-create
+
+=head1 Description
+
+C<pdebuild-cross> wraps pdebuild to support cross-building inside a
+pbuilder chroot. C<pdebuild-cross> needs to be run in the top level
+source directory of the package (where it can find F<debian/changelog>).
+
+=head1 Options
+
+C<pdebuild-cross-create> supports no options. Edit the
+F</etc/pdebuild-cross/pdebuild-cross.rc> configuration file to change how
+C<pdebuild-cross-create> behaves.
+
+=head1 Architecture
+
+F</etc/pdebuild-cross/pdebuild-cross.rc> defaults to C<armel> - edit the
+F</etc/pdebuild-cross/pdebuild-cross.rc> configuration file to change the
+architecture. Ensure that the C<MULTISTRAPFILE> configuration value
+is also modified to specify a C<multistrap> configuration file suitable
+for the architecture required.
+
+However, the current pbuilder hooks also default to C<armel> and would
+need to be replaced for other architectures.
+
+=cut

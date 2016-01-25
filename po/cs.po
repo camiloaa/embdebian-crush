@@ -1,0 +1,474 @@
+# Czech translation of emdebian-crush.
+# Copyright (C) 2010 Michal Simunek <michal.simunek@gmail.com>
+# This file is distributed under the same license as the emdebian-crush package.
+# Michal Simunek <michal.simunek@gmail.com>, 2011.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: emdebian-crush 2.2.11\n"
+"Report-Msgid-Bugs-To: emdebian-crush@packages.debian.org\n"
+"POT-Creation-Date: 2013-05-06 19:15+0100\n"
+"PO-Revision-Date: 2011-02-17 17:01+0100\n"
+"Last-Translator: Michal Simunek <michal.simunek@gmail.com>\n"
+"Language-Team: Czech <debian-l10n-czech@lists.debian.org>\n"
+"Language: cs\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+
+#: ../buildd/pdebuild-cross:27
+msgid ""
+"You must run this from inside a debian source tree (debian/changelog not "
+"found)"
+msgstr ""
+"Toto musíte spustit zevnitř zdrojového stromu Debianu (debian/changelog "
+"nenalezen)"
+
+#: ../buildd/pdebuild-cross:34 ../buildd/pdebuild-cross-create:28
+#: ../buildd/pdebuild-cross-update:27 ../buildd/svn-pdebuild-cross:35
+msgid "$cfg does not exist!"
+msgstr "$cfg neexistuje!"
+
+#: ../buildd/pdebuild-cross:44 ../buildd/pdebuild-cross-update:37
+msgid "Need to create a new pbuilder crossbuilding chroot first."
+msgstr "Nejprve je potřeba vytvořit nový chroot pro pbuilder crossbuilding."
+
+#: ../buildd/pdebuild-cross:45 ../buildd/pdebuild-cross-update:38
+msgid "Use pdebuild-cross-create to create one."
+msgstr "Pro vytvoření zadejte pdebuild-cross-create."
+
+#: ../buildd/pdebuild-cross-create:34
+msgid "Broken config, no BUILDPLACE set in '$cfg'."
+msgstr "Chybné nastavení, v '$cfg' není nastaveno BUILDPLACE."
+
+#: ../buildd/pdebuild-cross-create:39
+msgid ""
+"$BASETGZ exists! If you want to create a new one, delete or move '$BASETGZ'."
+msgstr ""
+"$BASETGZ již existuje! Chcete-li vytvořit nový, smažte nebo přesuňte "
+"'$BASETGZ'."
+
+#: ../buildd/pdebuild-cross-create:40
+msgid ""
+"Otherwise, use 'pbuilder login --configfile /etc/pdebuild-cross/pdebuild-"
+"cross.rc --save-after-login'"
+msgstr ""
+"Jinak zadejte 'pbuilder login --configfile /etc/pdebuild-cross/pdebuild-"
+"cross.rc --save-after-login'"
+
+#: ../buildd/pdebuild-cross-create:41
+msgid "to make changes within the existing $BASETGZ."
+msgstr "pro provedení změň v existujícím $BASETGZ."
+
+#: ../buildd/pdebuild-cross-update:42
+msgid "Enter your sudo password if prompted"
+msgstr "Na vyžádání zadejte své heslo pro sudo"
+
+#: ../emvendor:54 ../xapt/embuilddeps:113 ../xapt/embuilddeps:135
+#: ../xapt/xapt:91
+msgid "Unknown option"
+msgstr "Neznámá volba"
+
+#: ../emvendor:87
+#, perl-format
+msgid ""
+"\n"
+"%s version %s\n"
+"\n"
+"Usage:\n"
+" %s -V|--vendor VENDOR -p|--package PACKAGE -k|--key KEY\n"
+" %s -?|-h|--help|--version\n"
+"\n"
+"Commands:\n"
+" -v|--vendor VENDOR:    the vendor name from dpkg-vendor\n"
+" -p|--package PACKAGE:  the package name (usually source)\n"
+" -k|--key KEY:          arbitrary string for the key of the data\n"
+"\n"
+"All commands need to be specified.\n"
+"\n"
+"On success, the string is printed and %s exits with zero.\n"
+"\n"
+"In the case of error, %s dies with an empty string on STDERR\n"
+"and exits with a non-zero return value.\n"
+"\n"
+msgstr ""
+"\n"
+"%s verze %s\n"
+"\n"
+"Používání:\n"
+" %s -V|--vendor PRODEJCE -p|--package BALÍČEK -k|--key KLÍČ\n"
+" %s -?|-h|--help|--version\n"
+"\n"
+"Příkazy:\n"
+" -v|--vendor PRODEJCE:    název prodejce z dpkg-vendor\n"
+" -p|--package BALÍČEK:  název balíčku (obvykle zdrojového)\n"
+" -k|--key KLÍČ:          libovolný řetězec pro klíč dat\n"
+"\n"
+"Je potřeba zadat všechny příkazy.\n"
+"\n"
+"Po úspěšném provedení se řetězec zobrazí a %s skončí s nulou.\n"
+"\n"
+"V případě chyby, %s umře na STDERR s prázdným řetězcem\n"
+"a skončí s nenulovou hodnotou.\n"
+"\n"
+
+#: ../xapt/embuilddeps:83
+#, perl-format
+msgid "Unknown architecture: %s"
+msgstr ""
+
+#: ../xapt/embuilddeps:92
+#, perl-format
+msgid "Unable to find '%s' directory"
+msgstr ""
+
+#: ../xapt/embuilddeps:98
+msgid "Please specify a .dsc file"
+msgstr ""
+
+#: ../xapt/embuilddeps:126 ../xapt/xapt:124
+#, perl-format
+msgid "Cannot read /etc/xapt.d/%s.conf"
+msgstr "/etc/xapt.d/%s.conf nelze přečíst"
+
+#: ../xapt/embuilddeps:152
+#, perl-format
+msgid "Unable to open .dsc file: '%s'"
+msgstr ""
+
+#: ../xapt/embuilddeps:172
+#, fuzzy, perl-format
+msgid "Checking that build dependencies '%s' for %s are installed.\n"
+msgstr "Ověřuje se, zda jsou nainstalovány nástroje k sestavení '%s' pro %s:\n"
+
+#: ../xapt/embuilddeps:191
+#, perl-format
+msgid "No build dependencies to install for %s\n"
+msgstr "Pro %s nejsou k instalaci žádné závislosti pro sestavení\n"
+
+#: ../xapt/embuilddeps:198 ../xapt/embuilddeps:244
+#, perl-format
+msgid "%s needs dependencies installed:\n"
+msgstr "%s potřebuje nainstalovat závislosti:\n"
+
+#. Translators: fields are architecture and package.
+#: ../xapt/embuilddeps:234 ../xapt/embuilddeps:422
+#, perl-format
+msgid "Architecture limit: [!%s] %s\n"
+msgstr ""
+
+#: ../xapt/embuilddeps:253
+#, perl-format
+msgid "No cross dependencies to install for %s\n"
+msgstr "Pro %s nejsou k instalaci žádné křížené závislosti\n"
+
+#: ../xapt/embuilddeps:261
+#, fuzzy, perl-format
+msgid "Checking that cross build dependencies '%s' for %s are installed.\n"
+msgstr "Ověřuje se, zda jsou nainstalovány nástroje k sestavení '%s' pro %s:\n"
+
+#: ../xapt/embuilddeps:271 ../xapt/embuilddeps:292
+#, perl-format
+msgid "'%s' needs %d cross dependency installed: %s\n"
+msgid_plural "'%s' needs %d cross dependencies installed: %s\n"
+msgstr[0] "'%s' vyžaduje mít nainstalovánu %d kříženou závislost: %s\n"
+msgstr[1] "'%s' vyžaduje mít nainstalovány %d křížené závislosti: %s\n"
+msgstr[2] "'%s' vyžaduje mít nainstalováno %d křížených závislostí: %s\n"
+
+#: ../xapt/embuilddeps:365
+#, perl-format
+msgid "Checking Build-Conflict between '%s' and '%s'\n"
+msgstr ""
+
+#: ../xapt/embuilddeps:383 ../xapt/embuilddeps:394
+#, perl-format
+msgid "%s: Error: Cannot build '%s': build conflict found with '%s'\n"
+msgstr ""
+
+#. Translators: fields are architecture and package.
+#: ../xapt/embuilddeps:435
+#, perl-format
+msgid "Architecture limit: [%s]  %s\n"
+msgstr ""
+
+#. Translators: fields are package, architecture, requirement
+#: ../xapt/embuilddeps:467
+#, perl-format
+msgid "Skipping %s, %s does not match %s\n"
+msgstr ""
+
+#. Translators: fields are package and architecture
+#: ../xapt/embuilddeps:475 ../xapt/embuilddeps:495
+#, perl-format
+msgid "Using %s for %s\n"
+msgstr ""
+
+#. Translators: fields are package, architecture and alternative
+#: ../xapt/embuilddeps:505
+#, perl-format
+msgid "Omitting %s for %s - already selected %s\n"
+msgstr ""
+
+#: ../xapt/embuilddeps:584
+#, perl-format
+msgid ""
+"Constraint '%s' is a virtual package provided by 'type-handling', omitting "
+"%s for %s\n"
+msgstr ""
+
+#: ../xapt/embuilddeps:630
+#, perl-format
+msgid ""
+"Constraint '%s' is a virtual package provided by 'type-handling', omitting.\n"
+msgstr ""
+
+#: ../xapt/embuilddeps:639
+#, perl-format
+msgid ""
+"Constraint '%s' is not available, omitting. (This could be a virtual package "
+"or a bug.)\n"
+msgstr ""
+
+#: ../xapt/embuilddeps:660
+#, perl-format
+msgid "%s: Failed to read apt-cache policy for '%s'\n"
+msgstr "%s: Nepodařilo se přečíst pravidlo apt-cache pro '%s'\n"
+
+#: ../xapt/embuilddeps:671
+#, perl-format
+msgid "Unable to satisfy 'Build-Depends: %s (%s %s)' for %s."
+msgstr ""
+
+#: ../xapt/embuilddeps:674
+#, perl-format
+msgid "Latest available version of %s is %s"
+msgstr ""
+
+#: ../xapt/embuilddeps:676
+#, perl-format
+msgid "'%s' does not appear to be available to apt!"
+msgstr ""
+
+#: ../xapt/embuilddeps:731
+#, perl-format
+msgid "error occurred while parsing %s"
+msgstr ""
+
+#: ../xapt/embuilddeps:755
+#, perl-format
+msgid ""
+"\n"
+"%s version %s\n"
+"\n"
+"Usage:\n"
+" %s [-a|--arch] [-d|--dir] [-q|--quiet] [-n|--dry-run]\n"
+" %s -?|-h|--help|--version\n"
+"\n"
+"Options:\n"
+" -a|--arch:          Install cross packages for the specified arch.\n"
+" -d|--dir DIR:       Location of the unpacked source (./debian/control)\n"
+"    --dsc DSCFILE:   Path to a .dsc file for the package.\n"
+" -m|--multiarch:     Make dpkg-cross convert Multi-Arch packages.\n"
+" -v|--verbose:       Make the output more verbose\n"
+" -q|--quiet:         Make the output less verbose\n"
+" -n|--dry-run:       Only output the commands which would be used.\n"
+" --use-sudo:         Call apt-get using sudo.\n"
+"\n"
+"%s is a simple build dependency checker for cross-building.\n"
+"Native build dependencies are checked using the debian/control file\n"
+"in the source package being built and installed with apt-get.\n"
+"\n"
+"Cross build dependencies are checked using a debian/xcontrol file\n"
+"or the debian/control file if no xcontrol file exists.\n"
+"\n"
+"%s uses xapt to install cross build dependencies.\n"
+"\n"
+msgstr ""
+
+#: ../xapt/xapt:67
+#, perl-format
+msgid "Error: Multi-Arch support needs dpkg-cross (>= %s). Found %s"
+msgstr ""
+
+#: ../xapt/xapt:101
+#, perl-format
+msgid "%s: Illogical options set.\n"
+msgstr "%s: Jsou nastaveny nelogické volby.\n"
+
+#: ../xapt/xapt:103
+#, perl-format
+msgid "%s: --build-only cannot be used with --clean-cache\n"
+msgstr "%s: --build-only nelze použít s --clean-cache\n"
+
+#: ../xapt/xapt:109
+#, perl-format
+msgid "%s: Cleaning %s* \n"
+msgstr "%s: Pročišťuje se %s* \n"
+
+#: ../xapt/xapt:113
+#, perl-format
+msgid ""
+"%s: Done.\n"
+"\n"
+msgstr ""
+"%s: Dokončeno.\n"
+"\n"
+
+#: ../xapt/xapt:143
+#, perl-format
+msgid "ERROR: Please specify some packages for %s to convert.\n"
+msgstr "CHYBA: Zadejte prosím nějaké balíčky k převedení pro %s.\n"
+
+#: ../xapt/xapt:158
+#, perl-format
+msgid "ERROR: %s: misconfiguration, '%s' missing.\n"
+msgstr "CHYBA: %s: nesprávné nastavení, chybí '%s'.\n"
+
+#: ../xapt/xapt:176
+msgid "Cannot open sources list"
+msgstr "Nelze otevřít seznam zdrojů"
+
+#: ../xapt/xapt:232
+msgid "Cannot read"
+msgstr "Nelze přečíst"
+
+#: ../xapt/xapt:247
+msgid ""
+"\n"
+"INF: Checking against currently installed cross packages....\n"
+msgstr ""
+"\n"
+"INF: Ověřuje se oproti současným nainstalovaným kříženým balíčkům....\n"
+
+#: ../xapt/xapt:269
+#, perl-format
+msgid ""
+"INF: Skipping installation of %s - newer or same version already installed "
+"(%s).\n"
+msgstr ""
+"INF: Přeskakuje se instalace %s - novější či stejná verze je již "
+"nainstalována (%s).\n"
+
+#: ../xapt/xapt:291 ../xapt/xapt:295 ../xapt/xapt:309 ../xapt/xapt:313
+msgid "cannot open apt sources list."
+msgstr "nelze otevřít seznam zdrojů pro apt."
+
+#: ../xapt/xapt:302
+msgid "cannot open apt sources.list directory"
+msgstr "nelze otevřít adresář se zdroji pro apt sources.list"
+
+#: ../xapt/xapt:323
+#, fuzzy, perl-format
+msgid ""
+"\n"
+"%s version %s\n"
+"\n"
+"Usage:\n"
+" %s [-M|--mirror] [-S|--suite] [-k|--keep-cache] PACKAGES ...\n"
+" %s -c|--clean-cache\n"
+" %s -?|-h|--help|--version\n"
+"\n"
+"Commands:\n"
+" -c|--clean-cache:        Remove any downloaded cache files and exit.\n"
+"\n"
+"Options:\n"
+" -b|--build-only:         Get and process the packages, do not install\n"
+"                           (implies -k)\n"
+" -M|--mirror:             A Debian mirror with the requested package(s)\n"
+" -S|--suite:              Which suite to use for the package(s)\n"
+" -k|--keep-cache:         Preserve the downloaded cache files to use again.\n"
+" -a|--arch ARCHITECTURE:  Specify the architecture to download or install.\n"
+"    --ignore-status:      Ignore currently installed packages (native)\n"
+"    --check-newer:        Check if the same or newer version of the cross\n"
+"                          package is installed and skip installation.\n"
+" -m|--multiarch:          Convert Multi-Arch packages to old dpkg-cross\n"
+"                           paths. Requires dpkg-cross (>= %s)\n"
+"\n"
+"xapt tidies up after itself by removing all temporary data and\n"
+"packages after installation, unless the --keep-cache option is used.\n"
+"(Converted packages are not preserved.)\n"
+"\n"
+"The archives will be downloaded into /var/lib/xapt/archives/ before\n"
+"being converted with dpkg-cross and installed using dpkg. Using\n"
+"--build-only implies --keep-cache. Converted packages are created in\n"
+"/var/lib/xapt/output/\n"
+"\n"
+msgstr ""
+"\n"
+"%s verze %s\n"
+"\n"
+"Používání:\n"
+" %s [-M|--mirror] [-S|--suite] [-k|--keep-cache] BALÍČKY ...\n"
+" %s -c|--clean-cache\n"
+" %s -?|-h|--help|--version\n"
+"\n"
+"Příkazy:\n"
+" -c|--clean-cache:        Odstranit všechny stažené soubory vyrovnávací "
+"paměti a skončit.\n"
+"\n"
+"Volby:\n"
+" -b|--build-only:         Získat a zpracovat balíčky, neinstalovat\n"
+"                           (předpokládá volbu -k)\n"
+" -M|--mirror:             Zrcadlo Debianu s požadovaným balíčkem(čky)\n"
+" -S|--suite:              Kterou sadu pro balíček(čky) použít\n"
+" -k|--keep-cache:         Zachovat stažené soubory vyrovnávací paměti pro "
+"pozdější použití.\n"
+" -a|--arch ARCHITEKTURA:  Určit architekturu ke stažení či instalaci.\n"
+"    --ignore-status:      Ignorovat současné nainstalované balíčky "
+"(výchozí)\n"
+"    --check-newer:        Ověřit, zda-li je nainstalována novější či stejná\n"
+"                          verze kříženého balíčku a přeskočit instalaci.\n"
+"\n"
+"xapt odstraní všechna dočasná data a balíčky, čímž po instalaci\n"
+"po sobě uklízí, s vyjímkou, kdy je použita volba --keep-cache.\n"
+"(Převedené balíčky nejsou zachovány.)\n"
+"\n"
+"Před převedením s dpkg-cross a nainstalováním pomocí dpkg\n"
+"se archivy stáhnou do /var/lib/xapt/archives/. Použití\n"
+"--build-only předpokládá --keep-cache. Převedené balíčky se vytvářejí ve\n"
+"/var/lib/xapt/output/\n"
+"\n"
+
+#~ msgid "%s: Must have apt to proceed!\n"
+#~ msgstr "%s: K pokračování musíte mít nainstalován apt!\n"
+
+#, fuzzy
+#~ msgid ""
+#~ "\n"
+#~ "%s version %s\n"
+#~ "\n"
+#~ "Usage:\n"
+#~ " %s [-a|--arch] [--use-sudo]\n"
+#~ " %s -?|-h|--help|--version\n"
+#~ "\n"
+#~ "Options:\n"
+#~ " -a|--arch:          Install cross packages for the specified arch.\n"
+#~ " --use-sudo:         Call apt-get using sudo.\n"
+#~ "\n"
+#~ "When used outside a chroot or as a user, set the --use-sudo option.\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "%s verze %s\n"
+#~ "\n"
+#~ "Používání:\n"
+#~ " %s [-a|--arch] [--use-sudo]\n"
+#~ " %s -?|-h|--help|--version\n"
+#~ "\n"
+#~ "Volby:\n"
+#~ " -a|--arch:          Přečíst závislosti pro sestavení z debian/xcontrol\n"
+#~ "                      a nainstalovat křížené balíčky pro zadanou "
+#~ "architekturu.\n"
+#~ " --use-sudo:         Zavolat apt-get pomocí sudo.\n"
+#~ "\n"
+#~ "Je-li použit mimo chroot či jako obyčejný uživatel, zadejte volbu --use-"
+#~ "sudo.\n"
+#~ "\n"
+
+#~ msgid "No build tools need to be installed\n"
+#~ msgstr "Není potřeba instalovat žádné nástroje k sestavení\n"
+
+#~ msgid "%s: dpkg-checkbuilddeps failed with return value: %s\n"
+#~ msgstr "%s: dpkg-checkbuilddeps selhal s chybou: %s\n"

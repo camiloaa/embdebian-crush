@@ -1,0 +1,7 @@
+buildd/pdebuild-cross
+buildd/pdebuild-cross-create
+buildd/pdebuild-cross-update
+buildd/svn-pdebuild-cross
+emvendor
+xapt/embuilddeps
+xapt/xapt

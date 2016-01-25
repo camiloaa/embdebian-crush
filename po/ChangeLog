@@ -1,0 +1,4 @@
+2010-09-25  Neil Williams  <codehelp@debian.org>
+
+	* Makevars: Migrate to a textdomain of xapt.
+	* POTFILES.in: Match migrated files.

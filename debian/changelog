@@ -1,0 +1,2014 @@
+emdebian-crush (2.2.20) unstable; urgency=low
+
+  * Fix manpages references to configfile path. (Closes: #670774)
+  * Improve build-conflicts handling in embuilddeps
+  * [INTL:fr] French program translation update (Closes: #671502)
+  * [INTL:fr] French documentation translation (Closes: #673983)
+  * Fix reference to cdn.debian.org in conf file and in the
+    default xapt handling, use cdn.debian.net. (Closes: #674134)
+  * Let embuilddeps proceed with "apt-get -f install" without
+    user interaction. (Closes: #672819)
+  * [INTL:pt] Add Plural-Forms field in Portuguese translation
+    (Closes: #696588)
+  * Add commands and options to xaat man page (Closes: #674129)
+  * Skip checking build-dependencies in pdebuild-cross due to
+    changes with Multi-Arch. (Closes: #688701)
+
+ -- Neil Williams <codehelp@debian.org>  Fri, 17 May 2013 21:22:16 +0100
+
+emdebian-crush (2.2.19) unstable; urgency=low
+
+  * Check for MultiArch support in dpkg and force the multiarch
+    support in dpkg-cross if the requested architecture is in the
+    list of dpkg foreign architectures. (Closes: #688912)
+  * Limit installation to only packages successfully converted using
+    dpkg-cross.
+
+ -- Neil Williams <codehelp@debian.org>  Wed, 26 Sep 2012 22:16:57 +0100
+
+emdebian-crush (2.2.18) unstable; urgency=low
+
+  * Implement the new lintian profile support
+  * Allow embuilddeps to use noauth for native as well as cross.
+  * [INTL:de] Initial German documentation translation
+    (Closes: #644795)
+  * Update SVN browse location.
+
+ -- Neil Williams <codehelp@debian.org>  Sun, 04 Dec 2011 16:40:05 +0000
+
+emdebian-crush (2.2.17) unstable; urgency=low
+
+  * Pass -m option via pdebuild-cross as well.
+  * Make identification of SRC and VER more precise.
+  * Switch to cdn.debian.net instead of .org (Closes: #629839)
+  * Only call prepare_sources_list if suite option is not set.
+    (Closes: #629840)
+
+ -- Neil Williams <codehelp@debian.org>  Sat, 18 Jun 2011 20:38:49 +0100
+
+emdebian-crush (2.2.16) unstable; urgency=low
+
+  * Sideline the old lintian checks - not currently used and may break
+    due to subsequent changes in lintian.
+  * [INTL:de] Updated German translation (Closes: #624619)
+  * Add xapt dependency on liblocale-gettext-perl for translation
+    support.
+  * Add -m option to embuilddeps to pass this down to xapt and hence to
+    dpkg-cross.
+
+ -- Neil Williams <codehelp@debian.org>  Sat, 07 May 2011 21:27:46 +0100
+
+emdebian-crush (2.2.15) unstable; urgency=low
+
+  * Add support for embuilddeps reading a dsc
+  * Add -k option to embuilddeps to pass down to xapt
+  * Fail if --dsc used without a file and remove old apt check.
+
+ -- Neil Williams <codehelp@debian.org>  Fri, 15 Apr 2011 12:51:14 +0100
+
+emdebian-crush (2.2.14) unstable; urgency=low
+
+  * Use perl realpath support and drop dependency.
+  * Fix multiple arch-specific alternative fallbacks in embuilddeps
+    (gcc-4.6)
+  * Add support for !arch matching in embuilddeps.
+  * Add support for type-handling and not+linux-gnu type
+    dependencies. (Closes: #619160)
+  * Further improvements to resolver - add descriptions to the decisions
+    being made when in verbose mode.
+  * [INTL:fr] French program translation update (Closes: #620281)
+  * Add support for passing Multi-Arch option to dpkg-cross if the
+    matching version of dpkg-cross is installed (allowing for backports)
+
+ -- Neil Williams <codehelp@debian.org>  Fri, 01 Apr 2011 10:40:39 +0100
+
+emdebian-crush (2.2.13) unstable; urgency=low
+
+  * Improve embuilddeps to use a specified directory. 
+  * Add xapt dependency on dpkg-dev for dpkg-architecture usage.
+  * No need for pdebuild-cross to recommend dpkg-cross, xapt depends on
+    it.
+  * Add support for Build-Conflicts to embuilddeps
+  * Add support for architecture constraints to embuilddeps
+  * Add support for detecting virtual packages via code from Dpkg::Deps.
+  * Add verbose and quiet support in embuilddeps
+  * Extend embuilddeps to understand noauth from the xapt config.
+  * Allow use of debian/xcontrol with embuilddeps.
+
+ -- Neil Williams <codehelp@debian.org>  Sun, 06 Mar 2011 20:35:20 +0000
+
+emdebian-crush (2.2.12) unstable; urgency=low
+
+  * [INTL:ru] Russian translation update (Closes: #613243)
+  * [INTL:da] Danish translation update (Closes: #613287)
+  * Drop the transitional libemdebian-tools-perl package.
+  * [INTL:de] updated german translation (Closes: #613713)
+  * [l10n:cs] Initial Czech translation of package emdebian-crush
+    2.2.11 (Closes: #613697)
+  * [l10n:fr] French program translation update - modified to fix
+    syntax. (Closes: #613876)
+  * xapt needs to depend on realpath
+  * change the build-dependency resolver as aptitude is needed for the
+    pbuilder one and does not work with cross architectures
+  * Fix detection of no default cross arch in svn-pdebuild-cross and
+    allow for DEB_BUILD_OPTIONS to be carried over
+  * Fix detection of no default cross arch in xapt hook
+  * Fix detection of no default cross arch in pdebuild-cross and move
+    arch into config file.
+  * Promote embuilddeps to be the complete tools and cross dependency
+    resolver for pdebuild-cross
+  * Ensure xapt is installed inside the chroot, when available.
+
+ -- Neil Williams <codehelp@debian.org>  Sun, 20 Feb 2011 10:44:48 +0000
+
+emdebian-crush (2.2.11) unstable; urgency=low
+
+  * Migrate to unstable. 
+  * Only suggest svn-buildpackage
+
+ -- Neil Williams <codehelp@debian.org>  Mon, 07 Feb 2011 12:22:21 +0000
+
+emdebian-crush (2.2.10) experimental; urgency=low
+
+  * pdebuild-cross: bump Replaces to match version
+    now in Squeeze. (Closes: #610683)
+  * pdebuild-cross needs to depend on latest multistrap
+  * embuilddeps support for checking if listed packages are installed
+    already.
+
+ -- Neil Williams <codehelp@debian.org>  Sat, 29 Jan 2011 12:01:53 +0000
+
+emdebian-crush (2.2.9) experimental; urgency=low
+
+  * Add support for skipping if a newer or same version cross package is
+    already installed.
+  * pdebuild-cross: fix string markup for translation
+  * Add colour output to xapt
+
+ -- Neil Williams <codehelp@debian.org>  Fri, 17 Dec 2010 16:26:57 +0000
+
+emdebian-crush (2.2.8) experimental; urgency=low
+
+  * Lower xapt dependency on dpkg-cross to use with Lenny.
+  * Allow command line options of mirror and suite to override
+    conffile (Closes: #606436)
+
+ -- Neil Williams <codehelp@debian.org>  Sat, 11 Dec 2010 13:35:21 +0000
+
+emdebian-crush (2.2.7) experimental; urgency=low
+
+  * [INTL:de] German translation (Closes: #601766)
+
+ -- Neil Williams <codehelp@debian.org>  Fri, 29 Oct 2010 13:19:15 +0100
+
+emdebian-crush (2.2.6) experimental; urgency=low
+
+  [ Wookey ]
+  * xapt: Add config file to localise distibution differences 
+    so xapt works on both Debian and Ubuntu 
+  * Require an arch to be specified if none set in dpkg-cross.
+  * Put xapt and embuilddeps back in their own package.
+  * Require an arch to be specified if not set in dpkg-cross.
+  * xapt-hook: Respect arch qualifiers in dependencies so we don't try
+     to install deps which don't exist for the host architecture.
+  * xapt-hook: Fall back to control when xcontrol not present
+  * xapt-hook: Use Build-Depends-Indep too in dependency list
+  * remove redundant apt-cross hooks
+
+  [ Neil Williams ]
+  * pdebuild-cross depends on xapt ${source:Version}.
+  * [INTL:vi] Vietnamese program translation (Closes: #598586)
+  * Use Config::IniFiles to parse the xapt config file.
+  * Allow all existing source list files and let apt sort out the result
+    for backwards compatibility.
+  * Add explicit noauth support in conf file.
+
+ -- Neil Williams <codehelp@debian.org>  Fri, 22 Oct 2010 23:20:27 +0100
+
+emdebian-crush (2.2.5.1) unstable; urgency=low
+
+  * Drop apt-cross dependency - drop emchain.
+  * Port some changes from 2.2.6 to ensure localised strings are output
+    correctly.
+
+ -- Neil Williams <codehelp@debian.org>  Sat, 30 Oct 2010 20:31:04 +0100
+
+emdebian-crush (2.2.5) unstable; urgency=low
+
+  * [i18n] Add French program translation (Closes: #595804)
+  * Fix build system to put the translation files in the correct place.
+  * [INTL:da] Danish translation of emdebian-crush. (Closes: #596008)
+  * [INTL:ru] Russian program translation (Closes: #596088)
+  * [INTL:pt] Portuguese translation for program messages (Closes: #596148)
+
+ -- Neil Williams <codehelp@debian.org>  Wed, 08 Sep 2010 23:08:38 +0100
+
+emdebian-crush (2.2.4) unstable; urgency=low
+
+  * Add an alternative script to get cross dependencies: xapt
+  (not used by default, yet.)
+  * Adapt embuilddeps to work with xapt
+  * Switch from parsechangelog to dpkg-parsechangelog - no longer need
+    the more complex output, so drop the extra depends.
+  * Ensure main apt cache is updated before trying to get dependencies.
+  * Add translation support to pdebuild-cross scripts.
+
+ -- Neil Williams <codehelp@debian.org>  Wed, 28 Jul 2010 20:32:32 +0100
+
+emdebian-crush (2.2.3) unstable; urgency=low
+
+  * Switch source package name and move to unstable.
+  * Switch to po4a now that the package has been simplified.
+  * emsource.sh: add nocheck build option for all cross-builds.
+  * Move -uc -us options into the config file due to shell expansion
+    failure.
+  * When using pdebuild and svn-bp, show the results.
+
+ -- Neil Williams <codehelp@debian.org>  Sun, 30 May 2010 23:14:14 +0100
+
+emdebian-tools (2.2.2) experimental; urgency=low
+
+  * Read dpkg-cross data to set the default architecture to cross build
+    inside the pdebuild-cross chroot.
+  * Drop the emdebian-qa package and trim down emdebian-buildsupport
+    again.
+  * Adapt pdebuild-cross to use the dpkg-cross default arch, if any.
+  * Improve cross-deps hook to support different architectures.
+  * Promote svn-pdebuild-cross to /usr/bin/
+  * Move libemdebian-tools-perl into emdebian-crush, leave a
+    transitionary package for dependency reasons.
+
+ -- Neil Williams <codehelp@debian.org>  Sat, 08 May 2010 19:04:40 +0100
+
+emdebian-tools (2.2.1) experimental; urgency=low
+
+  * Add fakeroot as dependency of pdebuild-cross. 
+  * Roll back CDBS perl support to allow builds on Lenny.
+
+ -- Neil Williams <codehelp@debian.org>  Thu, 29 Apr 2010 16:11:49 +0100
+
+emdebian-tools (2.2.0) experimental; urgency=low
+
+  * Transitional changes for new Crush build methods.
+  * Add pdebuild-cross for initial crossbuilding pbuilder support.
+  * Add some tweaks for current unstable build changes
+
+ -- Neil Williams <codehelp@debian.org>  Sun, 25 Apr 2010 12:00:04 +0100
+
+emdebian-tools (2.1.3) unstable; urgency=low
+
+  [ Neil Williams ]
+  * Convert upload_handler.sh to /bin/bash (Closes: #547747)
+
+  [ Hector Oron ]
+  * Fix "supportbinary and fixfindlatestgcc in emchain"
+    Thanks to Alban Browaeys (prahal) (Closes: #544068)
+
+  [ Neil Williams ]
+  * Fix lintian breakage in file-info regular expression.
+  * Downgrade lintian error to advise about replacement scripts.
+    checks/emdebian checks/emdebian.desc
+  * Add embuilddeps script to help transition away from emdebuild --
+    build-deps
+  * Drop embug
+  * Add manpage for embuilddeps
+  * Migrate from deprecated CDBS perl module build support.
+
+ -- Neil Williams <codehelp@debian.org>  Wed, 14 Apr 2010 21:44:06 +0100
+
+emdebian-tools (2.1.2) unstable; urgency=low
+
+  * Fix email address for Hector
+  * emdebian-qa: Drop unwanted unpack command in lintian check.
+
+ -- Neil Williams <codehelp@debian.org>  Thu, 07 Jan 2010 12:29:08 +0000
+
+emdebian-tools (2.1.1) unstable; urgency=low
+
+  * qa/emxcontrol : Support packages that indent Build-Depends.
+  * emdebuild : only set CONFIG_SITE in a cross-build.
+  * Prune some more dependencies and remove duplicate dependencies.
+  * Add emvendor support for configurable package build arguments.
+  * specify dpkg-reconfigure libemdebian-tools-perl in each instance in
+    manpages.
+  * Add vendor support to emsource and empdebuild.
+  * Fix lintian check for lintian 2.3.0 (Closes: #562776)
+  * Add Hector as Uploader.
+
+ -- Neil Williams <codehelp@debian.org>  Mon, 28 Dec 2009 21:18:49 +0000
+
+emdebian-tools (2.1.0) unstable; urgency=low
+
+  * Convert bug support script to /bin/bash (Closes: #530970)
+  * embug, embug_report: Add support for opening new bugs with a gzipped
+    build log.
+  * emsource, qa/emxcontrol : Add support for updating debian/xcontrol
+    as part of cleaning the package with emsource.
+  * Add dpkg-vendor conffile.
+  * Add note to emsetup manpage about ensuring the Emdebian toolchain
+    apt source is available. (Closes: #532400)
+  * Migrate emchain to look for eglibc instead of glibc (Closes: #532428)
+  * bug/embug : extend coverage to packages using epochs and improve
+    non-native handling.
+  * Package emdebian-tools.1 manpage. (Closes: #532748)
+  * Add -S option to bash completion of emdebuild.
+  * qa/emxcontrol : Promote emxcontrol to /usr/bin, package manpage and
+    use a temporary file to update debian/xcontrol in place.
+  * fix missing comma in -tools depends.
+  * Add a note about Crush to the package description.
+  * Add a Vendor-Name field to vendor/emdebian-crush for a fully verbose
+    title.
+  * Add --check-in support to emsource, based on emdebuild --svn-only.
+  * Emdebian/Tools.pm : Move find_latest_gcc away from finding the
+    latest version of gcc in Debian. Instead find the latest built
+    toolchains in Emdebian.
+  * emsetup : use the new support in the module and simplify the script
+    considerably.
+  * emdebuild : Add vendor support to emdebuild.
+  * em_make : Add vendor support to em_make, called by emdebuild.
+  * em_make : Use emxcontrol support in em_make, if emdebian-qa is
+    installed.
+
+ -- Neil Williams <codehelp@debian.org>  Mon, 22 Jun 2009 06:57:08 +0100
+
+emdebian-tools (2.0.1) unstable; urgency=low
+
+  * emsetup: try to find a toolchain from the previous version of gcc
+    when the new version arrives.
+  * Update manpage for emsetup with help on reporting bugs and
+    installing binary toolchains.
+  * Add time stamp to the emchain log file name.
+  * Add emxcontrol script to emdebian-qa in /usr/share/
+  * Add notes about xcontrol usage in the generated changelog via
+    em_make.
+  * Convert em_newer to /bin/bash (Closes: #530080)
+
+ -- Neil Williams <codehelp@debian.org>  Mon, 25 May 2009 17:21:02 +0100
+
+emdebian-tools (2.0.0) unstable; urgency=low
+
+  * Merge Emdebian changes to make emdebian-rootfs installable again.
+    (Closes: #521736)
+
+ -- Neil Williams <codehelp@debian.org>  Sat, 25 Apr 2009 23:19:22 +0100
+
+emdebian-tools (1.9.0) unstable; urgency=low
+
+  * Emdebian release whilst other packages go through NEW.
+  * Add docbook-xml to Build-Depends-Indep
+  * add diffuse as an alternative to meld.
+
+ -- Neil Williams <codehelp@debian.org>  Mon, 30 Mar 2009 23:02:41 +0100
+
+emdebian-tools (1.8.0) unstable; urgency=low
+
+  * Splitting the source package into four.
+  * pbuilder/empdebuild : clean the build place after each update run.
+
+ -- Neil Williams <codehelp@debian.org>  Sun, 29 Mar 2009 16:08:35 +0100
+
+emdebian-tools (1.6.2) unstable; urgency=low
+
+  * Bug fix Emdebian release.
+  * Debian/Packages/Compare.pm : describe why some packages with missing
+    sources are not migrated and how to fix it.
+  * emdebian-rootfs needs to depend on multistrap so that existing users
+    retain support.
+  * grip/emgrip : fix uninitialised  and add support for removing
+    lintian and linda override files.
+  * gccross : migrate simplify_path into gccross - the only place it is
+    still used.
+  * emdebuild : in cross-libtool mode, ensure that the specified
+    setting is made available to gccross.
+
+ -- Neil Williams <codehelp@debian.org>  Wed, 25 Mar 2009 02:30:30 +0000
+
+emdebian-tools (1.6.1) unstable; urgency=low
+
+  * Interim Emdebian release
+  * grip/emgrip : add support for packages that already have a
+    compressed copyright.gz
+  * pbuilder/multistrap : remove debootstrap code and do all the work in
+    apt+dpkg. Improve native support and re-enable.
+  * Drop debhelper dependency for multistrap.
+  * pbuilder/multistrap : Support Secure Apt.
+  * Create new multistrap package because em_multistrap does not need 
+    Emdebian::Tools or other emdebian-rootfs dependencies.
+    (Closes: #520087)
+  * pbuilder/em_multistrap : ensure /dev and /etc/network/ exist; only
+    install keyring packages if not already installed.
+
+ -- Neil Williams <codehelp@debian.org>  Tue, 24 Mar 2009 13:30:42 +0000
+
+emdebian-tools (1.6.0) unstable; urgency=low
+
+  * New Debian release
+  * pbuilder/embootstrap: inherit same root vs sudo check from emsandbox
+  * Migrate targetsuite support into module postinst so that sources.list.d/
+    is updated when targetsuite updated (Closes: #518130)
+  * Update standards version (no changes)
+
+ -- Neil Williams <codehelp@debian.org>  Tue, 17 Mar 2009 11:47:42 +0000
+
+emdebian-tools (1.5.2) unstable; urgency=low
+
+  * Interim Emdebian release
+  * Get the archive keyring package from Lenny using pre-seeding
+  * grip/emlist-tdebs.pl : add a convenience script to help TDeb
+    maintenance.
+  * pbuilder/embootstrap : Add the entire keyring, not just the first
+    key.
+  * pbuilder/emsecondstage : leave the keyring around - if the clock has
+    not been set, the offsets confuse gnupg.
+  * pbuilder/emrootfslib : isolate invoke-rc.d and update-rc.d changes
+    from unpack_debootstrap so that Grip can have unchanged scripts.
+  * pbuilder/em_multistrap : New script to make one debootstrap from
+    multiple repositories.
+  * debian/emdebian-archive-keyring.postrm debian/rules : Remove the
+    second key after re-assessing the pre-seeding methods to obtain the
+    archive keyring from Debian.
+  * grip/grip-preseed.cfg : obtain the archive keyring directly from a
+    Lenny mirror.
+  * grip/grip-config/grip-tasks.desc : add a touchscreen task.
+  * pbuilder/em_multistrap : Add new script to extend debootstrap to
+    cope with multiple repositories using apt to reconcile dependencies.
+    May migrate into a different package in time, does not support
+    machine:variant.
+  * buildd/emdepends : avoid undefined 'mkdir -p' and set verbose in apt
+    bindings. Skip uninitialised variables
+  * pbuilder/em_multistrap : add support for complete unpacking, ported
+    from emsandbox, with options to remove the .debs and cache data.
+    Disable broken native support.
+  * grip/archive.php : Add a parser for the reprepro update logs for
+    Grip, provides RSS feeds direct from the repository. Link to the RSS
+    from logs.php
+
+ -- Neil Williams <codehelp@debian.org>  Mon, 09 Mar 2009 17:53:22 +0000
+
+emdebian-tools (1.5.1) unstable; urgency=low
+
+  * Interim Emdebian release
+  * tdeb/em_installtdeb : ensure tdeb dsc remains separate from existing
+    dsc when package uses an epoch
+  * bug/embug : skip tdeb sources in --prepare mode.
+  * Use grip to handle doc and locale removal in Crush, stop patching
+    debian/rules to omit dh_installman etc.
+  * emdebuild : migrate TDeb support to Grip wrapper and clean up any
+    modified .gmo files
+  * grip/em_autogrip : pick the latest source package if multiple ones
+    are available
+  * Emdebian/Grip.pm : Check the return values of system calls to
+    reprepro and output sensible results.
+  * Add 0x28BCB3E3 as one of the keys signing the stable Release files.
+  * emsource : Add outline support for native architecture usage.
+  * emsetup : Improve native support and handle inherent problems of a
+    typical debootstrap environment
+
+ -- Neil Williams <codehelp@debian.org>  Tue, 24 Feb 2009 13:07:00 +0000
+
+emdebian-tools (1.5.0) unstable; urgency=low
+
+  * Fold Emdebian interim releases into Debian package.
+
+ -- Neil Williams <codehelp@debian.org>  Sun, 15 Feb 2009 13:58:58 +0000
+
+emdebian-tools (1.4.16) unstable; urgency=low
+
+  * Missed one occurrence of /usr/lib/emdebian-tools in the autobuilder
+    - fixed.
+  * buildd/upload_handler.sh : no need to look for /bin/bash, /bin/sh is
+    fine for the emrecent call.
+  * bug/embug_report : add information on the cross-tool versions used
+    in the fix within the closure message.
+  * grip/logs.php : Add more detail on possible issues and architectures
+    affected by errors.
+  * tdeb/em_installtdeb : Ensure the em1 version suffix is used in Grip
+    and migrate to the +t1 syntax for changes files.
+  * Expand on hostname problems in emsetup manpage. (Closes: #512689)
+  * overview.1.xml : Describe interim Emdebian versions and use of the
+    tools within Lenny.
+  * grip/grip-overridereplace.pl : Add a new script to implement
+    overrides for packages already in the archive.
+  * Emdebian/Grip.pm : setup_repos - provide defaults for archlist and
+    locroots if the repository directory hierarchy is completely empty.
+  * emdebuild: add -S option to allow build-deps to be located in non-
+    Debian repositories
+  * grip/grip-config/debian/postinst  Tidy up dangling symlinks in
+    /usr/share/man
+  * pbuilder/embootstrap : use the crush/ directory name instead of the
+    deprecated packages/ one at www.emdebian.org
+  * qa/emtargetcmp : refine the find local builds option to be more
+    specific to normal and chroot builds.
+  * pbuilder/emsandbox : Relax sudo check to allow for any way of getting
+    USER=root - allows for schroot.
+
+ -- Neil Williams <codehelp@debian.org>  Sun, 15 Feb 2009 13:39:34 +0000
+
+emdebian-tools (1.4.15) unstable; urgency=low
+
+  * Improve grip-config for easier conversion of a debootstrap into a
+    bootable system
+  * grip/em_autogrip.pl Add binary package support and extend both
+    binary and source modes to allow multiple packages to be added per
+    run.
+  * Debian/Packages/Compare.pm : read the locale roots and architecture
+    list from the reprepro data files directly.
+  * pbuilder/emsecondstage : allow for cdebconf to be optional (grip)
+  * Move all files out of /usr/lib/emdebian-tools into /usr/share/.
+  * Debian/Packages/Compare.pm : Allow comments in the reprepro conf
+    files and explicitly allow situations where the codename has been
+    switched with the suite because reprepro continues to work with that
+    error.
+  * grip/em_autogrip.pl : When creating new repositories, fix the suite
+    and codename issue. Add a synopsis and explain about the continuing
+    problems with recursive edos-debcheck parsing
+  * doc/genmanpages : Generate a manpage for the new internal
+    Emdebian::Grip module.
+  * Derive an internal perl module from em_autogrip.pl (Emdebian::Grip)
+    and package the results.
+  * Add lintian check to look for kill -s in maintainer scripts, unsupported
+    by busybox. (Closes: #512016)
+  * bug/embug_report : Add a --dry-run option for --closes and warn if
+    svn info is out of date by more than a week
+  * Remove duplicate section and priority listings from debian/control -
+    lintian
+  * Debian/Packages/Compare.pm : enforce that each binary always has a
+    source package and ensure repo name for locale is used with
+    get_locale_roots
+  * grip/grip-override.pl : Support for implementing Debian archive
+    override files in Grip.
+  * autogrip - enable a dry-run mode, limit the number of runs through
+    the update loop and use the locale repo name for the tdeb
+    calculations.
+  * Swap the shell version of em_autogrip for the perl version.
+  * pull migrate_missing from the script into the Emdebian::Grip module
+    and add documentation to the POD content
+  * Emdebian/Grip.pm : allow limited use of &edos without recursion and
+    warn instead of die in case of missing source packages
+  * grip/em_autogrip : allow limited use of &edos, explain delays in
+    loading britney data and tidy up INF messages.
+  * Debian/Packages/Compare.pm : always return a sorted archlist for
+    easier reading of the logs.
+  * grip/grip-cron.sh : Get the ARCHLIST directly from the
+    Emdebian::Grip perl module and thereby from the repository itself
+    instead of hardcoded.
+  * grip/grip-selections.pl : simple parser script to identify packages
+    to add to the filter.
+  * Emdebian/Grip.pm : use system mv instead of perl rename because
+    rename turns out to be unreliable on some installations, notably
+    www.emdebian.org.
+  * Emdebian/Grip.pm : ensure package data is reloaded inside
+    migrate_missing to catch newly added source packages in Grip
+    unstable.
+  * qa/emtoolchain.pl : New script for /usr/share to check the status of
+    the toolchain repositories.
+  * grip/grip-preseed.cfg Add some default groups and preseed them. Use
+    www. prefix instead of buildd. for all website locations and expand
+    comments.
+  * Emdebian/Grip.pm :setup_repos - configure testing to pull from
+    unstable instead of re-downloading all the same files twice.
+  * grip/grip-overridearch.pl : New script to handle Arch: all packages
+    with dependencies only available on selected architectures.
+  * grip/grip-cron.sh : use nice for the main cron workload.
+  * grip-config: create the .changelog.Debian.gz and .copyright files
+    for gcc-4.3-base within the package itself so that the symlinks can
+    work when grip-config is unpacked but not configured.
+
+ -- Neil Williams <codehelp@debian.org>  Sun, 25 Jan 2009 22:59:34 +0000
+
+emdebian-tools (1.4.14) unstable; urgency=low
+
+  * Add a wrapper for edos-debcheck support in Grip. 
+  * grip/emgrip : support strict OR dependencies by making perl regexp
+    non-greedy
+  * grip/grip-cron.sh : Add a crontab handler using a log file
+  * Add a udeb for the emdebian archive keyring for inclusion into d-i
+    images
+  * Add debian-archive-keyring to the emdebian-archive-keyring so that
+    we can replace the default keyring with all keys. Add conflict and
+    provide debian-archive-keyring-udeb to debian/control.
+  * grip/em_autogrip : add experimental support for testing - needs more
+    work
+  * add ssmtp as dependency of grip-config
+  * drop debootstrap dependency from emdebian-grip
+  * grip/logs.php : Add a log index page for the Grip cron job
+  * grip/em_autogrip : ensure --dry-run only lists changes and catch a
+    few errors in testing checks
+  * grip/emgrip : ensure only directories in /usr/share/locale are
+    removed, preserving locale.alias
+  * grip/grip-cron.sh : fix bashisms
+  * grip/emgrip omit doc-base files under nodocs
+  * grip/grip-liststd.sh : New script to compare filter package list
+    against dpkg --get-selections output
+  * Debian/Packages/Compare.pm Add another new package - repository
+    comparison module to support emdebian-grip but which may well have
+    other uses
+  * debian/emdebian-grip-server.install : Separate out emdebian-grip so
+    that the emgrip script can be installed on Emdebian Grip machines
+    and the server-side cron job and update tasks can be installed on
+    the buildd.
+  * debian/emdebian-grip-server.install : Add the entire grip-config
+    metadata to the emdebian-grip-server package so that grip-config can
+    be built and updated on the server. (Script may be added later.)
+  * Debian/Packages/Compare.pm : Add get_single_package support and spin
+    out get_archlist and get_locale_roots for general usage.
+  * Run apt-cache policy in LANG=C to parse strings in emsetups 
+    within localized environments (Closes: #510521)
+  * grip/emgrip : Allow Task: control fields for d-i support
+  * Drop build-depends on debian-archive-keyring
+  * pbuilder/embootstrap : finally drop pkgdetails after testing with
+    Emdebian Grip sandbox
+  * emdebian-buildsupport - a new package to only contain the build
+    tools for easier backporting.
+
+ -- Neil Williams <codehelp@debian.org>  Mon, 05 Jan 2009 19:31:18 +0000
+
+emdebian-tools (1.4.13) unstable; urgency=low
+
+  * TDeb improvements - add maxdepth 1 to templates handing in
+    dpkg-gentdeb, only find templates files in debian/. 
+  * tdeb/dpkg-gentdeb : handle multiple template files and skip
+    templates for udebs
+  * Add certainty and severity fields to emdebian.desc lintian checks
+    (Closes: #507285)
+  * grip/autogrip : add a mandatory --base-path command for the top
+    level location of the repositories.
+  * grip-config: Add install-info and update-alternatives replacements
+    and a readme to describe how to build the grip-config package
+  * Relocate emdebian.buildd to /usr/share/emdebian-tools/" 
+    and remove packages removed from Debian unstable (Closes:
+    #507686)
+  * Rename autogrip to em_autogrip and add a manpage; move emgrip and
+    em_autogrip to /usr/bin/
+  * grip/em_autogrip : Add support for retrieving missing GnuPG keys -
+    prevents reprepro errors. Add note about key retrieval to manpage.
+  * grip/em_autogrip : Add a dry-run mode and use a single function for
+    source package handling
+  * grip/em_autogrip : allow adding a binary even if the source package
+    is the same name
+  * improve grip-config until issues with gcc postinst can be fixed in
+    Debian
+  * grip/grip-config/update-alternatives : nasty hack - less subtle
+    workarounds still fail, so now just ignore all errors from update-
+    alternatives until a better solution can be found.
+  * Add the emdebian archive key to the grip-config packag
+  * Build a binary archive keyring file alongside the ascii armour for
+    cdebootstrap compatibility.
+
+ -- Neil Williams <codehelp@debian.org>  Tue, 09 Dec 2008 09:49:30 +0000
+
+emdebian-tools (1.4.12) unstable; urgency=low
+
+  * Add tdeb/dh_gentdeb, a simple debhelper wrapper. debhelper itself
+    needs improved TDeb support. Improve dpkg-gentdeb to cope with
+    more varied packages and epochs. 
+  * emgrip : Add outdir option, missing module dependency (from perl-
+    modules) and implement DEB_BUILD_OPTIONS support
+  * emgrip : Add support for processing a .changes file, with support
+    for modifying the content and binary-only uploads.
+  * emgrip : Add support to use em_installtdeb when a .changes file is
+    used.
+  * tdeb/splitout_tdeb : experimental new script to split a Debian
+    package into a Debian TDeb and a smaller Debian package.
+  * grip/autogrip : Add code to handle updates and checks against
+    reprocessing the same packages. Ensure pkglist filter is refreshed
+    before and after each operation.
+  * grip/emgrip : Add support for packages that already encode the
+    source version (libgcc1). Add support for handling strict
+    dependencies; also handle pre-depends, replaces and conflicts to
+    allow for the grip version suffix.
+  * tdeb/splitout_tdeb : Add support for relocating debconf templates
+    into the TDeb
+  * tdeb/dpkg-gentdeb : Add support for having debconf template files in
+    the TDeb
+  * grip/emgrip tdeb/splitout_tdeb : Include support for Provides: and
+    fix TDeb source version dependency listing
+  * Add manpages for the tdeb utilities.
+  * grip/emgrip : retain epoch for binary versions, use no_epoch only
+    for source version
+  * grip/autogrip : Add support for extending the architecture list -
+    requires some manual editing of reprepro config files
+  * grip/grip : Customised debootstrap suite script to cope with bugs in
+    install-info and update-alternatives
+
+ -- Neil Williams <codehelp@debian.org>  Thu, 13 Nov 2008 20:40:21 +0000
+
+emdebian-tools (1.4.11) unstable; urgency=low
+
+  * Interim Emdebian release
+  * bug/embug_report : Check that the 'Closes' bug is assigned to the
+    right package: buildd.emdebian.org only.
+  * bug/embug : fix problems with lists of bugs for one package
+  * bug/embug : switch to buildd.emdebian.org psuedo-package instead of
+    using usertags
+  * bash/emdebian-tools : add embug_report bash completion
+  * bug/embug : add convenience wrapper for embug_report from embug --
+    report
+  * Emdebian/Tools.pm : ignore more generated debhelper log files in
+    debian/
+  * Migrate gccross from dpkg-cross to emdebian-tools for easier
+    migration of dpkg-cross into dpkg-dev and improved support for
+    removing the need for gccross itself
+  * em_installtdeb : Fix support for .tdeb without needing changes in
+    dpkg. Some workarounds for reprepro will be needed.
+  * qa/embritney : add support for packages using epochs
+  * checks/emdebian : Refine the i386 handling, not just for amd64/ie86
+    but for native i386 builds
+  * Package history.php in emdebian-qa
+  * buildd/buildd.php : keep the architecture in the link for
+    consistency
+  * Allow setting the template file for header and footer content via
+    config.php
+  * emsource : Move the warning about out of date changelog patches,
+    which are handled automatically anyway, to verbose mode only.
+  * Emdebian/Tools.pm : get_config - simplified, tools_version converted
+    to dpkg-query
+  * emdebuild : avoid installing -cross packages in native builds
+  * buildd/buildd.php buildd/history.php : Handle errors from servers
+    with limited available memory but large log files
+  * emgrip : experimental script to repack archives for Emdebian Grip
+  * qa/embritney : support + in package names
+  * em_installtdeb : omit PO files in man/ from the TDeb, leave in the
+    TDeb source
+  * Add two new packages: emdebian-grip (containing emgrip) and
+    emdebian-tdeb for TDeb support in Debian and Emdebian.
+
+ -- Neil Williams <codehelp@debian.org>  Tue, 28 Oct 2008 12:49:37 +0000
+
+emdebian-tools (1.4.10) unstable; urgency=low
+
+  * Interim Emdebian release
+  * Add embug_report as a bash script to assist in filing and closing
+    bugs against buildd.emdebian.org
+  * qa/embritney : Add embritney - a server side script to assist with
+    migrating packages using data from emtargetcmp -m or the migration
+    files created by the autobuilder
+
+ -- Neil Williams <codehelp@debian.org>  Thu, 02 Oct 2008 19:59:55 +0100
+
+emdebian-tools (1.4.9) unstable; urgency=low
+
+  * Interim Emdebian release
+  * Fix OR'd dependency handling to not duplicate the list. Use
+    AptCrossDependency::List instead.
+
+ -- Neil Williams <codehelp@debian.org>  Mon, 29 Sep 2008 11:37:32 +0100
+
+emdebian-tools (1.4.8) unstable; urgency=low
+
+  * Interim Emdebian release
+  * qa/emdebcheck : utilise new Cache::Apt::Package::Operator field and
+    concatenated OR dependencies.
+  * debian/control : migrate emdebian-qa to new support in Cache::Apt
+
+ -- Neil Williams <codehelp@debian.org>  Sun, 28 Sep 2008 15:29:28 +0100
+
+emdebian-tools (1.4.7) unstable; urgency=low
+
+  * Interim Emdebian release
+  * qa/emcache : fix typo in location of package-specific cache files
+  * qa/emcache : support for the few packages that do need package-
+    specific cache values
+  * pbuilder/empbuilderlib : Add disable_apt_pdiffs function
+  * buildd/em_autobuild : add support for outputting migration data and
+    arch-dependent comparison files
+  * buildd/config.php : New config file for all config of the PHP
+    scripts
+  * buildd/emdepends : New helper script to identify source dependencies
+    of a list of packages to ease the workload of em_autobuild
+  * checks/emdebian : add support for building 32bit on 64bit
+  * qa/embuildstats : ignore erroneous directories
+  * Document the problems with emsandbox and empdebuild is bash is not
+    the default shell
+  * buildd/buildd.php : Add a list of the affected packages for build
+    failures and dependency problems.
+  * debian/control : suggest gkdebconf to identify which bits control
+    which debconf settings
+  * qa/emtargetcmp : force updates of the apt-cross data
+  * emdebuild : Support -- [dpkg-buildpackage options] - subject to -us,
+    -uc being preserved and -a being ignored.
+  * emchain : Improve uClibc support - patch from Bernhard Fischer.
+  * embootstrap fails if /bin/sh is not symlinked to /bin/bash (Closes:
+    #498495)
+  * pbuilder/emdebian.coreutils pbuilder/emdebian.crossd
+    pbuilder/emdebian.gpe pbuilder/emdebian.gtk pbuilder/empbuilderlib
+    pbuilder/emrootfslib: migrate POSIX functions out of empbuilderlib
+    and into a new shell library, emrootfslib, that is checked for
+    bashisms each build. Migrate deboostrap suite scripts into 
+    /usr/share. Add experimental pbuilder/emdebian.coreutils.
+  * debian/control : add devscripts for genmanpages support
+  * emdebuild should have/pass along more dpkg-buildpackage options
+    (Closes: #497816) - add -- support to emdebuild and pass-down support
+    to calling scripts.
+  * buildd/em_autobuild : add --skip-compare option to avoid running
+    emtargetcmp on systems with low RAM
+  * emdebian-qa: Add some example scripts to manage the autobuilder
+
+ -- Neil Williams <codehelp@debian.org>  Sun, 21 Sep 2008 19:10:51 +0100
+
+emdebian-tools (1.4.6) unstable; urgency=low
+
+  * Interim Emdebian release
+  * emrecent : exclude -dbg packages from edos-debcheck, often depend on
+    the -dev packages
+  * pbuilder/update-rc.d : Use two digit prefixes to set the correct
+    order during boot
+  * Split out a new package, emdebian-qa
+    - add new package to debian/control
+    - migrate all debconf support to libemdebian-tools-perl to facilitate
+      the package split.
+    - migrate postinst debconf control to library package.
+    - split install files for emdebian-qa
+    - support bash_completion for emdebian-qa
+    - add emdebian-qa support to genmanpages
+    - Emdebian::Tools: /etc/emsandbox.conf dropped
+  * emcache : add support for cache files provided by maintainers
+  * pbuilder/emdebian.busybox pbuilder/emdebian.crossd : synchronize and
+    explain why .busybox is not the default, just an example
+  * emsource : Apply the patches in debian/patches consistently
+  * qa/emcache : Drop Config::Auto as it can get confused with values
+    that contain = or commas
+
+ -- Neil Williams <codehelp@debian.org>  Sun, 31 Aug 2008 19:43:40 +0100
+
+emdebian-tools (1.4.5) unstable; urgency=low
+
+  * Emdebian interim release
+  * Fix autobuilder logs when used outside a chroot
+  * emsource : Check for emrecent logs in pbuilder result directories
+  * buildd/upload_handler.sh : Comment on trickle (does not work with 
+  scp but can work with rsync.)
+  * buildd/buildd.php : Add a time filter in preparation for adding
+    multiple arch logs
+
+ -- Neil Williams <codehelp@debian.org>  Tue, 26 Aug 2008 17:55:10 +0100
+
+emdebian-tools (1.4.4) unstable; urgency=low
+  * emcache : New script to help maintenance of stored cache values. r4622
+  * buildd/upload_handler.sh : enable upload by default. r4723
+  * emrecent: Handle absolute and relative locations. r4722
+  * emdebcheck: Handle absolute and relative locations. r4721
+  * pbuilder/empbuilderlib : Readability improvements. r4710
+  * pbuilder/TODO : Note current problems. r4689
+  * pbuilder/emdebian.gpe : Add langupdate to the GPE tarball. r4688
+  * pbuilder/empbuilderlib : drop .symbols files from the tarball r4687
+  * checks/emdebian : extend bash check to catch spaces and check config
+     script. r4673
+  * buildd/buildd.php : allow marking some build trees as obsolete by
+    putting an empty file called 'obsolete' in the log directory of the
+    package. r4668
+  * bug/embug : lay out multi-bug lists in improvised tables. r4663.
+  improve handling of more than one bug report per package. r4659
+  * buildd/em_autobuild : add mode to allow sudo when needed. r4652. 
+  * checks/emdebian : extend bash check to catch spaces and check config
+    script
+  * checks/emdebian : special case armel so that lintian detects the
+    correct output for armel files. r4587
+  * emsource : handle double - characters in version strings (e.g.
+    dialog) and only clean up the package when necessary, reducing
+    duplicate downloads in autobuild mode
+  * pbuilder/empbuilderlib : set 1777 permissions on /tmp
+  * emtargetcmp : add --complete option for repo-wide checks
+  * emdebcheck : Sort out handling of paths
+  * Remove checks for apt from postinst and postrm - paths should not be
+    explicit in maintainer scripts.
+  * doc/genmanpages : use po4a properly and generate po4a.config instead
+    of mangling two POT files
+  * doc/genmanpages : implement next stage of po4a support for
+    translated files
+  * migrate edos-debcheck to -tools package instead of -rootfs
+  * README : Include advice on translating the manpages
+  * bash/emdebian-tools bash/emdebian-rootfs : Include support for auto-
+    completing --arch, --machine and --variant
+  * emtargetcmp : Add support for changing the --suite and initial
+    support for --migration-check that attempts to provide assistance
+    for keeping Emdebian in sync with Britney in Debian.
+  * pbuilder/emsandbox pbuilder/embootstrap : add support for -S|--suite
+    to allow building root filesystems from the Emdebian target testing
+    repository
+  * Bump depends on libcache-apt-perl for &clear_config support needed by
+    emtargetcmp
+  * emsource : add autobuilder status to stats report output
+
+ -- Neil Williams <codehelp@debian.org>  Sun, 24 Aug 2008 16:57:16 +0100
+emdebian-tools (1.4.3.1) unstable; urgency=low
+
+  * Add emdebian-archive-keyring-udeb package -
+    special package to assist installation of
+    Emdebian Grip using the Lenny installer.
+
+ -- Neil Williams <codehelp@debian.org>  Sat, 03 Jan 2009 12:54:04 +0000
+
+emdebian-tools (1.4.3) unstable; urgency=low
+
+  * [INTL:sv] po-debconf file for emdebian-tools (Closes: #492752)
+  'svn merge -r 4580:4581'
+  * Remove mountall because it shuts down process 1 - without runlevels,
+    this means shut down the system. r4672+r4675 (superceded by r4711
+    which in turn is part of the fix for #494622 below).
+  * two suite scripts force installation of conflicting packages
+    (Closes: #494622) - implement replacement for perl update-rc.d
+    script in shell: r4711. Ensure /etc/rc.d/ exists for update-rc.d
+    support: r4699. Implement shell replacement for update-rc.d: r4677
+  * pbuilder/empbuilderlib : ensure update-rc.d is executable . r4680
+    Specify a real device for tslib in xorg.conf. r4678
+  * pbuilder/empdebuild : force noninteractive debconf frontend during
+    upgrades of the cross-building chroot (prevents chroot breakage due
+    to priority high debconf messages in noninteractive environment). r4626
+  * Remove mountall because it shuts down process 1 - without runlevels,
+    this means shut down the system. r4675+r4672 (superceded by r4711).
+  * pbuilder/empbuilderlib : Add support for a basic /etc/profile file
+    to set the correct paths for all users. r4682
+
+ -- Neil Williams <codehelp@debian.org>  Sat, 09 Aug 2008 16:48:50 -0300
+
+emdebian-tools (1.4.2) unstable; urgency=low
+
+  * Emdebian bug fix release
+  * embug : only copy and unpack the most recently modified .dsc etc. in
+    --prepare mode.
+  * pbuilder/empdebuild : If Emdebian patches implement a patches
+    directory, check it exists.
+  * buildd/history.php : build result link should link back to index
+    page to get the log
+  * emdebuild : Implement support for Build-Depends-Tools in
+    debian/xcontrol.
+  * em_installtdeb : strip comments from control files (xorg-server)
+
+ -- Neil Williams <codehelp@debian.org>  Sun, 27 Jul 2008 14:40:31 +0100
+
+emdebian-tools (1.4.1) unstable; urgency=low
+
+  * PHP local file inclusion  (Closes: #491917)
+  * [INTL:nl] Updated debconf templates translation for Dutch 
+  (Closes: #492072)
+
+ -- Neil Williams <codehelp@debian.org>  Wed, 23 Jul 2008 21:24:06 +0100
+
+emdebian-tools (1.4.0) unstable; urgency=low
+
+  * Bug fix Debian release
+  * buildd/em_autobuild : unset -e in single package mode too, allows an
+    external loop and preserves the log file.
+  * buildd/buildd.php : allow + in package names
+  * buildd/history.php : Add a historical view of previous logs
+  * emsource : Add non-interactive to svn list as well
+  * FTBFS: ./doc/genmanpages: line 26: xml2po: command not found
+    (Closes: #490323)
+  * emsource : allow + in version strings in status output
+  * buildd/buildd.php : Add a summary table with colours.
+  * emdebuild: add the OR dependencies for apt-cross to sort out.
+  * pbuilder/emsecondstage : allow some initial commands to fail so that
+    the configure run is at least started each time
+
+ -- Neil Williams <codehelp@debian.org>  Tue, 22 Jul 2008 17:03:31 +0100
+
+emdebian-tools (1.3.0) unstable; urgency=low
+
+  * Merge Emdebian changes into Debian package
+  * buildd/em_autobuild: Add a single-package mode
+  * pbuilder/emdebian.gtk, pbuilder/emdebian.gpe: Add xfonts-base and
+    dependencies to allow X to start
+  * buildd/status.php : Wrap the emtargetcmp output into a webpage
+  * emsource : set svn --non-interactive when cleaning patches
+  * suggest wiggle - docs on how to use it to follow
+  * bashism in /bin/sh script (Closes: #489572)
+  * pbuilder/embootstrap : use /bin/bash for pbuilder compatibility
+  * checks/emdebian, checks/emdebian.desc : Add new maintainer-scripts-
+    calls-unsupported-executable tag for flexibility in which
+    executables are not supported
+  * pbuilder/empbuilderlib : Always add the control file to status - the
+    order of the lines does not matter, as long as the lines exist.
+    (Prevents errors with apt-cache show and apt-get upgrade)
+  * checks/emdebian : only check the maintainer scripts once per package
+  * Remove set_busybox_path as putting symlinks into /bin/busyboxln/bin/
+    turned out to be a bad idea
+  * buildd/em_autobuild : run emtargetcmp for status output after each
+    build
+  * emdebuild : silence a lintian warning with TDebs, clean up after
+    apt-cross in case of some conflicts
+  * buildd/upload_handler.sh : Recommend -qLzrc instead of -qza for
+    rsync so that symlinks are respected
+
+ -- Neil Williams <codehelp@debian.org>  Tue, 08 Jul 2008 12:33:44 +0100
+
+emdebian-tools (1.2.2) unstable; urgency=low
+
+  * Interim Emdebian release
+  * debian/control : Revert depends on libc6-dev-i386 - implement via
+    emsetup instead
+  * Emdebian/Tools.pm emsetup : Implement a check in emsetup for libc6-
+    dev-i386 on amd64 as part of the toolchain
+  * bash/em_autobuild : support silent mode
+
+ -- Neil Williams <codehelp@debian.org>  Sun, 22 Jun 2008 22:35:51 +0100
+
+emdebian-tools (1.2.1) unstable; urgency=low
+
+  * Interim Emdebian release
+  * checks/emdebian: improved regexp for grep -w type checks.
+  * debian/control: Add depends on libc6-dev-i386 - needed for packages
+    like ntp, avahi, gnome-vfs and others.
+  * emprunecross: Also remove packages that failed to install by
+    checking for unpacked packages
+  * emdebuild : correctly return the exitval if the build fails
+  * emsource : correctly return the emdebuild exitval if the build fails
+
+ -- Neil Williams <codehelp@debian.org>  Thu, 19 Jun 2008 21:57:42 +0100
+
+emdebian-tools (1.2.0) unstable; urgency=low
+
+  * New Debian release, incorporating interim Emdebian releases
+     since 1.1.0.
+
+ -- Neil Williams <codehelp@debian.org>  Wed, 18 Jun 2008 14:08:25 +0100
+
+emdebian-tools (1.1.6) unstable; urgency=low
+
+  * Interim Emdebian release
+  * bash/upload_handler.sh : New example script for uploading autobuilt
+    packages and build logs
+  * pbuilder:empbuilderlib: drop support for emtarget - scripts parse
+    the build log for the relevant embug output data instead
+  * Add verbose and arch options to emtargetcmp
+  * emsource: help the autobuilder by outputting the version string even
+    if the patches fail to apply
+  * emdebcheck : drop unprintable characters.
+  * emrecent : Only support one changes file at a time in noninteractive
+    mode for improved error tracking
+  * bash/upload_handler.sh : Ignore TDeb .changes if target .changes
+    failed in emrecent
+  * emchain : Fix typo in uclibc handling - thanks to Bernhard Fischer
+    for spotting it.
+
+ -- Neil Williams <codehelp@debian.org>  Sun, 15 Jun 2008 18:16:21 +0100
+
+emdebian-tools (1.1.5) unstable; urgency=low
+
+  * Interim Emdebian release.
+  * bash/em_autobuild : Add per package log support with timestamps.
+  * pbuilder/emdebian.buildd : update dependency on libpcap
+  * update standards version - no changes
+  * pbuilder/empdebuild : Add a new routine to bypass emsource -c
+    outside the chroot to ease autobuild operations
+  * emsource : prevent wrapping of long directory names and let the
+    autobuilder pick up a usable return value from emsource
+  * pbuilder/empbuilderlib pbuilder/empdebuild : autobuilders to
+    retrieve updated embug messages
+  * emsource : avoid adding the series file to itself.
+  * emdebuild : drop build log support from SVN
+  * bash/em_autobuild : hide messages about cleaning chroots in
+    autobuilder runs
+  * bash/buildd.php bash/index.php : Add PHP scripts to present buildd
+    reports, imitating buildd.debian.org
+  * pbuilder/empbuilderlib : split the emtarget update function into two
+    - copy in and copy out.
+  * emrecent : support for noninteractive mode
+  * bash/em_autobuild : Add support for a bespoke handler to upload the
+    build logs
+
+ -- Neil Williams <codehelp@debian.org>  Fri, 13 Jun 2008 21:12:19 +0100
+
+emdebian-tools (1.1.4) unstable; urgency=low
+
+  * New Emdebian release
+  * Add README for machine:variant - more to follow examples/README
+    debian/emdebian-rootfs.install
+  * pbuilder/emdebian.gpe Add framebuffer and touchscreen drivers to
+    root filesystem
+  * pbuilder/empbuilderlib : set the new busybox workaround path
+  * pbuilder/emdebian.buildd pbuilder/emdebian.busybox
+    pbuilder/emdebian.crossd pbuilder/emdebian.gpe pbuilder/emdebian.gtk
+    : add new busybox path workaround
+
+ -- Neil Williams <codehelp@debian.org>  Tue, 10 Jun 2008 18:09:34 +0100
+
+emdebian-tools (1.1.3) unstable; urgency=low
+
+  * Interim Emdebian release
+  * emrecent: continue to next package instead of dying at first error.
+  * disable XC-Package-Type until a wider fix is in place
+  * emdebuild: allow the warnings from ProgressBar after all -
+    redirecting stderr to dev/null loses more important information
+    during --build-dep
+  * Improve emdebian lintian checks to find more incompatibilities
+    between Debian and busybox
+  * Update Japanese debconf template translation, thanks to Kobayashi
+    Noritada
+  * checks/emdebian : tell the user which maintainer script is affected
+    by the error
+  * emdebcheck: Add a hack to work around inability to decipher OR
+    dependencies in Cache::Apt* so that debconf-2.0 | debconf does not
+    produce constant debcheck errors.
+  * pbuilder/empbuilderlib: Add support for dbus messagebus group and
+    users
+  * depend on new libcache-apt-perl support for cleaner emdebcheck
+    reports
+  * control: depend on updated version of libio-compress-zlib-perl to
+    get benefit of #482056 being fixed
+  * checks/emdebian: allow checks on maintainer scripts in arch:all
+    packages as well as arch:any
+  * pbuilder/empdebuild: allow update to proceed if umountproc gives bad
+    exit value
+  * em_newer: support finding the package name from the changelog
+  * em_newer: add help and option support
+  * embug: add support for buildd.emdebian.org usertag
+  * checks: search for readlink -e, only -f is supported
+  * emdebian.crossd|.gtk|.gpe: Drop conditional copying of build machine
+    networking files, the fix needs to be via machine:variant support
+  * empbuilderlib: always have the dbus user and group available
+  * Add Catalan and Spanish translations of debconf templates - Hector
+    Oron.
+  * checks: add warning about unwanted linda overrides
+  * emchain: drop dependency on gcc-foo-base in toolchain
+  * Add support for creating a POT file for manpage translation
+  * machine:variant - add support for adding kernels and modules to the
+    root filesystem
+  * emdebian.crossd, emdebian.gpe, emdebian.gtk: implement an init
+    sequence with udev starting first
+  * checks: remove RPATH warning - it is a problem for us too
+  * Emdebian::Tools: generalise the extra-directory approach for
+    nominated directories for wider supprot of unconventional
+    subdirectories of debian/
+  * pbuilder/emdebian.gtk, pbuilder/emdebian.gpe: Add /var/lib/X11
+    support.
+  * pbuilder/empbuilderlib: support the full Debian passwd and group set
+  * setup symlinks after the targets of the symlinks have been unpacked
+    pbuilder/emdebian.crossd pbuilder/emdebian.gpe pbuilder/emdebian.gtk
+  * pbuilder/empbuilderlib : Add output messages and fix disable-apt-
+    recommends
+  * pbuilder/emdebian.busybox, pbuilder/emdebian.crossd, 
+    pbuilder/emdebian.gpe pbuilder/emdebian.gtk : standardise suite script
+    processes
+  * pbuilder/empbuilderlib : Standardise on $BUILDPLACE instead of $TARGET
+    which might not always be defined
+  * Emdebian/Tools.pm : Add debhelper.in to extradirs
+  * pbuilder/empbuilderlib pbuilder/emdebian.gpe : Add support for
+    /etc/shadow - need to ensure that either passwd, group and shadow
+    are used together or not at all.
+  * control: add po4a to build-depends for manpage translation
+    preparations
+  * Lower apt-cross dependency in absence of apt-cross upload to Debian
+  * pbuilder/empbuilderlib : add sysfs mount by default at startup
+  * bash/em_autobuild : improve autobuilder chroot support
+  * emsource : correct the empdebuild handler options
+  * pbuilder/emdebian.buildd : Upgrade libperl listing after perl 5.10
+    transition
+
+ -- Neil Williams <codehelp@debian.org>  Thu, 05 Jun 2008 11:21:56 +0100
+
+emdebian-tools (1.1.2) unstable; urgency=low
+
+  * Interim Emdebian release
+  * embug: handle native packages in --prepare
+  * emdebuild: pass the correct .changes filename to lintian for TDeb
+    checks
+  * embug: add a check in case --prepare is started in a different
+    package directory
+  * em_newer: new script to compare Debian versions against Emdebian
+    target versions
+  * emrecent: use dcmd to parse the .changes file and ensure the splice
+    is only temporary, for the benefit of the dialog only.
+  * pbuilder/empdebuild: fix handler for update-rc.d now that it is not
+    likely to be perl
+
+ -- Neil Williams <codehelp@debian.org>  Mon, 12 May 2008 19:51:15 +0100
+
+emdebian-tools (1.1.1) unstable; urgency=low
+
+  * Interim Emdebian release
+  * emsource: add status message for failed builds
+  * embug: support dependency wait status from emdebcheck
+  * emsetup: upgrading packages should not be an error exit value
+  * em_make: stop removing udeb packages automatically
+  * pbuilder/empbuilderlib: add video group and support new versions of
+    busybox symlink presentation
+  * emsource: support debian/patches-applied as used by pam
+  * em_installtdeb: generate an architecture-dependent .changes file to
+    match arch-dep contents
+  * emsource: handle + in package name in status output
+
+ -- Neil Williams <codehelp@debian.org>  Sun, 11 May 2008 19:18:08 +0100
+
+emdebian-tools (1.1.0) unstable; urgency=low
+
+  * New Debian release
+  * Add inhibit_log call to workaround bug in debhelper 7 and ignore
+    debhelper.log files that may already have been generated
+  * pbuilder/empdebuild: do an upgrade before dist-upgrade - fixes some
+    upgrade problems
+  * emdebuild, control: allow use with or without debhelper 7
+  * emdebcheck: Prevent nested quantifiers in regex
+  * emrecent: add pbuilder results support
+  * checks/emdebian: detect translated manpages too.
+  * emrecent: add a respawn mode and --exclude-error
+  * emrecent: use Dpkg::Version to only show the latest .changes file
+  * emdebuild: drop omitarchcheck handler - check now done in lintian
+  * emrecent: reset embug flags on successful upload
+  * Emdebian::Tools, migrate write_target_config into library from embug
+  * emtargetcmp: use a table for older packages showing the difference
+    between versions
+
+ -- Neil Williams <codehelp@debian.org>  Mon, 05 May 2008 17:27:25 +0100
+
+emdebian-tools (1.0.2) unstable; urgency=low
+
+  * pbuilder/empdebuild: Add a --clean mode and ensure proc and dev/pts
+    are mounted when in the chroot
+  * pbuilder/empbuilderlib: Add support for cleaning out obsolete .deb
+    files. Add permanent override to disable Install-Recommends
+  * Emdebian::Tools; retrieve the version string dynamically from the
+    actual changelog. Add Depends on libio-compress-zlib-perl, likely to
+    already be installed as a dependency of other packages anyway
+
+ -- Neil Williams <codehelp@debian.org>  Wed, 23 Apr 2008 20:15:36 +0100
+
+emdebian-tools (1.0.1) unstable; urgency=low
+
+  * Interim Emdebian release 
+  * emdebuild: drop noudebs from DEB_BUILD_OPTIONS
+  * emdebcheck: use new Provides support in libcache-apt-perl 0.8.1 for
+    more robust checks
+  * Update pt_BR debconf translation
+  * emprunecross: fix uninitialized variable
+  * bash/emdebian-tools: Improve bash completion support and install the
+    new support file by default
+  * bash/emdebian-rootfs: Provide bash completion support for rootfs
+    scripts too.
+  * em_autobuild: declare bashism and fix interpreter to specify bash
+   (Closes: #476753)
+
+ -- Neil Williams <codehelp@debian.org>  Sat, 19 Apr 2008 07:36:26 +0100
+
+emdebian-tools (1.0.0) unstable; urgency=low
+
+  * Migrate Emdebian changes into Debian package
+  * [INTL:eu] debconf templates Basque translatio (Closes: #475289)
+
+ -- Neil Williams <codehelp@debian.org>  Fri, 11 Apr 2008 20:06:56 +0100
+
+emdebian-tools (0.9.4) unstable; urgency=low
+
+  * Interim Emdebian release to test new debconf configuration.
+  * emdebuild: Remove shlibdeps and pkg-config workarounds,
+   due to sane cross building environment implemented by
+   dpkg-dev (>= 1.14.17).
+  * emdebian-tools.templates: New debconf question for primary mirror
+    selection.
+  * emdebian-rootfs.templates: revise text to emphasise the need for a
+    writable directory
+  * emdebian-tools.postinst, emdebian-tools.config: Migrate primary
+    mirror detection code into config to work with the new debconf
+    question and store the primary mirror selection in
+    /etc/emsource.conf instead of adding the actual apt source.
+  * control: drop libtext-balanced-perl dependency which is already part
+    of perl-modules.
+  * emsetup, emsource: check the debconf value for 'primary' and pass
+    that as a mirror to apt-cross
+  * emchain: Divide out force, uclibc and a new ignore option into
+    commands; add a warning if a usable toolchain exists and use --
+    ignore to allow to override that check
+  * Emdebian::Tools - support for retrieving 'primary' setting from
+    debconf
+  * [INTL:pt] Updated Portuguese translation for debconf messages
+    (Closes: #473472)
+  * [INTL:ru] Russian debconf templates translation update (Closes:
+    #473616)
+  * [INTL:fr] French debconf templates translation update (Closes:
+    #473554)
+  * [INTL:gl] Galician debconf template translation for emdebian-tools
+    (Closes: #473492)
+  * [INTL:fi] Updated Finnish translation of the debconf templates
+    (Closes: #473650)
+  * emdebian-rootfs.postrm: purge /etc/emsandbox.conf from rootfs
+    package, not tools.
+  * emdebcheck: enable STDIN mode and parse multiple files in one
+    operation to handle internal dependencies
+  * emrecent: pass multiple files to emdebcheck to handle internal
+    dependencies
+  * Emdebian::Tools; return an undef if no primary needs to be used.
+    (easier parsing)
+  * [INTL:vi] Vietnamese debconf templates translation update (Closes:
+    #473728)
+  * [l10n] Updated Czech translation of emdebian-tools debconf messages
+    (Closes: #474111)
+  * [INTL:de] updated German debconf translation (Closes: #474150)
+  * checks/emdebian: New lintian extension to separate the build checks
+    from emdebuild into lintian
+  * control: depend on lintian to use new lintian tests
+  * em_installtdeb: include functions from Emdebian::Tools and fix arch
+    check
+  * emsource: run lintian during --status and check for emrecent error
+    logs
+  * emdebuild: Replace build checks with lintian support
+  * embug: add --list-bugs and --list-newer sub-options
+  * embug: handle more than one cross built bug per package
+  * emrecent: add lintian support
+  * embug: implement a hierarchy in the flags to indicate severity of
+    the breakage
+  * embuildstats: add --lintian option to iterate over all locally built
+    packages and run the Emdebian lintian checks
+  * emdebcheck: handle .changes files directly
+  * emsource --status: report if the most recent build log ends with
+    'dpkg-buildpackage: failure'
+  * emdebuild: provisional and possibly incomplete support for OR
+    dependencies - handle architecture lists.
+  * emrecent: handle a single .changes file on the command line
+  * emdebcheck: ensure Pre-Depends are available to edos-debcheck
+  * emsetup: fail if not actually Debian and advise on using a chroot
+  * embug: add a --failed option for FTBFS (patches must be up to date)
+  * emdebuild: use embug --failed when dpkg-buildpackage exits with an
+    error
+  * emsource: retrieve exit status from emdebuild in autobuild mode.
+    exit with error if patches fail to apply in autobuild mode
+  * em_autobuild: Add code behind the --omit option and add configurable
+    behaviour when builds fail
+  * ta.po: Updated Tamil debconf translation
+  * emdebian-tools.postinst: don't ask for workdir or targetsuite as
+    these are not set by this postinst anymore, use emdebian-
+    rootfs.postinst instead
+  * pbuilder/emdebian.buildd: disable Apt Recommends behaviour inside
+    the chroot
+  * pbuilder/embootstrap: use primary for MIRROR if set via debconf,
+    otherwise default to a http URL for easier use with proxies
+  * Prepare a 0.9.4 upload for Emdebian, pending 1.0.0 for Debian
+  * emdebhelper.mk: sync with current cdbs and add a last-ditch rule to
+    remove manpages
+  * ensure targetsuite is set in both postinst scripts and get
+    Emdebian::Tools to handle any conflicts
+
+ -- Neil Williams <codehelp@debian.org>  Wed, 09 Apr 2008 21:52:54 +0100
+
+emdebian-tools (0.9.3) unstable; urgency=low
+
+  * Emdebian interim release
+  * embug, emsource: Track packages with out of date patches in SVN
+  * em_autobuild: New autobuilder for target packages
+  * Package em_autobuild in main tools package
+  * emdebuild: don't test architecture of symbolic links
+  * em_autobuild: Add dependency lookups
+  * emtargetcmp: record out of date packages using embug -d
+  * emsource: pass the --arch option to emdebuild and empdebuild
+  * emdebuild: skip undefined dependency info and return if no
+    dependencies listed.
+  * Emdebian::Tools - add get_standards_version as a single place to
+    update it.
+  * embug: Separate support for out of date patches from filed bugs.
+  * emsource: add patch status output to stats
+  * emchain: add experimental support for uClibc toolchains
+
+ -- Neil Williams <codehelp@debian.org>  Sat, 29 Mar 2008 20:29:54 +0000
+
+emdebian-tools (0.9.2) unstable; urgency=low
+
+  * Check workdir is writable
+  * Ask the workingdir question for both the -tools and the -rootfs
+    packages
+  * control:ensure emdebuild has the latest version of libdebian-
+    dpkgcross-perl
+  * Emdebian::Tools : ensure the targetsuite value is used, remove the
+    default
+  * emsource: ensure machine-patch.stamp is created (thanks to David
+    Goodenough).
+
+ -- Neil Williams <codehelp@debian.org>  Sat, 22 Mar 2008 18:42:42 +0000
+
+emdebian-tools (0.9.1) unstable; urgency=low
+
+  * Migrate Replaces: into Debian package to allow migration due to
+    package split
+
+ -- Neil Williams <codehelp@debian.org>  Sun, 16 Mar 2008 12:47:16 +0000
+
+emdebian-tools (0.9.0) unstable; urgency=low
+
+  * New Debian release with package split
+
+ -- Neil Williams <codehelp@debian.org>  Sun, 16 Mar 2008 12:46:44 +0000
+
+emdebian-tools (0.8.5) unstable; urgency=low
+
+  * Add Replaces: to allow migration due to package split
+
+ -- Neil Williams <codehelp@debian.org>  Wed, 12 Mar 2008 22:07:28 +0000
+
+emdebian-tools (0.8.4) unstable; urgency=low
+
+  * Merge package split branch into trunk
+  * emdebian-rootfs: Suggest screen to cope with USB over serial
+  * emdebian-rootfs: Add Replaces to give a smooth migration from single
+    package
+  * empbuilderlib: improve rcS and inittab handling for easier boot
+    setup
+
+ -- Neil Williams <codehelp@debian.org>  Wed, 12 Mar 2008 20:16:06 +0000
+
+emdebian-tools (0.8.3) unstable; urgency=low
+
+  * Interim Emdebian release.
+  * emsecondstage: ensure cdebconf environment is setup before
+    configuring packages
+  * emdebian.gpe: Add extra packages needed to allow the gpe package set
+    to boot.
+  * Emdebian::Tools, (create_patches) : skip generated files.
+    [*.debhelper, *.substvars, files]
+  * em_installtdeb: support special modes via debian/xcontrol
+  * Support unpack method in basic emsandbox rootfs
+  * embootstrap: continue after some errors
+  * Support unpack method in gtk emsandbox rootfs
+  * Simplify basic empdebuild chroot and copy in hostname files
+  * empbuilderlib: add support for creating skeleton versions of
+    /etc/group and /etc/passwd.
+  * empbuilderlib: add an approximate time set func for use when no
+    network is available.
+  * emsecondstage: configure cdebconf before others so that the database
+    is ready
+  * embootstrap: use the new support in empbuilderlib for group, passwd
+    and date
+  * Add --arch support to em_installtdeb
+  * Depend on new support in libdebian-dpkgcross-perl
+  * empdebuild: force the -S argument to apt-cross to prevent
+    intermittent failures
+  * empbuilderlib: parse the .list contents from dpkg
+  * embootstrap: ensure buildplace is clean before starting a fresh
+    debootstrap
+  * emdebuild: use dpkg-cross support for detect arch to distinguish
+    between arm and armel binaries
+  * Emdebian::Tools. add parse_xcontrol function for easy queries of
+    debian/xcontrol
+  * pbuilder/emdebian.crossd|gpe|gtk : Tidy up the scripts with routine
+    calls to the empbuilderlib library
+  * pbuilder/empbuilderlib: Add some common routines to help make the
+    rootfs bootable
+  * pbuilder/emsecondstage: bring into line with other changes in the
+    suite scripts
+  * empbuilderlib.3 : Add a manpage for the expanded set of common
+    functions in empbuilderlib
+  * Suggest file-roller for inspection of rootfs tarballs
+  * emdebhelper.mk: sync with recent changes in CDBS for debhelper
+    support
+
+ -- Neil Williams <codehelp@debian.org>  Sun, 09 Mar 2008 23:03:04 +0000
+
+emdebian-tools (0.8.2) unstable; urgency=low
+
+  * Interim Emdebian release.
+  * em_installtdeb: handle separate build trees where po/Makefile does
+    not exist.
+  * Emdebian::Tools: (create_patches) : Skip binary files, only create
+    patches for text files.
+  * emrecent : new script for upload assistance using zenity or whiptail.
+  * control: depend on whiptail or zenity for emrecent.
+  * emsource: read emrecent log output if in use.
+  * emdebcheck: new script to run pre-upload tests on cross-built
+    packages
+  * empbuilderlib: incorporate 'unpack' support to replace second stage
+
+ -- Neil Williams <codehelp@debian.org>  Wed, 20 Feb 2008 14:22:09 +0000
+
+emdebian-tools (0.8.1) unstable; urgency=low
+
+  * Interim Emdebian release
+  * emsetup: output progress during download wget to help debugging
+  * emsource: add outline support for machine variant patches
+  * emdebuild, emsource: disable SVN commits if machine customisations
+    are in use.
+  * Update manpage for emsource machine;variant support
+  * [INTL:de] updated German debconf translation (Closes: #464036)
+  * embug: new helper script using SOAP to query bugs.debian.org for
+    cross-building bugs.
+  * Emdebian::Tools - add bug_config support
+  * emsource: add bug listing to --status
+  * postinst: Improve detection of existing primary mirrors to match
+    any suite. (Closes: #464913)
+  * emsource: allow ++ in package names.
+  * emdebuild: allow ++ in package names for build tests.
+  * embug: escape + to support all file names
+
+ -- Neil Williams <codehelp@debian.org>  Mon, 11 Feb 2008 12:28:20 +0000
+
+emdebian-tools (0.8.0) unstable; urgency=low
+
+  * New Debian release.
+  * [INTL:eu] Basque debconf templates translation update
+    (Closes: #459867)
+  * [INTL:ru] Russian debconf templates translation update -
+    Debian Bug report logs (Closes: #459945)
+  * [INTL:pt] Updated Portuguese translation for debconf messages
+    (Closes: #460804)
+  * [l10n] Updated Czech translation of emdebian-tools debconf messages
+    (Closes: #460949)
+  * emdebuild: Check for Architecture:all packages before starting. Exit
+    if no binary packages are available for the selected arch
+  * Bump version of libcache-apt-perl dependency for architecture check
+    support
+  * emsource: Check for Architecture:all packages - no need to cross
+    build, no need to store patches in Emdebian SVN
+  * [INTL:fi] Updated Finnish translation of the debconf templates
+    (Closes: #462279)
+  * emtargetcmp: workaround regression in apt where List-Cleanup=off is
+    ignored
+  * emchain: give the full path to the log file on error
+  * add a download option for emsetup
+
+ -- Neil Williams <codehelp@debian.org>  Fri, 01 Feb 2008 17:51:06 +0000
+
+emdebian-tools (0.7.4) unstable; urgency=low
+
+  * Interim Emdebian release
+  * emsetup: check for an updated emdebian-tools package in Emdebian
+  * empdebuild: login should be as close to failsafe as possible so do
+    v.little else.
+  * Emdebian::Tools - avoid metapackages in checks for latest gcc and
+    libc by looking for a binary package in the cache
+  * manpage/debconf unclear on default directory for emsource (Closes: #459780)
+  * Move po-debconf from Build-Depends-Indep back to Build-Depends to
+    support clean target
+  * emsource: Detect if tree already exists and simply exit with a
+    message
+  * [INTL:gl] Galician debconf template translation for emdebian-tools
+    (Closes: #459796)
+  * emdebuild: use Dpkg::Deps to allow any valid construct in
+    debian/xcontrol
+
+ -- Neil Williams <codehelp@debian.org>  Tue, 08 Jan 2008 23:38:02 +0000
+
+emdebian-tools (0.7.3) unstable; urgency=low
+
+  * Interim Emdebian release
+  * em_installtdeb: allow 'bad' po files by dropping msgfmt check and
+    handle epochs
+  * emdebhelper.mk: Prevent CDBS packaging locale files now that
+    em_installtdeb is in use
+  * em_installtdeb: extended for 'tar-within-a-tar' packages like grep
+  * em_installtdeb: extended for packages with specialised multiple po
+    handling like apt
+  * em_installtdeb: exit cleanly if no translations exist
+  * em_installtdeb: avoid packaging debconf and manpage translations
+  * Emdebian::Tools.pm - skip debian patch directories
+  * emdebuild: correlate em1 with -sa option even when incrementing or
+    changelog patch has failed
+  * emdebuild: error out on unrecognised options
+  * emsetup: exit cleanly if build=host or in special i386/amd64 case
+  * Expand overview manpage to document emlocale removal
+  * Add NEWS file about emlocale removal
+  * emdebuild: make gccross support optional, packages will need to use
+    X-Build-Cross-Libtool in debian/xcontrol.
+
+ -- Neil Williams <codehelp@debian.org>  Tue, 01 Jan 2008 14:26:49 +0000
+
+emdebian-tools (0.7.2) unstable; urgency=low
+
+  * Interim Emdebian release
+  * first working version of emdebian TDeb support
+  * emsource: remove call to emlocale in favour of em_installtdeb in the
+    build itself
+  * em_make: remove call to emlocale in favour of em_installtdeb in the
+    build itself
+  * emlocale: Remove from package.
+  * emdebuild: remove emlocale patch files from old builds
+  * Use msgfmt instead of $(MAKE) to rebuild pot and gmo files
+  * em_installtdeb: Convert into a separate build process with own
+    source, dsc and changes
+  * emdebuild: remove patches from svn when removed by the build
+  * emdebuild: revert locale patches so that removal goes ahead
+  * Add outline support for the debian-xcontrol package.
+
+ -- Neil Williams <codehelp@debian.org>  Sat, 22 Dec 2007 22:05:57 +0000
+
+emdebian-tools (0.7.1) unstable; urgency=low
+
+  * Interim Emdebian release.
+  * emsource: run empdebuild under nice.
+  * emsource: auto install build deps with apt-get -y
+  * empdebuild: put debian patch files into debian/patches and rename
+    with sed
+  * embuildstats: add libtext-formattable-perl dependency to
+    debian/control
+  * empdebuild: ensure build result tree is writeable by the sudo user
+    to make it easier to sign .changes files from chroot builds
+  * embuildstats: add CSV, XML and HTML output formats
+  * empdebuild: give the final location of the .changes and the .dsc
+    upon success
+  * emdebuild: output the build directory location (useful with emsource
+    -b)
+  * emprunecross: New script to remove cross packages whilst preserving
+    the toolchain
+  * embuildstats: handle epochs when calculating .changes filename
+  * emdebuild: document plans for debian-xcontrol support and workaround
+    disablement
+
+ -- Neil Williams <codehelp@debian.org>  Wed, 12 Dec 2007 16:28:05 +0000
+
+emdebian-tools (0.7.0) unstable; urgency=low
+
+  * check empdebuild status as well as emdebuild
+  * emsource: add build-dep option that is passed down to emdebuild (but
+    not empdebuild)
+  * emsource: install (or check) apt-get build deps as well as cross
+  * emsource: use catch_no_dir in --where to locate the actual directory
+  * use the apt-cross quiet mode if emdebuild --quiet also set
+  * empdebuild: disable colours in called perl scripts and allow use as
+    root, not just sudo
+  * emdebuild: allow patch files that contain '+' and other wildcards
+  * emlocale: handle file content separately from control content to
+    allow missing po files to be packaged
+  * emlocale: handle translations for packages that are not actually in
+    the archive too.
+  * embuildstats: simple report tool (new script)
+
+ -- Neil Williams <codehelp@debian.org>  Tue, 11 Dec 2007 12:03:53 +0000
+
+emdebian-tools (0.6.3) unstable; urgency=low
+
+  * empdebuild: proceed if no debian-patch*.patch files exist
+  * emsource: add --where-is and --status commands
+
+ -- Neil Williams <codehelp@debian.org>  Sat, 08 Dec 2007 13:13:05 +0000
+
+emdebian-tools (0.6.2) unstable; urgency=low
+
+  * embootstrap: support old and new versions of debootstrap
+  * embootstrap: Add support for relocating the machine directory
+  * emchain: use DEB_CROSS instead of DEB_CROSS_INDEPENDENT
+  * emsource: ensure --arch argument is passed to the cache
+  * Update standards version (no changes)
+  * empdebuild: use all the patches, including debian-patch*.patch
+
+ -- Neil Williams <codehelp@debian.org>  Fri, 07 Dec 2007 20:22:48 +0000
+
+emdebian-tools (0.6.1) unstable; urgency=low
+
+  * Ignore comments in build tests
+  * Add debootstrap scripts for gtk and gpe
+  * emlocale: handle control.in substution macros
+  * emdebuild: work around for packages that are Architecture: all with
+    a .pc file
+  * emsandbox: typo in usage info
+  * embootstrap: adapt to debootstrap changed layout
+
+ -- Neil Williams <codehelp@debian.org>  Tue, 27 Nov 2007 21:34:48 +0000
+
+emdebian-tools (0.6.0) unstable; urgency=low
+
+  * emdebuild: Add tests for maintainer scripts
+  * emdebuild : use -sa with --next
+  * pbuilder/empdebuild : ensure devscripts are handled after build
+    place is created
+  * pbuilder/empdebuild : add --login-after-fail option
+  * pbuilder/empdebuild: turn off recommends and automatic removal
+    in apt dist-upgrade
+  * pbuilder/empdebuild: Use the apt-cross -k option to save repeated
+    downloads
+
+ -- Neil Williams <codehelp@debian.org>  Mon, 19 Nov 2007 18:38:33 +0000
+
+emdebian-tools (0.5.4) unstable; urgency=low
+
+  * em_make: Fix annoying bug when changelog cannot be applied - em_make
+    corrupts .old
+  * emsource : migrate prepare_pristine into the module
+  * emlocale : Use XC-Package-Type: tdeb
+  * emsetup : check toolchains with edos-debcheck
+  * em_make : use prepare_pristine to help building packages from
+    outside Debian
+  * emlocale: check the po/ directory for updates as well as
+    repositories
+
+ -- Neil Williams <codehelp@debian.org>  Sun, 11 Nov 2007 19:14:12 +0000
+
+emdebian-tools (0.5.3) unstable; urgency=low
+
+  * Interim Emdebian release
+  * typo in DEB_BUILD_OPTIONS
+  * allow translation files to match even if filename is not identical
+    to source
+  * some locales use ucfirst after @, some do not. Use i in the match.
+
+ -- Neil Williams <codehelp@debian.org>  Wed, 07 Nov 2007 11:54:41 +0000
+
+emdebian-tools (0.5.2) unstable; urgency=low
+
+  * Support native builds
+  * Add dependencies on build tools and patch systems
+  * Stop enforcing -B option to dpkg if not for arm
+  * Check for hostname -f support for chroot usage
+  * Prevent emlocale tinkering with debian/rules
+
+ -- Neil Williams <codehelp@debian.org>  Sat, 03 Nov 2007 14:11:05 +0000
+
+emdebian-tools (0.5.1) unstable; urgency=low
+
+  * Probably best to depend on latest libcache-apt-perl for recent fixes
+  * emlocale: Allow scanning of existing locale upstream packages
+  * Change emdebuild behaviour to ignore native build dependencies,
+     add --build-dep support to install cross build dependencies.
+  * set a usable fstab file and use the new archive-keyring for the
+    emdebian key
+
+ -- Neil Williams <codehelp@debian.org>  Fri, 02 Nov 2007 11:15:31 +0000
+
+emdebian-tools (0.5.0) unstable; urgency=low
+
+  * New Debian release.
+  * Cannot build armeb cross compiler (Closes: #440064)
+  * include all available sources in bug script
+  * improve emchain source version failure message
+  * ensure the host cache is updated in emsetup
+  * emdebian-tools depends on debconf *twice*; blocks cdebconf
+    transition (Closes: #448476)
+
+ -- Neil Williams <codehelp@debian.org>  Tue, 30 Oct 2007 12:22:19 +0000
+
+emdebian-tools (0.4.3) unstable; urgency=low
+
+  * [INTL:vi] Vietnamese debconf templates translation update
+    (Closes: #447259)
+  * migrate to new debootstrap support
+  * [INTL:pt] Updated Portuguese translation for debconf messages
+    (Closes: #447385)
+  * migrate to libcache-apt-perl 0.3.2
+  * use realpath to show the location of the changes file
+  * [l10n] Updated Czech translation of emdebian-tools debconf messages
+    (Closes: #447437)
+  * removing glibc-gconv and gcc-4.2-base, adding gnupg
+  * fix typo in emsecondstage call to new debootstrap function
+  * add note on how SHELL and /etc/passwd affect chroot in Debian
+  * enable hooks for emsandbox
+  * enable hooks for emsecondstage
+  * [INTL:de] updated German debconf translation (Closes: #447634)
+  * export DEBCONF_USE_CDEBCONF to allow cdebconf to act as debconf
+  * allow gccross to be symlinked to gcc even if gcc is a symlink
+  * Outline support for machine-type and variant customisations within
+    emsandbox
+  * Include skeleton copies of the customisation scripts
+  * allow modifications to files in debian/patches
+
+ -- Neil Williams <codehelp@debian.org>  Sat, 27 Oct 2007 17:45:26 +0100
+
+emdebian-tools (0.4.2) unstable; urgency=low
+
+  * Interim Emdebian release
+  * [INTL:gl] Galician debconf template translation for emdebian-tools
+    (Closes: #447077)
+  * Updating Swedisk debconf translation: Daniel Nylander
+  * [INTL:eu+ Basque debconf template translation for emdebian-tools
+    (Closes: #447130)
+  * [INTL:fi] Finnish translation of the debconf templates
+    (Closes: #447157)
+  * [INTL:ru] Russian debconf templates translation update
+    (Closes: #447177)
+
+ -- Neil Williams <codehelp@debian.org>  Thu, 18 Oct 2007 18:35:08 +0100
+
+emdebian-tools (0.4.1) unstable; urgency=low
+
+  * New Emdebian interim release.
+  * Package missing emsecondstage script for emsandbox
+  * Add pbuilder automation to emsource
+  * Ensure devscripts config is copied into the chroot
+  * empbuilderlib: Fix typo in perl binding
+  * add a reportbug info script
+  * stop detecting the suite, use debconf to set a static value
+  * add colour to em_make and emchain
+  * drop need for libstdc++6-4.2-dbg--cross
+
+ -- Neil Williams <codehelp@debian.org>  Wed, 17 Oct 2007 23:01:35 +0100
+
+emdebian-tools (0.4.0) unstable; urgency=low
+
+  * New Debian release.
+  * emsource: move old builds into ../branches/ to ensure trunk/ is
+    clean
+  * emdebuild: handle gccross and shlibdeps internally, instead of
+    waiting for dpkg
+
+ -- Neil Williams <codehelp@debian.org>  Mon, 15 Oct 2007 01:53:39 +0100
+
+emdebian-tools (0.3.9) unstable; urgency=low
+
+  * migrate to dpkg-cross 2.0.0
+  * emsetup: migrate to check_arch() from  due to Debian::DpkgCross
+    changes
+  * debian/control: replacing flex and gcc with build-essential, adding
+    new aptcross and dpkgcross modules
+  * postinst: extend regexp to cope with non-free and contrib
+  * emdebian-tools postinst causes duplicate if non-free or contrib in
+    use. (Closes: #439100)
+  * Begin migration to apt-cross 0.3.0
+  * Convert emlocale to Cache::Apt and stop adding redundant lines
+  * Convert emchain to Cache::Apt
+  * Convert emsource to Cache::Apt and wrap error messages nicely
+  * use Text::ANSIColor for clearer error and status reports
+  * implement an autobuild option
+  * Allows attempt to build armeb cross compiler (Closes: #440064)
+  * Create a manpage for the package via pod2man
+  * emdebuild: check the arch of built files
+  * emsandbox: improved second-stage handling after testing on Balloon3
+
+ -- Neil Williams <codehelp@debian.org>  Sat, 06 Oct 2007 22:16:11 +0100
+
+emdebian-tools (0.3.1) unstable; urgency=low
+
+  * Interim Emdebian release
+  - emlocale : skip our own packages
+  - Emdebian/Tools.pm : Create patches for new files in debian/
+  * emchain incorrectly predicts source diretory created by apt-get
+    source (Closes: #432190)
+
+ -- Neil Williams <codehelp@debian.org>  Wed, 01 Aug 2007 12:08:03 +0100
+
+emdebian-tools (0.3.0) unstable; urgency=low
+
+  * New Debian release incorporating all interim
+  Emdebian changes in the 0.2.x series.
+  * depends on non-essential package ucf in postrm (Closes: #431677)
+
+ -- Neil Williams <codehelp@debian.org>  Fri, 06 Jul 2007 21:29:59 +0100
+
+emdebian-tools (0.2.6) unstable; urgency=low
+
+  * pbuilder/empdebuild : Check the Build-Cross-Depends data is not
+  empty before calling apt-cross.
+  * empdebuild : Output the name of the .changes file to make it
+  easier to use deb-gview to inspect the built package(s).
+  * [l10n] Updated Czech translation of emdebian-tools debconf messages
+    (Closes: #431468)
+
+ -- Neil Williams <codehelp@debian.org>  Mon, 02 Jul 2007 21:39:59 +0100
+
+emdebian-tools (0.2.5) unstable; urgency=low
+
+  * emsource: Add cleanup support.
+    Support debian/rules.d & debian/control.in
+  * [INTL:fr] French debconf templates translation (Closes: #430987)
+  * emsetup: accept linux-libc-dev where linux-kernel-headers is
+    not installed.
+  * emchain: Include support for a --force option to try to build
+  the toolchain even if the native build has failed.
+  * [INTL:pt] Updated Portuguese translation for debconf messages
+    (Closes: #431121)
+  * [INTL:de] updated German debconf translation (Closes: #431153)
+
+ -- Neil Williams <codehelp@debian.org>  Sat, 30 Jun 2007 23:06:17 +0100
+
+emdebian-tools (0.2.4) unstable; urgency=low
+
+  * Standardise package version handling,
+    package missing file, debconf template changes.
+  * [INTL:gl] Galician debconf template translation for emdebian-tools
+    (Closes: #429925)
+  * [INTL:sv] Swedish debconf templates translation
+    (Closes: #429896)
+  * emdebian-tools : [INTL:pt] Updated Portuguese translation for
+    debconf messages (Closes: #430042)
+
+ -- Neil Williams <codehelp@debian.org>  Fri, 22 Jun 2007 08:33:13 +0100
+
+emdebian-tools (0.2.3) unstable; urgency=low
+
+  * Some fixes for empdebuild and emsetup to make chroot
+    usage easier. Package emsandbox for the first time.
+
+ -- Neil Williams <codehelp@debian.org>  Wed, 20 Jun 2007 11:42:48 +0100
+
+emdebian-tools (0.2.2) unstable; urgency=low
+
+  * emdebuild : Handle all modified files in debian/
+  * emsource : Handle partial builds and updated packages.
+  Disable SVN developer access if not using unstable (or sid).
+  * Emdebian/Tools.pm : use libtext-diff-perl instead of spawning
+  another system process. (Adds libtext-diff-perl dependency.)
+  Avoid zero length patches, use a better name for debian patches
+  (debian-patch-$file) to differentiate from emdebian-$file.patch.
+  * emchain : Reinstate warning when native build has failed.
+  Change log method to use tee. Saves memory and covers all output.
+  * emsetup : Allow automated toolchain installation.
+  * emlocale : Use a default priority (optional) for locale packages.
+  * debian/control : Add missing dependency on devscripts.
+  * pbuilder/*,
+  empdebuild : Add a cross-building chroot for unstable and testing.
+  * [INTL:vi] Vietnamese debconf templates translation (Closes: #426880)
+
+ -- Neil Williams <codehelp@debian.org>  Thu, 31 May 2007 16:04:15 +0100
+
+emdebian-tools (0.2.1) unstable; urgency=low
+
+  * Re-enable dh_shlibdeps in CDBS packages.
+  * Fix emlocale to work with epochs.
+
+ -- Neil Williams <codehelp@debian.org>  Sat, 12 May 2007 15:44:05 +0100
+
+emdebian-tools (0.2.0) unstable; urgency=low
+
+  * Debian release incorporating Emdebian changes in v0.1x.
+  * [INTL:pt] Updated Portuguese translation for debconf messages
+    (Closes: #416414)
+  * [l10n] Updated Czech translation of emdebian-tools debconf messages
+    (Closes: #416532)
+  * [INTL:ru] Russian debconf templates translation (Closes: #416592)
+  * [INTL:ml] Malayalam debconf translation (Closes: #416607)
+  * [INTL:fr] French debconf templates translation (Closes: #417148)
+  * [INTL:de] initial German debconf translation (Closes: #417602)
+  * [INTL:pt_BR] Brazilian Portuguese debconf PO translations
+    (Closes: #418225)
+  * [INTL:it] Italian debconf template translation (Closes: #418373)
+
+ -- Neil Williams <codehelp@debian.org>  Tue, 10 Apr 2007 22:52:01 +0100
+
+emdebian-tools (0.1.5) unstable; urgency=low
+
+  * Use ucf to handle changes to configuration files.
+  - remove lintian override, #406731 is now closed.
+  - Improve determination of $suite variable
+  - Only add a primary mirror if an apt-cache test fails.
+  - Document changes in manpages.
+
+ -- Neil Williams <codehelp@debian.org>  Fri, 06 Apr 2007 18:09:23 +0100
+
+emdebian-tools (0.1.4) unstable; urgency=low
+
+  * Interim Emdebian release.
+  - Improved behaviour in a chroot
+  - use maintainer scripts to add Emdebian repository
+  - extra dependencies from debootstrap experiments
+
+ -- Neil Williams <codehelp@debian.org>  Tue, 03 Apr 2007 20:27:32 +0100
+
+emdebian-tools (0.1.3) unstable; urgency=low
+
+  * Interim Emdebian release.
+  - Fix emdebuild bugs when ~/.devscripts is absent
+  - Migrate all manpage XML to UTF-8
+  - New debconf question for users who prefer aptitude to apt-get
+  - Document need for a 'primary debian mirror' to catch the few
+  cases where the installation uses a mirror with a limited number
+  of supported architectures.
+  - Explain more about failures if the wrong working directory is
+  specified by the user in debconf.
+
+ -- Neil Williams <codehelp@debian.org>  Tue, 27 Mar 2007 00:42:28 +0100
+
+emdebian-tools (0.1.2) unstable; urgency=low
+
+  * Emdebian interim release to expand support for new arches.
+  emdebuild: incorporate .changes into .build logs.
+  emsetup:   handle new arches cleanly.
+
+ -- Neil Williams <codehelp@debian.org>  Mon, 26 Mar 2007 12:45:54 +0100
+
+emdebian-tools (0.1.1) unstable; urgency=low
+
+  * Emdebian release to match with repository changes.
+
+ -- Neil Williams <codehelp@debian.org>  Sun, 25 Mar 2007 09:52:56 +0100
+
+emdebian-tools (0.1.0) unstable; urgency=low
+
+  * Debian release. Fix handling of unknown architectures,
+  fix update of apt-cross cache data between arches and
+  use cleaner error messages.
+  * [INTL:ja] Japanese debconf templates translation (Closes: #414297)
+
+ -- Neil Williams <codehelp@debian.org>  Sun, 11 Mar 2007 17:12:33 +0000
+
+emdebian-tools (0.0.5) unstable; urgency=low
+
+  * Fix bug in emsource checkout.
+  - Avoid calling emlocale with emdebuild.
+  (internal emdebian release)
+
+ -- Neil Williams <codehelp@debian.org>  Sat, 24 Feb 2007 23:34:24 +0000
+
+emdebian-tools (0.0.4) unstable; urgency=low
+
+  * New release. Adds emsource (with debconf questions) and
+  fixes bugs in emlocale. Added dependency on Config::Auto
+  and subversion.
+  * Add [INTL:pt] Portuguese translation for debconf messages
+  (Closes: #409083)
+  * Add [l10n] Czech translation of emdebian-tools debconf messages
+  (Closes: #409087)
+  * [INTL:nl] Dutch debconf templates translation (Closes: #410197)
+
+ -- Neil Williams <codehelp@debian.org>  Thu,  8 Feb 2007 18:32:30 +0000
+
+emdebian-tools (0.0.3) unstable; urgency=low
+
+  * Initial Debian release. (Closes: #405961: ITP: emdebian-tools -- emdebian
+    crossbuilding tool set - Debian Bug report logs)
+
+ -- Neil Williams <codehelp@debian.org>  Tue, 23 Jan 2007 21:59:30 +0000
+
+emdebian-tools (0.0.2) unstable; urgency=low
+
+  * Remove udeb packages from debian/control.
+  - Improve patch creation.
+
+ -- Neil Williams <codehelp@debian.org>  Sun,  7 Jan 2007 17:45:18 +0000
+
+emdebian-tools (0.0.1) unstable; urgency=low
+
+  * Initial release for emdebian.
+
+ -- Neil Williams <codehelp@debian.org>  Fri,  8 Dec 2006 16:58:39 +0000

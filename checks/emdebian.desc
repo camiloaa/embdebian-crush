@@ -1,0 +1,125 @@
+Check-Script: emdebian
+Author: Neil Williams <codehelp@debian.org>
+Abbrev: crush
+Type: binary, udeb, source
+Needs-Info: objdump-info, file-info, unpacked
+Info: This script checks binaries and object files for bugs.
+
+Tag: binary-is-wrong-architecture
+Severity: serious
+Certainty: certain
+Type: error
+Info: The binary or shared library is the wrong architecture.
+ This is usually a failure of the Emdebian patches to set the
+ correct compiler.
+
+Tag: unsupported-interpreter-in-maintainer-script
+Severity: important
+Certainty: certain
+Type: error
+Info: The maintainer script needs an unsupported interpreter.
+ Maintainer scripts in Emdebian must not try to use perl
+ or python, no matter what dependencies are specified.
+ bash is not supported either - only sh.
+ .
+ Change the interpreter to #!/bin/sh and verify with
+ checkbashims.
+
+Tag: unsupported-interpreter-in-binary
+Severity: important
+Certainty: certain
+Type: error
+Info: The binary package includes an interpreted script.
+ Interpreted languages like perl and python are not supported
+ in Emdebian.
+ Shell scripts must not attempt to call bash as there is no
+ guarantee that /bin/bash will exist.
+
+Tag: maintainer-scripts-calls-replaced-binary
+Severity: wishlist
+Certainty: certain
+Type: warning
+Info: Emdebian Crush replaces some executables for modified behaviour
+ Certain unsupportable executables in Debian have been replaced in
+ Emdebian Crush with simple shell replacements. In certain cases,
+ (fmt), the replacement does a similar job using a different tool.
+ In other cases, the replacement does absolutely nothing but also
+ never results in an error condition.
+ .
+ No-op replacement scripts include update-alternatives and dpkg-divert
+ (from the dpkg-crush package) and update-rc.d (sysv-rc-crush package).
+ Packages which fail to operate with these replacements must provide
+ alternative support using acceptable interpreters and methods.
+
+Tag: maintainer-scripts-calls-unsupported-executable
+Severity: important
+Certainty: certain
+Type: error
+Info: Maintainer scripts in Emdebian must not call the
+ perl scripts update-pangox-aliases or getopts.
+
+Tag: maintainer-scripts-tries-to-process-a-manpage
+Severity: important
+Certainty: certain
+Type: error
+Info: Maintainer pages in Emdebian must not process manpages
+
+Tag: emdebian-tdeb-without-messages
+Severity: minor
+Certainty: certain
+Type: warning
+Info: The Emdebian TDeb does not contain a matching messages file.
+
+Tag: emdebian-package-contains-translations
+Severity: normal
+Certainty: certain
+Type: error
+Info: All translations must be in Emdebian TDeb packages.
+
+Tag: emdebian-package-contains-manpages
+Severity: important
+Certainty: certain
+Type: error
+Info: All manpages must be removed from Emdebian packages.
+
+Tag: emdebian-package-contains-docs
+Severity: important
+Certainty: certain
+Type: error
+Info: The package contains files in /usr/share/doc/
+ Only copyright.gz is allowed in /usr/share/doc/.
+
+Tag: emdebian-copyright-not-compressed
+Severity: important
+Certainty: certain
+Type: warning
+Info: copyright files should be compressed for Emdebian.
+
+Tag: emdebian-package-cannot-be-essential
+Severity: serious
+Certainty: certain
+Type: error
+Info: The package retains the Essential field in debian/control
+ To provide full flexibility in package selection and dependency
+ chains, no Emdebian package is allowed to be 'Essential'.
+
+Tag: unsupported-options-in-maintainer-script
+Severity: normal
+Certainty: possible
+Type: error
+Info: busybox does not accept long options for certain commands
+ e.g. mkdir --mode needs to be replaced by
+ mkdir -m and mkdir --parents by mkdir -p.
+ Other options (like grep -x) are simply missing in busybox.
+ Groups of similar options (like readlink -e | -f) are only
+ supported as a single option (readlink -f in this case.
+ To check individual commands, use:
+  busybox $command --help
+
+Tag: unnecessary-linda-overrides
+Severity: minor
+Certainty: certain
+Type: warning
+Info: linda is deprecated in Debian and linda overrides
+ are a waste of space in Emdebian. All linda overrides
+ need to be removed.

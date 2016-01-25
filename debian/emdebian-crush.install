@@ -1,0 +1,11 @@
+emvendor ./usr/bin
+emsource.sh ./usr/share/emdebian-crush/
+wrap-lintian.pl ./usr/share/emdebian-crush/
+toolchain.list ./usr/share/emdebian-crush/
+checks/emdebian ./usr/share/lintian/checks
+checks/emdebian.desc ./usr/share/lintian/checks/
+doc/emdebian-crush/* ./usr/share/
+bash/emdebian-crush ./etc/bash_completion.d/
+vendor/emdebian-crush ./etc/dpkg/origins/
+vendor/emdebian-crush.conf ./etc/emvendor.d/
+vendor/lintian/main.profile ./etc/lintian/profiles/emdebian-crush/

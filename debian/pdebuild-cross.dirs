@@ -1,0 +1,2 @@
+var/lib/pdebuild-cross/result/
+var/lib/pdebuild-cross/aptcache/

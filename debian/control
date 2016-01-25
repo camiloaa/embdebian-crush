@@ -1,0 +1,55 @@
+Source: emdebian-crush
+Section: utils
+Priority: extra
+Maintainer: Neil Williams <codehelp@debian.org>
+Uploaders: Wookey <wookey@debian.org>, Hector Oron <zumbi@debian.org>
+Build-Depends: cdbs (>= 0.4.73), debhelper (>= 5), po-debconf
+Build-Depends-Indep: po4a (>= 0.37.1)
+Standards-Version: 3.9.4
+Homepage: http://www.emdebian.org/crush/
+Vcs-Browser: http://www.emdebian.org/trac/browser/current/host/trunk/emdebian-crush/trunk
+Vcs-Svn: http://www.emdebian.org/svn/current/host/trunk/emdebian-crush/trunk/
+
+Package: emdebian-crush
+Architecture: all
+Depends: ${perl:Depends}, ${misc:Depends}, dpkg-dev,
+ emdebian-grip, libconfig-auto-perl, pdebuild-cross, sudo
+Suggests: svn-buildpackage
+Description: emdebian crossbuilding helpers
+ A collection of scripts and checks to ease cross-building Debian
+ packages for Emdebian to make functional changes that benefit
+ embedded systems and reducing the length of dependency chains.
+ .
+ This package primarily serves to support Emdebian Crush, the
+ cross-built distribution using busybox and lacking perl support.
+ For Emdebian Grip or Emdebian Baked support, see the emdebian-grip
+ package.
+
+Package: pdebuild-cross
+Architecture: all
+Section: devel
+Priority: optional
+Depends: ${misc:Depends}, gettext-base, multistrap (>= 2.1.9), fakeroot,
+ pbuilder, xapt (= ${source:Version})
+Suggests: svn-buildpackage
+Description: cross-building support for pbuilder
+ pdebuild-cross includes pbuilder hooks and a multistrap method to
+ setup a cross-building chroot compatible with pbuilder.
+ .
+ Cross-building pbuilder chroots use xapt to satisfy the
+ dependencies.
+
+Package: xapt
+Priority: optional
+Section: devel
+Architecture: all
+Depends: ${perl:Depends}, ${misc:Depends}, apt, dpkg-cross, dpkg-dev,
+ libconfig-inifiles-perl, libdpkg-perl, liblocale-gettext-perl
+Replaces: pdebuild-cross (<= 2.2.5.1)
+Description: retrieve, build and install libraries for cross-compiling
+ xapt wraps apt and calls dpkg-cross for the collected
+ archives. Downloaded files are passed directly to dpkg-cross.
+ .
+ embuilddeps can be used to parse debian/control to install the
+ native and or cross dependencies, using apt and xapt respectively,
+ for a particular unpacked source package.

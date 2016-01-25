@@ -1,0 +1,886 @@
+#!/usr/bin/perl
+
+# Copyright (C) 2009-2011  Neil Williams <codehelp@debian.org>
+# Copyright © 1998 Richard Braakman
+# Portions Copyright © 1999 Darren Benham
+# Portions Copyright © 2000 Sean 'Shaleh' Perry
+# Portions Copyright © 2004 Frank Lichtenheld
+# Portions Copyright © 2006 Russ Allbery
+
+# This package is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+use strict;
+use warnings;
+use File::Basename;
+use Cwd qw (realpath);
+use POSIX qw(locale_h);
+use Term::ANSIColor qw(:constants);
+use Config::IniFiles;
+use Locale::gettext;
+use Data::Dumper;
+use Dpkg::Deps;
+use Dpkg::Arch qw(get_host_arch debarch_is debarch_to_debtriplet);
+use Dpkg::ErrorHandling;
+use vars qw/ $progname $ourversion $name $deps $ret @list %res @constraint
+ @series $splice $constraint $version $check $pkg $policy @bits $limit
+ $c $msg $vendor $tools @dependencies @aptlist $use_sudo $pbuilding
+ $arch $dryrun $cmd $pdebuild_dsc $pdebuild_dir $pdebuild_cmd $dir $build
+ $pdebuild_target $pdebuild_opt $cmdline $buildconflict $archlimit
+ %buildarchdep @buildarchdeps @hostarchdeps @buildalts $facts $verbose
+ $configfile $vendor $noauth $vendor_name $config %crossres @unmet
+ $use_dsc $preserve $multiarch /;
+
+setlocale(LC_MESSAGES, "");
+textdomain("xapt");
+$verbose = 1;
+$progname = basename($0);
+$ourversion = &scripts_version();
+$build = `dpkg-architecture -qDEB_BUILD_ARCH`;
+$noauth='';
+$preserve='';
+$multiarch='';
+# fix broken shell command line parsing
+my @arg=();
+while( @ARGV ) {
+	my @ar = split(/ /, shift);
+	push @arg, @ar;
+}
+@ARGV=();
+push @ARGV, @arg;
+while( @ARGV ) {
+	$_= shift( @ARGV );
+	last if m/^--$/;
+	if (!/^-/) {
+		unshift(@ARGV,$_);
+		shift;
+		next;
+	} elsif (/^(-\?|-h|--help|--version)$/) {
+		&usageversion();
+		exit 0;
+	} elsif (/^(-k|--preserve)$/) {
+		$preserve = "-k";
+	} elsif (/^(-v|--verbose)$/) {
+		$verbose++;
+	} elsif (/^(-q|--quiet)$/) {
+		$verbose--;
+	} elsif (/^(-m|--multiarch)$/) {
+		$multiarch = "-m";
+	} elsif (/^(-a|--arch)$/) {
+		$arch = shift(@ARGV);
+		undef $arch if ($arch eq $build);
+		if (not defined (debarch_to_debtriplet ($arch))) {
+			warn RED, "$progname: ".sprintf(_g("Unknown architecture: %s"),$arch), RESET, "\n";
+			undef $arch;
+		}
+	} elsif (/^(-d|--dir)$/) {
+		$dir = shift;
+		if (-d $dir) {
+			$dir = realpath ($dir);
+			chdir ($dir);
+		} else {
+			die RED, "$progname: ".sprintf(_g("Unable to find '%s' directory"),$dir), RESET, "\n";
+		}
+	} elsif (/^(--use-sudo)$/) {
+		$use_sudo++;
+	} elsif (/^(--dsc)$/) {
+		$use_dsc = shift;
+		die RED, "$progname: "._g("Please specify a .dsc file"), RESET, "\n" if (not defined $use_dsc);
+	# allow pbuilder to pass arguments
+	} elsif (/^(--control)$/) {
+		$pdebuild_dsc = shift(@ARGV);
+	} elsif (/^(--internal-chrootexec)$/) {
+		$pdebuild_cmd = shift(@ARGV);
+		$pdebuild_cmd .= ' '.shift(@ARGV);
+	} elsif (/^(--chroot)$/) {
+		$pdebuild_dir = shift(@ARGV);
+	} elsif (/^(--binary-all)$/) {
+		$pdebuild_target = "--binary-all";
+	} elsif (/^(-n|--dry-run)$/) {
+		$dryrun++;
+	} else {
+		&usageversion();
+		die RED, "$progname: "._g("Unknown option")." $_.\n", RESET;
+	}
+}
+# work out if we need to use noauth using xapt config.
+$vendor = "debian";
+if (-f "/usr/bin/dpkg-vendor") {
+	$vendor_name = `LC_ALL=C dpkg-vendor --vendor $vendor --query vendor`;
+	chomp ($vendor_name);
+	$vendor_name = lc($vendor_name);
+} else {
+	$vendor_name = "debian";
+}
+$configfile = "/etc/xapt.d/$vendor_name.conf";
+die (RED, "$progname:", sprintf(_g("Cannot read /etc/xapt.d/%s.conf"), $vendor_name), RESET, "\n")
+	if (not -r "/etc/xapt.d/$vendor_name.conf");
+$configfile = "/etc/xapt.d/$vendor_name.conf";
+$config     = new Config::IniFiles( -file => $configfile );
+$noauth     = " -o Apt::Get::AllowUnauthenticated=true "
+	if ($config->val(lc($vendor_name), 'noauth') eq 'true');
+# work out if this is a pbuilder call
+if (defined $pdebuild_dir and defined $pdebuild_cmd) {
+	if (not -d $pdebuild_dir) {
+		warn RED, "$progname:", _g("Unknown option"), "$pdebuild_dir", RESET, "\n";
+		exit 1;
+	} else {
+		$pbuilding++;
+	}
+}
+if (not defined $use_dsc) {
+	# make sure the data is where we can find it.
+	if (not -f "debian/changelog") {
+		print `pwd` if ($verbose >= 1);
+		system ("ls -al") if ($verbose >= 2);
+	}
+	$name=`dpkg-parsechangelog|grep Source:`;
+	chomp ($name);
+	$name =~ s/Source: //;
+} else {
+	open (DSC, "$use_dsc") or
+		die (RED, "$progname:", sprintf(_g("Unable to open .dsc file: '%s'"), $use_dsc), RESET, "\n");
+	my @dsc=<DSC>;
+	close (DSC);
+	foreach my $dline (@dsc) {
+		if ($dline =~ /^Source: (.*)$/) {
+			$name = $1;
+		}
+	}
+}
+# begin parsing native build dependencies.
+if (defined $pbuilding) {
+	# now parse the native deps in the chroot
+	$facts = &parse_status("$pdebuild_dir/var/lib/dpkg/status");
+} else {
+	# now parse the native deps outside, as req'd.
+	$facts = &parse_status("/var/lib/dpkg/status");
+}
+&get_build_deps($facts);
+if (($verbose > 0) and defined $deps) {
+	print GREEN;
+	printf (_g("Checking that build dependencies '%s' for %s are installed.\n"), $deps, $name);
+	print RESET;
+}
+@unmet=();
+if ($deps) {
+	push @unmet, build_depends('Build-Depends/Build-Depends-Indep)',
+		deps_parse($deps, reduce_arch => 1), $facts);
+}
+if (@unmet) {
+	map { $_->output_pkg($_)} @unmet;
+}
+my $list = join (" ", sort keys %res);
+$cmd = (defined $use_sudo) ? "sudo" : "";
+# overwrite this if inside pbuilder.
+$cmd = (defined $pbuilding) ? $pdebuild_cmd : "";
+
+if (scalar keys %res <= 0) {
+	if ($verbose > 0) {
+		print GREEN;
+		printf (_g("No build dependencies to install for %s\n"), $name);
+		print RESET;
+	}
+	exit 0 if (not defined $arch);
+} else {
+	if ($verbose > 0) {
+		print GREEN;
+		printf (_g("%s needs dependencies installed:\n"), $name);
+		print RESET;
+	}
+	if (defined $pbuilding) {
+		$cmdline = "$cmd /usr/bin/apt-get update";
+		&run_command ($cmdline);
+	}
+	$cmdline = "$cmd /usr/bin/apt-get -y $noauth install " . join (" ", sort keys %res);
+	&run_command ($cmdline);
+	exit 0 if (not defined $arch);
+}
+# clear the dependency stack ready for cross dependencies.
+undef $facts;
+undef $deps;
+%res=();
+@unmet=();
+# doesn't matter if this is outside the chroot, it remains empty
+# until Multi-Arch is available.
+my $status = `mktemp -t embuilddeps.XXXXXX`;
+chomp ($status);
+$facts = &parse_status($status);
+&get_build_deps($facts, $arch);
+if ($deps) {
+	push @unmet, build_depends('Build-Depends/Build-Depends-Indep)',
+		deps_parse($deps, use_arch => 1), $facts);
+}
+if (@unmet) {
+	map { $_->output_pkg($_)} @unmet;
+}
+# drop architecture-specific deps which are not for us.
+foreach my $depname (keys %res) {
+	# Translators: fields are package, architecture.
+	if ($res{$depname}{$arch} == 0) {
+		if ($verbose > 2) {
+			print BLUE;
+			# Translators: fields are architecture and package.
+			printf(_g("Architecture limit: [!%s] %s\n"), $arch, $depname);
+			print RESET;
+		}
+		delete $res{$depname};
+	}
+}
+%crossres = %res;
+# handle Build-Depends-Tools, if any
+if (scalar @buildarchdeps > 0) {
+	print GREEN;
+	printf (_g("%s needs dependencies installed:\n"), $name);
+	print RESET;
+	my $cmdline = "$cmd /usr/bin/apt-get -y $noauth install " . join (" ", sort @buildarchdeps);
+	&run_command ($cmdline);
+}
+
+if (scalar keys %crossres <= 0) {
+	if ($verbose > 0) {
+		print GREEN;
+		printf (_g("No cross dependencies to install for %s\n"), $name);
+		print RESET;
+	}
+	exit 0;
+}
+
+if (($verbose > 0) and defined $deps) {
+	print GREEN;
+	printf (_g("Checking that cross build dependencies '%s' for %s are installed.\n"), $deps, $name);
+	print RESET;
+}
+undef $facts;
+unlink ($status);
+# do not try to isolate build tools from build dependencies
+$list = join (" ", sort keys %crossres);
+if (defined $pbuilding) {
+	if ($verbose > 0) {
+		print GREEN;
+		printf(ngettext("'%s' needs %d cross dependency installed: %s\n",
+		"'%s' needs %d cross dependencies installed: %s\n", scalar keys %crossres),
+		$name, scalar keys %crossres, join(" ", keys %crossres));
+		print RESET;
+	}
+	if (not -x "$pdebuild_dir/usr/sbin/xapt") {
+		my $av = `LC_ALL=C $cmd /usr/bin/apt-cache policy xapt 2>/dev/null`;
+		chomp ($av);
+		if ($av =~ /xapt/) {
+			system ("$cmd /usr/bin/apt-get -y $noauth install xapt");
+		}
+	}
+	# the addition of libc6 and libc6-dev is a nasty hack
+	my $cmdline = "$cmd /usr/sbin/xapt -a $arch $multiarch $preserve $list libc6 libc6-dev";
+	&run_command ($cmdline);
+	$cmdline = "$cmd /usr/bin/apt-get -y -f $noauth install";
+	&run_command ($cmdline);
+	exit 0;
+}
+if ($verbose > 0) {
+	print GREEN;
+	printf(ngettext("'%s' needs %d cross dependency installed: %s\n",
+	"'%s' needs %d cross dependencies installed: %s\n", scalar keys %crossres),
+	$name, scalar keys %crossres, join (" ", keys %crossres));
+	print RESET;
+}
+my $cmdline = "$cmd /usr/sbin/xapt -a $arch $multiarch $preserve " . join (" ", sort keys %crossres);
+&run_command ($cmdline);
+exit 0;
+
+# sub routines
+
+sub run_command {
+	my $cmdline = shift;
+	if (defined $dryrun) {
+		print "$cmdline\n";
+	} else {
+		print "$cmdline\n" if ($verbose >= 1);
+		my $retval = system ("$cmdline");
+		$retval >>= 8;
+		exit ($retval) if ($retval != 0);
+	}
+}
+
+sub get_build_deps {
+	my $facts = shift;
+	my $ctrl;
+	if (defined $use_dsc ) {
+		$ctrl = $use_dsc;
+	} elsif (-f "debian/xcontrol" and (defined $arch)) {
+		$ctrl = "debian/xcontrol";
+	} else {
+		$ctrl = "debian/control";
+	}
+	open (XC, "<$ctrl");
+	my @xc=<XC>;
+	close (XC);
+	&parse_build_depends (@xc);
+}
+
+sub parse_build_depends {
+	my @xc = @_;
+	# allow multi-lines
+	my $str = join ("", @xc);
+	$str =~ s/\n / /g;
+	$str =~ s/  / /g;
+	my @long = split ("\n", $str);
+	@buildarchdeps=();
+	foreach my $line (@long) {
+		if ($line =~ /^Build-Depends: /) {
+			$line =~ s/^Build-Depends: //;
+			$line =~ s/  +/ /g;
+			$deps = $line;
+		}
+		if ($line =~ /^Build-Depends-Indep: /) {
+			$line =~ s/^Build-Depends-Indep: //;
+			$line =~ s/  +/ /g;
+			$deps .= ", ". $line;
+		}
+		if ($line =~ /^Build-Depends-Tools: /) {
+			$line =~ s/^Build-Depends-Tools: //;
+			$line =~ s/  +/ /g;
+			my @tools = split(/, /, $line);
+			my $b = (&check_constraints($facts, @tools));
+			push @buildarchdeps, @$b;
+		}
+		if ($line =~ /^Build-Conflicts: /) {
+			$line =~ s/^Build-Conflicts: //;
+			$buildconflict = $line;
+		}
+	}
+	if (defined $buildconflict) {
+		if ($verbose > 0) {
+			print BLUE;
+			printf (_g("Checking Build-Conflict between '%s' and '%s'\n"), $name, $buildconflict);
+			print RESET;
+		}
+		if (not defined $pbuilding) {
+			my @conflicts=split(/, /,$buildconflict);
+			foreach my $buildcflt (@conflicts) {
+				my ($package, $constraint, $version, $instver, $retval);
+				if ($buildcflt =~ m:^(.+)\s\((.+)\s(.+)\)$:) {
+					$package = $1;
+					$constraint = $2;
+					$version = $3;
+					$instver = `LC_ALL=C dpkg-query -W -f '\${Version}' $package 2>/dev/null`;
+					if ($instver ne '') {
+						$retval = system("LC_ALL=C dpkg --compare-versions $version \"$constraint\" ".
+							"`dpkg-query -W -f'\${Version}' $package 2>/dev/null` 2>/dev/null");
+						$retval >>= 8;
+						if ($retval) {
+							print STDERR RED;
+							warn sprintf(_g("%s: Error: Cannot build '%s': build conflict found with '%s'\n"), $progname, $name, $package);
+							print STDERR RESET;
+							print "\n";
+							exit 1;
+						}
+					}
+				} else {
+					$check = `LC_ALL=C dpkg-query -W -f '\${Status}' $buildcflt 2>/dev/null`;
+					chomp ($check);
+					if ($check =~ /^install ok installed$/) {
+						print STDERR RED;
+						warn sprintf(_g("%s: Error: Cannot build '%s': build conflict found with '%s'\n"), $progname, $name, $buildconflict);
+						print STDERR RESET;
+						print "\n";
+						exit 1;
+					}
+				}
+			}
+		}
+	}
+	my @chk= join(", ", $deps);
+	&check_constraints ($facts, @chk);
+}
+
+sub Dpkg::Deps::Simple::output_pkg {
+	my ($self, $fh) = @_;
+	my $archlabel = (not defined $arch) ? 'arch' : $arch;
+	my $pkg = $self->{package};
+	$res{$pkg}{'version'} = (defined $self->{version}) ? $self->{version}->as_string() : '';
+	if (defined($self->{'arches'})) {
+		foreach my $deparch (@{$self->{arches}}) {
+			$res{$pkg}{$archlabel} = 0 if (not exists $res{$pkg}{$archlabel});
+			my $retval = 1;
+			if ($deparch =~ /^!/) {
+				$deparch =~ s/!//;
+				if (debarch_is($archlabel, $deparch) == 1) {
+					if ($verbose > 1) {
+						print BLUE;
+						# Translators: fields are architecture and package.
+						printf (_g("Architecture limit: [!%s] %s\n"), $archlabel, $pkg);
+						print RESET;
+					}
+					$res{$pkg}{$archlabel} = 0;
+				} else {
+					$res{$pkg}{$archlabel} = 1;
+				}
+				next;
+			}
+			if (debarch_is($archlabel, $deparch) == 1) {
+				if ($verbose > 1) {
+					print BLUE;
+					# Translators: fields are architecture and package.
+					printf (_g("Architecture limit: [%s]  %s\n"), $archlabel, $pkg);
+					print RESET;
+				}
+				$res{$pkg}{$archlabel} = 1;
+			}
+		}
+	} elsif ($pkg ne '') {
+		$res{$pkg}{$archlabel} = 1;
+	}
+}
+
+sub Dpkg::Deps::OR::output_pkg {
+	my ($self, $fh) = @_;
+	my $skip;
+	push my @a, $self->get_deps();
+	my $archlabel = (not defined $arch) ? 'arch' : $arch;
+	foreach my $dep (@a) {
+		my $omit = &check_special ($self->get_deps());
+		if (defined $omit and scalar @$omit > 0) {
+			foreach my $o (@$omit) {
+				delete $res{$o};
+			}
+			last;
+		}
+		if (ref($dep) !~ /ARRAY/) {
+			if (defined $dep->{arches}) {
+				foreach my $chk (@{$dep->{arches}}) {
+					# doesn't work for linux-any anymore.
+					if (debarch_is($arch, $chk) == 0) {
+						if ($verbose > 1) {
+							print BLUE;
+							# Translators: fields are package, architecture, requirement
+							printf (_g("Skipping %s, %s does not match %s\n"), $dep->{package}, $arch, $chk);
+							print RESET;
+						}
+						next;
+					} else {
+						if ($verbose > 1) {
+							print BLUE;
+							# Translators: fields are package and architecture
+							printf (_g("Using %s for %s\n"), $dep->{package}, $chk);
+							print RESET;
+						}
+						$res{$dep->{package}}{'version'} = (defined $dep->{version}) ? $dep->{version}->as_string() : '';
+						$res{$dep->{package}}{$archlabel} = 1;
+						$skip++;
+					}
+				}
+			}
+			# if the alternative has no arch dependency, use it unless already got one.
+			if (not defined $dep->{arches} and not defined $skip) {
+				my @iter = $self->{list};
+				foreach my $i (@iter) {
+					foreach my $ii (@$i) {
+						if (not defined ($ii->{arches})) {
+							if (not defined $res{$dep->{package}}{'version'}) {
+								if ($ii->{package} eq $dep->{package}) {
+									if ($verbose > 1) {
+										print BLUE;
+										# Translators: fields are package and architecture
+										printf (_g("Using %s for %s\n"), $dep->{package}, $arch);
+										print RESET;
+									}
+									$res{$dep->{package}}{'version'} = (defined $dep->{version}) ?
+										$dep->{version}->as_string() : '';
+									$res{$dep->{package}}{$archlabel} = 1;
+								} elsif (defined $res{$ii->{package}}) {
+									if ($verbose > 1) {
+										print BLUE;
+										# Translators: fields are package, architecture and alternative
+										printf(_g("Omitting %s for %s - already selected %s\n"),
+											$dep->{package}, $arch, $ii->{package});
+										print RESET;
+									}
+									delete ($res{$dep->{package}});
+									last;
+								}
+							}
+						}
+					}
+				}
+			}
+			next;
+		}
+		if (ref($dep) =~ /ARRAY/ and scalar @{$dep->{arches}} > 0) {
+			foreach my $deparch (@{$dep->{arches}}) {
+				my $retval = ($deparch =~ /^!/) ? 0 : 1;
+				$deparch =~ s/^!//;
+				if (debarch_is($archlabel, $deparch) == $retval) {
+					$res{$dep->{package}}{'version'} = (defined $dep->{version}) ? $dep->{version}->as_string() : '';
+					$res{$dep->{package}}{$archlabel} = 1;
+				} elsif (not defined $res{$dep->{package}}{$arch}) {
+					$res{$dep->{package}}{'version'} = (defined $dep->{version}) ? $dep->{version}->as_string() : '';
+					$res{$dep->{package}}{$archlabel} = 0;
+				}
+			}
+		} else {
+			my @alternatives = $self->{list};
+			foreach my $alt (@alternatives) {
+				my $first;
+				foreach my $a (@$alt) {
+					$res{$a->{package}}{'version'} = (defined $dep->{version}) ? $dep->{version}->as_string() : '';
+					$res{$a->{package}}{$archlabel} = 1;
+					$first = $a->{package};
+					last;
+				}
+				foreach my $a (@$alt) {
+					next if ($first eq $a->{package});
+					${$res{$first}{'alternate'}}{$a->{package}} = (defined $a->{version}) ? $a->{version}->as_string() : '';
+				}
+			}
+		}
+	}
+}
+
+sub expand_arch_limit {
+	my $check = shift;
+	my $limit = shift;
+	my @a = (debarch_to_debtriplet ($check));
+	my @c = split (/-/, $limit);
+	my $ret = scalar @c;
+	foreach my $str (@c) {
+		if (grep(/\Q$str\E/, @a)) {
+			$ret--;
+		}
+	}
+	return $ret;
+}
+
+sub check_special {
+	my @a = @_;
+	my %omit=();
+	my $seq;
+	my @ret=();
+	my $typehandling;
+	foreach my $dep (@a) {
+		$omit{$dep->{package}}++;
+	}
+	$typehandling = `apt-cache show type-handling|grep Provides`;
+	chomp ($typehandling);
+	foreach my $pkg (keys %omit) {
+		if (grep (/\Q$pkg\E/, $typehandling)) {
+			my $allow = $pkg;
+			$allow =~ s/\Qnot+\E//;
+			next if (expand_arch_limit($arch, $allow) == 0);
+			delete $omit{$pkg};
+			$seq = join ('', keys %omit);
+			if ($verbose > 1) {
+				print BLUE;
+				printf (_g("Constraint '%s' is a virtual package provided by 'type-handling', omitting %s for %s\n"), $pkg, $seq, $arch);
+				print RESET;
+			}
+			@ret = keys %omit;
+			return \@ret;
+		}
+	}
+	return undef;
+}
+
+sub check_constraints {
+	my $facts = shift;
+	my @depends=@_;
+	@constraint=();
+	my $installedok;
+	my @virt=();
+	my @section = split(/, /, join (', ', @depends));
+	foreach $constraint (@section) {
+		undef $limit;
+		undef $version;
+		undef $installedok;
+		$constraint =~ s/^ +//;
+		$constraint =~ s/,//;
+		$constraint =~ s/\[.*\]//;
+		$constraint =~ s/\|.*//;
+		@bits=split(/ /, $constraint);
+		$pkg = $bits[0];
+		next if (not defined $pkg);
+		if (defined $bits[1]) {
+			$limit = $bits[1];
+			$limit =~ s/\(//;
+		}
+		if (defined $bits[2]) {
+			$version = $bits[2];
+			$version =~ s/\)//;
+		}
+		$pkg =~ s/ //g;
+		# cannot usefully check versions inside the chroot from outside
+		# or when cross-building before Multi-Arch is working
+		if (defined $pbuilding or defined $arch) {
+			my $typehandling;
+			if (-x "/usr/bin/grep-available") {
+				$typehandling = `grep-available -s Provides type-handling`;
+				chomp ($typehandling);
+				if (grep (/\Q$pkg\E/, $typehandling)) {
+					print BLUE;
+					printf (_g("Constraint '%s' is a virtual package provided by 'type-handling', omitting.\n"), $pkg);
+					print RESET;
+					next;
+				}
+			}
+			$policy=`LC_ALL=C apt-cache policy $pkg 2>/dev/null|grep Candidate|cut -d':' -f2-3|tr -d ' '`;
+			chomp ($policy);
+			if ($policy eq "(none)") {
+				print BLUE;
+				printf (_g("Constraint '%s' is not available, omitting. (This could be a virtual package or a bug.)\n"), $pkg);
+				print RESET;
+				next;
+			}
+			push @constraint, $pkg;
+		} else {
+			$check = `LC_ALL=C dpkg-query -W -f '\${Status}' $pkg 2>/dev/null`;
+			chomp ($check);
+			if ($check !~ /^install ok installed$/) {
+				# not installed, may be virtual but we can't tell from here
+				push @constraint, $pkg;
+				next if (not defined $limit);
+			} else {
+				$installedok++;
+			}
+			if (not defined $limit) {
+				next;
+			}
+			# now check the version constraint
+			$policy=`LC_ALL=C apt-cache policy $pkg 2>/dev/null|grep Candidate|cut -d':' -f2-3|tr -d ' '`;
+			chomp ($policy);
+			$msg = sprintf (_g("%s: Failed to read apt-cache policy for '%s'\n"),
+				$progname, $pkg);
+			die (RED, $msg, RESET) if ($policy eq "\n");
+			chomp ($policy);
+			if (defined $version) {
+				$check = ($policy ne '') ?
+					`LC_ALL=C dpkg --compare-versions $policy \"$limit\" $version ; echo \$?`
+					: 1;
+				chomp ($check);
+				print "Checking constraints for '$constraint':pkg=$pkg:policy=$policy:limit='$limit':version=$version\n" if ($verbose > 2);
+				if ($check != 0) {
+					warn RED, "$progname:", sprintf(_g("Unable to satisfy 'Build-Depends: %s (%s %s)' for %s."),
+						$pkg, $limit, $version, $name), RESET, "\n";
+					if ($policy ne '') {
+						warn RED, "$progname:", sprintf(_g("Latest available version of %s is %s"), $pkg, $policy), RESET, "\n";
+					} else {
+						warn RED, "$progname:", sprintf(_g("'%s' does not appear to be available to apt!"), $pkg), RESET, "\n";
+					}
+					exit 1;
+				} else {
+					# available and not installed already
+					push @constraint, $pkg if (not defined $installedok);
+				}
+				next;
+			}
+			push @constraint, $pkg;
+		}
+	}
+	return (\@constraint);
+}
+
+# Silly little status file parser that returns a Dpkg::Deps::KnownFacts
+sub parse_status {
+	my $status = shift;
+	my $facts = Dpkg::Deps::KnownFacts->new();
+	local $/ = '';
+	open(STATUS, "<$status") || die "$status: $!\n";
+	while (<STATUS>) {
+		next unless /^Status: .*ok installed$/m;
+		my ($package) = /^Package: (.*)$/m;
+		my ($version) = /^Version: (.*)$/m;
+		$facts->add_installed_package($package, $version);
+		if (/^Provides: (.*)$/m) {
+			my $provides = deps_parse($1, reduce_arch => 1, union => 1);
+			next if not defined $provides;
+			foreach (grep { $_->isa('Dpkg::Deps::Simple') } $provides->get_deps()) {
+				$facts->add_provided_package($_->{package}, $_->{relation}, $_->{version}, $package);
+			}
+		}
+	}
+	close STATUS;
+	return $facts;
+}
+
+sub build_depends {
+	return check_line(1, @_);
+}
+
+# This function does all the work. The first parameter is 1 to check build
+# deps, and 0 to check build conflicts.
+sub check_line {
+	my $build_depends=shift;
+	my $fieldname=shift;
+	my $dep_list=shift;
+	my $facts=shift;
+	my $host_arch = shift || get_host_arch();
+	chomp $host_arch;
+
+	my @unmet=();
+
+	unless(defined($dep_list)) {
+	    error(_g("error occurred while parsing %s"), $fieldname);
+	}
+
+	if ($build_depends) {
+		$dep_list->simplify_deps($facts);
+		if ($dep_list->is_empty()) {
+			return ();
+		} else {
+			return $dep_list->get_deps();
+		}
+	} else { # Build-Conflicts
+		my @conflicts = ();
+		foreach my $dep ($dep_list->get_deps()) {
+			if ($dep->get_evaluation($facts)) {
+				push @conflicts, $dep;
+			}
+		}
+		print "Conflicts:\n";
+		print Dumper (\@conflicts);
+		return @conflicts;
+	}
+}
+
+sub usageversion {
+	printf STDERR (_g("
+%s version %s
+
+Usage:
+ %s [-a|--arch] [-d|--dir] [-q|--quiet] [-n|--dry-run]
+ %s -?|-h|--help|--version
+
+Options:
+ -a|--arch:          Install cross packages for the specified arch.
+ -d|--dir DIR:       Location of the unpacked source (./debian/control)
+    --dsc DSCFILE:   Path to a .dsc file for the package.
+ -m|--multiarch:     Make dpkg-cross convert Multi-Arch packages.
+ -v|--verbose:       Make the output more verbose
+ -q|--quiet:         Make the output less verbose
+ -n|--dry-run:       Only output the commands which would be used.
+ --use-sudo:         Call apt-get using sudo.
+
+%s is a simple build dependency checker for cross-building.
+Native build dependencies are checked using the debian/control file
+in the source package being built and installed with apt-get.
+
+Cross build dependencies are checked using a debian/xcontrol file
+or the debian/control file if no xcontrol file exists.
+
+%s uses xapt to install cross build dependencies.
+
+"), $progname, $ourversion, $progname, $progname,$progname,$progname );
+}
+
+sub scripts_version {
+	my $query = `LC_ALL=C dpkg-query -W -f='\${Version}' xapt 2>/dev/null`;
+	(defined $query) ? return $query : return "";
+}
+
+sub _g {
+	return gettext(shift);
+}
+
+=pod
+
+=head1 NAME
+
+embuilddeps - handle native and cross build-dependency installation.
+
+=head1 Usage
+
+ embuilddeps [-a|--arch] [--use-sudo]
+
+ embuilddeps -?|-h|--help|--version
+
+=head1 Options
+
+ -a|--arch:          Install cross packages for the specified arch.
+ -d|--dir DIR:       Location of the unpacked source (./debian/control)
+    --dsc DSCFILE:   Path to a .dsc file for the package.
+ -m|--multiarch:     Make dpkg-cross convert Multi-Arch packages.
+ -k|--preserve:      Pass the -k option down to xapt.
+ -v|--verbose:       Make the output more verbose
+ -q|--quiet:         Make the output less verbose
+ -n|--dry-run:       Only output the commands which would be used.
+ --use-sudo:         Call apt-get using sudo.
+
+=head1 Description
+
+C<embuilddeps> is a simple build dependency checker for cross-building.
+Native build dependencies are checked using the F<debian/control> file
+in the source package being built and installed with C<apt-get>.
+
+Cross build dependencies are checked using a F<debian/xcontrol> file
+or the F<debian/control> file if no xcontrol file exists.
+
+C<embuilddeps> uses C<xapt> to install cross build dependencies.
+
+=head1 Output
+
+To see more about what is going on (and to check the results of parsing
+the dependencies and architecture limits.
+
+See also Term::ANSIColor (3) for information on ANSI_COLORS_DISABLED.
+
+=head1 pbuilder
+
+C<embuilddeps> can be used as a native and cross-dependency resolver
+in a pbuilder chroot using C<pbuilder>, C<pdebuild> or C<pdebuild-cross>
+and supports pbuilder options to locate the chroot and execute
+calls within the chroot.
+
+ --control indicates the location of the .dsc file
+ --internal-chrootexec indicates the command to execute inside the chroot
+ --chroot indicates the location of the chroot
+ --binary-all is supported as a no-op by C<embuilddeps>.
+
+If other build tools need particular options to be supported, please
+file a wishlist bug against C<xapt> and describe the exact options
+which are necessary.
+
+C<embuilddeps> does require that C<xapt> is installed inside the
+chroot - it will try to install it for you but it is much easier if
+you install it once and for all. C<pdebuild-cross> will add C<xapt>
+when creating a new chroot. See pdebuild-cross (1) for more
+information on how to manipulate a pdebuild-cross chroot after
+creation.
+
+=head1 Source packages and dsc files
+
+C<embuilddeps> can also parse the build dependencies of a package via
+the F<.dsc> file. The rest of the source package (the files listed in
+the F<.dsc>) do B<not> need to exist and the source does not need to
+have been unpacked. Use the C<embuilddeps --dsc FILE> option.
+
+The alternative method is to parse the F<./debian/control> file at
+the location specified by the C<--dir> option which defaults to the
+current working directory.
+
+=head1 Multi-Arch transition
+
+Some packages already have multi-arch paths which dpkg-cross does not
+normally convert. This can cause missing dependencies when trying to
+install the converted packages. Use the C<--multiarch> option to
+C<embuilddeps> to pass this down to C<xapt> and hence to C<dpkg-cross>.
+
+=head1 Retaining downloaded binaries
+
+C<embuilddeps> can pass the C<-k> option to C<xapt> to retain the
+foreign architecture packages downloaded by C<xapt> and the packages
+built using C<dpkg-cross>.
+
+Note that C<xapt> should be asked to clean up the downloaded files
+once these lists have been handled by calling the C<xapt -c> option
+which removes the contents of F</var/lib/xapt/*>.
+
+=cut

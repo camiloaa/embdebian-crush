@@ -1,0 +1,8 @@
+buildd/D* /usr/share/pdebuild-cross/hookdir/
+buildd/E* /usr/share/pdebuild-cross/hookdir/
+buildd/pdebuild-cross-create ./usr/sbin
+buildd/pdebuild-cross-update ./usr/sbin
+buildd/svn-pdebuild-cross ./usr/bin
+buildd/pdebuild-cross ./usr/bin
+buildd/pdebuild-cross.rc ./etc/pdebuild-cross/
+doc/pdebuild-cross/man/ ./usr/share/

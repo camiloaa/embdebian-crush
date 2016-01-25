@@ -1,0 +1,475 @@
+# Vietnamese translation for Emdebian-Crush.
+# Copyright © 2010 Free Software Foundation, Inc.
+# This file is distributed under the same license as the emdebian-crush package.
+# Clytie Siddall <clytie@riverland.net.au>, 2010.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: emdebian-crush 2.2.5\n"
+"Report-Msgid-Bugs-To: emdebian-crush@packages.debian.org\n"
+"POT-Creation-Date: 2013-05-06 19:15+0100\n"
+"PO-Revision-Date: 2010-09-30 18:58+0930\n"
+"Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
+"Language-Team: Vietnamese <vi-VN@googlegroups.com>\n"
+"Language: vi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: LocFactoryEditor 1.8\n"
+
+#: ../buildd/pdebuild-cross:27
+msgid ""
+"You must run this from inside a debian source tree (debian/changelog not "
+"found)"
+msgstr ""
+"Bạn cần phải chạy câu lệnh này từ bên trong một cây mã nguồn Debian (không "
+"tìm thấy sổ theo dõi thay đổi Debian)"
+
+#: ../buildd/pdebuild-cross:34 ../buildd/pdebuild-cross-create:28
+#: ../buildd/pdebuild-cross-update:27 ../buildd/svn-pdebuild-cross:35
+msgid "$cfg does not exist!"
+msgstr "$cfg không tồn tại"
+
+#: ../buildd/pdebuild-cross:44 ../buildd/pdebuild-cross-update:37
+msgid "Need to create a new pbuilder crossbuilding chroot first."
+msgstr "Trước tiên cần tạo một chroot xây dựng chéo kiểu pbuilder."
+
+#: ../buildd/pdebuild-cross:45 ../buildd/pdebuild-cross-update:38
+msgid "Use pdebuild-cross-create to create one."
+msgstr "Hãy sử dụng « pdebuild-cross-create » để tạo nó."
+
+#: ../buildd/pdebuild-cross-create:34
+msgid "Broken config, no BUILDPLACE set in '$cfg'."
+msgstr ""
+"Cấu hình bị hỏng, không có BUILDPLACE (nơi xây dựng) được lập trong « $cfg »."
+
+#: ../buildd/pdebuild-cross-create:39
+msgid ""
+"$BASETGZ exists! If you want to create a new one, delete or move '$BASETGZ'."
+msgstr ""
+"$BASETGZ đã có !  Muốn tạo một điều mới thì trước tiên cần xoá bỏ hoặc dời « "
+"$BASETGZ »."
+
+#: ../buildd/pdebuild-cross-create:40
+msgid ""
+"Otherwise, use 'pbuilder login --configfile /etc/pdebuild-cross/pdebuild-"
+"cross.rc --save-after-login'"
+msgstr ""
+"Không thì dùng câu lệnh « pbuilder login --configfile /etc/pdebuild-cross/"
+"pdebuild-cross.rc --save-after-login »"
+
+#: ../buildd/pdebuild-cross-create:41
+msgid "to make changes within the existing $BASETGZ."
+msgstr "để làm thay đổi bên trong « $BASETGZ » đã có."
+
+#: ../buildd/pdebuild-cross-update:42
+msgid "Enter your sudo password if prompted"
+msgstr "Gõ mật khẩu sudo nếu được nhắc"
+
+#: ../emvendor:54 ../xapt/embuilddeps:113 ../xapt/embuilddeps:135
+#: ../xapt/xapt:91
+msgid "Unknown option"
+msgstr "Tùy chọn không rõ"
+
+#: ../emvendor:87
+#, perl-format
+msgid ""
+"\n"
+"%s version %s\n"
+"\n"
+"Usage:\n"
+" %s -V|--vendor VENDOR -p|--package PACKAGE -k|--key KEY\n"
+" %s -?|-h|--help|--version\n"
+"\n"
+"Commands:\n"
+" -v|--vendor VENDOR:    the vendor name from dpkg-vendor\n"
+" -p|--package PACKAGE:  the package name (usually source)\n"
+" -k|--key KEY:          arbitrary string for the key of the data\n"
+"\n"
+"All commands need to be specified.\n"
+"\n"
+"On success, the string is printed and %s exits with zero.\n"
+"\n"
+"In the case of error, %s dies with an empty string on STDERR\n"
+"and exits with a non-zero return value.\n"
+"\n"
+msgstr ""
+"\n"
+"%s phiên bản %s\n"
+"\n"
+"Sử dụng:\n"
+" %s -V|--vendor NHÀ_BÁN -p|--package GÓI -k|--key KHOÁ\n"
+" %s -?|-h|--help|--version\n"
+"\n"
+"Lệnh:\n"
+" -v|--vendor NHÀ_BÁN:    tên nhà bán từ dpkg-vendor\n"
+" -p|--package GÓI:      tên của gói (bình thường là source)\n"
+" -k|--key KHOÁ:           chuỗi tùy ý cho khoá của dữ liệu\n"
+"\n"
+"Mọi câu lệnh đều cần phải được ghi rõ.\n"
+"\n"
+"Một khi thành công thì chuỗi được in ra và %s thoát với số không.\n"
+"\n"
+"Trong trường hợp gặp lỗi, %s chết với một chuỗi trống trên đầu lỗi tiêu "
+"chuẩn,\n"
+"và thoát với một giá trị trả lại khác số không.\n"
+"\n"
+
+#: ../xapt/embuilddeps:83
+#, perl-format
+msgid "Unknown architecture: %s"
+msgstr ""
+
+#: ../xapt/embuilddeps:92
+#, perl-format
+msgid "Unable to find '%s' directory"
+msgstr ""
+
+#: ../xapt/embuilddeps:98
+msgid "Please specify a .dsc file"
+msgstr ""
+
+#: ../xapt/embuilddeps:126 ../xapt/xapt:124
+#, perl-format
+msgid "Cannot read /etc/xapt.d/%s.conf"
+msgstr ""
+
+#: ../xapt/embuilddeps:152
+#, perl-format
+msgid "Unable to open .dsc file: '%s'"
+msgstr ""
+
+#: ../xapt/embuilddeps:172
+#, fuzzy, perl-format
+msgid "Checking that build dependencies '%s' for %s are installed.\n"
+msgstr "Đang kiểm tra những công cụ xây dựng cho %s có được cài đặt không:\n"
+
+#: ../xapt/embuilddeps:191
+#, perl-format
+msgid "No build dependencies to install for %s\n"
+msgstr "Không có gói phụ thuộc do xây dựng nào cần cài đặt cho %s\n"
+
+#: ../xapt/embuilddeps:198 ../xapt/embuilddeps:244
+#, perl-format
+msgid "%s needs dependencies installed:\n"
+msgstr "%s yêu cầu cài đặt một số gói phụ thuộc:\n"
+
+#. Translators: fields are architecture and package.
+#: ../xapt/embuilddeps:234 ../xapt/embuilddeps:422
+#, perl-format
+msgid "Architecture limit: [!%s] %s\n"
+msgstr ""
+
+#: ../xapt/embuilddeps:253
+#, perl-format
+msgid "No cross dependencies to install for %s\n"
+msgstr "Không có gói phụ thuộc chéo nào cần cài đặt cho %s\n"
+
+#: ../xapt/embuilddeps:261
+#, fuzzy, perl-format
+msgid "Checking that cross build dependencies '%s' for %s are installed.\n"
+msgstr "Đang kiểm tra những công cụ xây dựng cho %s có được cài đặt không:\n"
+
+#: ../xapt/embuilddeps:271 ../xapt/embuilddeps:292
+#, fuzzy, perl-format
+msgid "'%s' needs %d cross dependency installed: %s\n"
+msgid_plural "'%s' needs %d cross dependencies installed: %s\n"
+msgstr[0] "%s yêu cầu cài đặt một số gói phụ thuộc chéo :\n"
+
+#: ../xapt/embuilddeps:365
+#, perl-format
+msgid "Checking Build-Conflict between '%s' and '%s'\n"
+msgstr ""
+
+#: ../xapt/embuilddeps:383 ../xapt/embuilddeps:394
+#, perl-format
+msgid "%s: Error: Cannot build '%s': build conflict found with '%s'\n"
+msgstr ""
+
+#. Translators: fields are architecture and package.
+#: ../xapt/embuilddeps:435
+#, perl-format
+msgid "Architecture limit: [%s]  %s\n"
+msgstr ""
+
+#. Translators: fields are package, architecture, requirement
+#: ../xapt/embuilddeps:467
+#, perl-format
+msgid "Skipping %s, %s does not match %s\n"
+msgstr ""
+
+#. Translators: fields are package and architecture
+#: ../xapt/embuilddeps:475 ../xapt/embuilddeps:495
+#, perl-format
+msgid "Using %s for %s\n"
+msgstr ""
+
+#. Translators: fields are package, architecture and alternative
+#: ../xapt/embuilddeps:505
+#, perl-format
+msgid "Omitting %s for %s - already selected %s\n"
+msgstr ""
+
+#: ../xapt/embuilddeps:584
+#, perl-format
+msgid ""
+"Constraint '%s' is a virtual package provided by 'type-handling', omitting "
+"%s for %s\n"
+msgstr ""
+
+#: ../xapt/embuilddeps:630
+#, perl-format
+msgid ""
+"Constraint '%s' is a virtual package provided by 'type-handling', omitting.\n"
+msgstr ""
+
+#: ../xapt/embuilddeps:639
+#, perl-format
+msgid ""
+"Constraint '%s' is not available, omitting. (This could be a virtual package "
+"or a bug.)\n"
+msgstr ""
+
+#: ../xapt/embuilddeps:660
+#, perl-format
+msgid "%s: Failed to read apt-cache policy for '%s'\n"
+msgstr "%s: Lỗi đọc chính sách nhớ tạm apt-cache cho « %s »\n"
+
+#: ../xapt/embuilddeps:671
+#, perl-format
+msgid "Unable to satisfy 'Build-Depends: %s (%s %s)' for %s."
+msgstr ""
+
+#: ../xapt/embuilddeps:674
+#, perl-format
+msgid "Latest available version of %s is %s"
+msgstr ""
+
+#: ../xapt/embuilddeps:676
+#, perl-format
+msgid "'%s' does not appear to be available to apt!"
+msgstr ""
+
+#: ../xapt/embuilddeps:731
+#, perl-format
+msgid "error occurred while parsing %s"
+msgstr ""
+
+#: ../xapt/embuilddeps:755
+#, perl-format
+msgid ""
+"\n"
+"%s version %s\n"
+"\n"
+"Usage:\n"
+" %s [-a|--arch] [-d|--dir] [-q|--quiet] [-n|--dry-run]\n"
+" %s -?|-h|--help|--version\n"
+"\n"
+"Options:\n"
+" -a|--arch:          Install cross packages for the specified arch.\n"
+" -d|--dir DIR:       Location of the unpacked source (./debian/control)\n"
+"    --dsc DSCFILE:   Path to a .dsc file for the package.\n"
+" -m|--multiarch:     Make dpkg-cross convert Multi-Arch packages.\n"
+" -v|--verbose:       Make the output more verbose\n"
+" -q|--quiet:         Make the output less verbose\n"
+" -n|--dry-run:       Only output the commands which would be used.\n"
+" --use-sudo:         Call apt-get using sudo.\n"
+"\n"
+"%s is a simple build dependency checker for cross-building.\n"
+"Native build dependencies are checked using the debian/control file\n"
+"in the source package being built and installed with apt-get.\n"
+"\n"
+"Cross build dependencies are checked using a debian/xcontrol file\n"
+"or the debian/control file if no xcontrol file exists.\n"
+"\n"
+"%s uses xapt to install cross build dependencies.\n"
+"\n"
+msgstr ""
+
+#: ../xapt/xapt:67
+#, perl-format
+msgid "Error: Multi-Arch support needs dpkg-cross (>= %s). Found %s"
+msgstr ""
+
+#: ../xapt/xapt:101
+#, perl-format
+msgid "%s: Illogical options set.\n"
+msgstr "%s: đã lập các tuỳ chọn không có ý nghĩa.\n"
+
+#: ../xapt/xapt:103
+#, perl-format
+msgid "%s: --build-only cannot be used with --clean-cache\n"
+msgstr ""
+"%s: « --build-only » (chỉ xây dựng) không sử dụng được với « --clean-cache "
+"» (làm sạch vùng nhớ tạm)\n"
+
+#: ../xapt/xapt:109
+#, perl-format
+msgid "%s: Cleaning %s* \n"
+msgstr "%s: Đang làm sạch %s* \n"
+
+#: ../xapt/xapt:113
+#, perl-format
+msgid ""
+"%s: Done.\n"
+"\n"
+msgstr ""
+"%s: Hoàn tất.\n"
+"\n"
+
+#: ../xapt/xapt:143
+#, perl-format
+msgid "ERROR: Please specify some packages for %s to convert.\n"
+msgstr "LỖI: Hãy ghi rõ một số gói cho %s chuyển đổi.\n"
+
+#: ../xapt/xapt:158
+#, perl-format
+msgid "ERROR: %s: misconfiguration, '%s' missing.\n"
+msgstr "LỖI: %s: sai cấu hình, « %s » còn thiếu.\n"
+
+#: ../xapt/xapt:176
+msgid "Cannot open sources list"
+msgstr "Không thể mở danh sách các nguồn"
+
+#: ../xapt/xapt:232
+msgid "Cannot read"
+msgstr "Không thể đọc"
+
+#: ../xapt/xapt:247
+msgid ""
+"\n"
+"INF: Checking against currently installed cross packages....\n"
+msgstr ""
+
+#: ../xapt/xapt:269
+#, perl-format
+msgid ""
+"INF: Skipping installation of %s - newer or same version already installed "
+"(%s).\n"
+msgstr ""
+
+#: ../xapt/xapt:291 ../xapt/xapt:295 ../xapt/xapt:309 ../xapt/xapt:313
+msgid "cannot open apt sources list."
+msgstr "Không thể mở danh sách các nguồn apt."
+
+#: ../xapt/xapt:302
+#, fuzzy
+msgid "cannot open apt sources.list directory"
+msgstr "Không thể mở danh sách các nguồn apt."
+
+#: ../xapt/xapt:323
+#, fuzzy, perl-format
+msgid ""
+"\n"
+"%s version %s\n"
+"\n"
+"Usage:\n"
+" %s [-M|--mirror] [-S|--suite] [-k|--keep-cache] PACKAGES ...\n"
+" %s -c|--clean-cache\n"
+" %s -?|-h|--help|--version\n"
+"\n"
+"Commands:\n"
+" -c|--clean-cache:        Remove any downloaded cache files and exit.\n"
+"\n"
+"Options:\n"
+" -b|--build-only:         Get and process the packages, do not install\n"
+"                           (implies -k)\n"
+" -M|--mirror:             A Debian mirror with the requested package(s)\n"
+" -S|--suite:              Which suite to use for the package(s)\n"
+" -k|--keep-cache:         Preserve the downloaded cache files to use again.\n"
+" -a|--arch ARCHITECTURE:  Specify the architecture to download or install.\n"
+"    --ignore-status:      Ignore currently installed packages (native)\n"
+"    --check-newer:        Check if the same or newer version of the cross\n"
+"                          package is installed and skip installation.\n"
+" -m|--multiarch:          Convert Multi-Arch packages to old dpkg-cross\n"
+"                           paths. Requires dpkg-cross (>= %s)\n"
+"\n"
+"xapt tidies up after itself by removing all temporary data and\n"
+"packages after installation, unless the --keep-cache option is used.\n"
+"(Converted packages are not preserved.)\n"
+"\n"
+"The archives will be downloaded into /var/lib/xapt/archives/ before\n"
+"being converted with dpkg-cross and installed using dpkg. Using\n"
+"--build-only implies --keep-cache. Converted packages are created in\n"
+"/var/lib/xapt/output/\n"
+"\n"
+msgstr ""
+"\n"
+"%s phiên bản %s\n"
+"\n"
+"Sử dụng:\n"
+" %s [-M|--mirror] [-S|--suite] [-k|--keep-cache] CÁC_GÓI ...\n"
+" %s -c|--clean-cache\n"
+" %s -?|-h|--help|--version\n"
+"\n"
+"Lệnh:\n"
+" -c|--clean-cache:        Gỡ bỏ tập tin nhớ tạm nào đã tải về, sau đó "
+"thoát.\n"
+"\n"
+"Tuỳ chọn:\n"
+" -b|--build-only:       Lấy và xử lý các gói mà không cài đặt (ngụ ý « -k "
+"»).\n"
+" -M|--mirror:             Một máy nhân bản Debian có những gói yêu cầu.\n"
+" -S|--suite:                Bộ ứng dụng Debian nào cần dùng cho các gói.\n"
+" -k|--keep-cache:         Giữ lại những tập tin nhớ tạm đã tải về, để sử "
+"dụng lại.\n"
+" -a|--arch KIẾN_TRÚC:    Tải về chỉ kiến trúc này mà không cài đặt.\n"
+"    --ignore-status:        Bỏ qua những gói được cài đặt hiện thời.\n"
+"\n"
+"xapt tự làm sạch bằng cách gỡ bỏ tất cả các dữ liệu tạm thời và gói sau khi "
+"cài đặt,\n"
+"nếu tuỳ chọn « --keep-cache » không phải được lập.\n"
+"(Không giữ lại gói nào đã được chuyển đổi.)\n"
+"\n"
+"Những kho lưu được xử lý sẽ nằm trong « /var/lib/xapt/archives/ »\n"
+"trước khi được chuyển đổi dùng dpkg-cross và cài đặt dùng dpkg.\n"
+"Dùng « --build-only » thì cũng ngụ ý « --keep-cache ».\n"
+"\n"
+
+#~ msgid "%s: Must have apt to proceed!\n"
+#~ msgstr "%s: Để tiếp tục thì phải có gói apt !\n"
+
+#, fuzzy
+#~ msgid ""
+#~ "\n"
+#~ "%s version %s\n"
+#~ "\n"
+#~ "Usage:\n"
+#~ " %s [-a|--arch] [--use-sudo]\n"
+#~ " %s -?|-h|--help|--version\n"
+#~ "\n"
+#~ "Options:\n"
+#~ " -a|--arch:          Install cross packages for the specified arch.\n"
+#~ " --use-sudo:         Call apt-get using sudo.\n"
+#~ "\n"
+#~ "When used outside a chroot or as a user, set the --use-sudo option.\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "%s phiên bản %s\n"
+#~ "\n"
+#~ "Sử dụng:\n"
+#~ " %s [-a|--arch] [--use-sudo]\n"
+#~ " %s -?|-h|--help|--version\n"
+#~ "\n"
+#~ "Tuỳ chọn:\n"
+#~ " -a|--arch:          Đọc từ « debian/xcontrol » thông tin về các quan hệ "
+#~ "phụ thuộc\n"
+#~ "                           và cài đặt các gói chéo cho kiến trúc đưa ra.\n"
+#~ " --use-sudo:         Gọi apt-get dùng sudo.\n"
+#~ "\n"
+#~ "Khi được sử dụng bên ngoài chroot hoặc như là một người dùng,\n"
+#~ "hãy lập tuỳ chọn --use-sudo option.\n"
+#~ "\n"
+
+#, fuzzy
+#~ msgid "No build tools need to be installed\n"
+#~ msgstr "Không có gói phụ thuộc do xây dựng nào cần cài đặt cho %s\n"
+
+#~ msgid "%s: dpkg-checkbuilddeps failed with return value: %s\n"
+#~ msgstr "%s: dpkg-checkbuilddeps bị lỗi với giá trị gửi trả: %s\n"
+
+#, fuzzy
+#~ msgid "Cannot open xapt sources list"
+#~ msgstr "Không thể mở danh sách các nguồn apt."

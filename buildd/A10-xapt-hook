@@ -1,0 +1,104 @@
+#!/usr/bin/perl
+
+#  Copyright 2010 Neil Williams <codehelp@debian.org>
+#            2010 Wookey <wookey@debian.org>
+#
+#  This package is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+use strict;
+use warnings;
+use Cwd qw (realpath);
+use File::Basename;
+use vars qw/ @aptlist @bits $use_sudo $name $dryrun $tools $deps
+ @dependencies $cmd $hostarch $arch/;
+ 
+# no point translating output - locales won't be set in the chroot
+if (not -x "/usr/sbin/xapt") {
+	print "/usr/sbin/xapt not installed - skipping xapt-hook";
+	exit(0);
+}
+chomp($hostarch=`dpkg-architecture -qDEB_HOST_ARCH`);
+system ("mkdir -p /var/lib/xapt");
+my $ctrl = `find /tmp/buildd/ -path "*/debian/control"|head -n1`;
+chomp ($ctrl);
+my $dir = dirname ($ctrl);
+chomp ($dir);
+$dir = realpath ("$dir/../");
+print "Changing to '$dir/'\n";
+chdir ("$dir/");
+$name=`dpkg-parsechangelog|grep Source:`;
+chomp ($name);
+$name =~ s/Source: //;
+my @xc=();
+if (-f "debian/xcontrol") {
+	open (XC, "<debian/xcontrol");
+	@xc=<XC>;
+	close (XC);
+} elsif (-f "debian/control") {
+	open (XC, "<debian/control");
+	@xc=<XC>;
+	close (XC);
+}
+
+# allow multi-lines
+my $str = join ("", @xc);
+$str =~ s/\n / /g;
+$str =~ s/  / /g;
+my @long = split ("\n", $str);
+@dependencies=();
+foreach my $line (@long) {
+	if ($line =~ /^Build-Depends-Tools: /) {
+		$line =~ s/^Build-Depends-Tools: //;
+		$tools = $line;
+	}
+	if ($line =~ /^Build-Depends: /) {
+		$line =~ s/^Build-Depends: //;
+		$deps = $line;
+		$deps =~ s/ +/ /g;
+	}
+	if ($line =~ /^Build-Depends-Indep: /) {
+		$line =~ s/^Build-Depends-Indep: //;
+		$deps .= " ".$line;
+		$deps =~ s/ +/ /g;
+	}
+}
+@dependencies=split(/, /, $deps) if (defined $deps);
+@aptlist=();
+foreach my $dep (@dependencies) {
+	$dep =~ s/^ //;
+	my $archlisted=1;
+	# if there is an arch specifier then honour it when making deps list
+	if ($dep =~ /\[(.*)\]/) {
+		$archlisted=0;
+		my @archspec=split(/ /, $1);
+		foreach my $arch (@archspec) {
+			if ($arch eq $hostarch) {
+				$archlisted=1;
+				last;
+			}
+		}
+		next unless $archlisted;
+	}
+	@bits=split(/ /, $dep);
+	push @aptlist, $bits[0];
+}
+$arch = `debconf-show dpkg-cross 2>/dev/null|cut -d: -f2`;
+$arch =~ s/ //g;
+chomp ($arch);
+$arch = "armel" if (($arch eq '') or ($arch eq 'None'));
+print ("Installing build dependencies for '$name' to build for $arch.\n");
+if (scalar @aptlist > 0) {
+	$cmd = "xapt -m -a $arch ".join(" ", @aptlist);
+	system ("$cmd");
+}

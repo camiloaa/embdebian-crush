@@ -1,0 +1,10 @@
+#!/bin/sh
+
+set -e
+
+if [ ! -x "/usr/sbin/xapt" ]; then
+	AV=`/usr/bin/apt-cache policy xapt 2>/dev/null`
+	if [ -n "$AV" ]; then
+		/usr/bin/apt-get -y install xapt
+	fi
+fi

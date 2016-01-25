@@ -1,0 +1,477 @@
+#!/usr/bin/perl
+
+# Copyright (C) 2009-2010  Neil Williams <codehelp@debian.org>
+#
+# This package is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+use IO::File;
+use File::Basename;
+use POSIX qw(locale_h);
+use Locale::gettext;
+use strict;
+use warnings;
+use Term::ANSIColor qw(:constants);
+use Config::IniFiles;
+use vars qw/ $host $mirror $suite $config_str $dir $arch @touch $minver
+ $dpkgdir $etcdir $ourversion $progname @files $msg $type $noauth
+ @dirs @source_list $vendor $preserve $clean $build $ignore_status
+ $components $configfile $config %config %keys $section $key $value
+ $vendor_name @list @crossdata $installed $checknewer $multiarch $ignore_dep /;
+
+setlocale(LC_MESSAGES, "");
+textdomain("xapt");
+
+$progname = basename($0);
+$ourversion = &scripts_version();
+$dir = "/var/lib/xapt/";
+$vendor="default";
+$configfile = "/etc/xapt.d/default.conf";
+$vendor = "debian";
+$etcdir = "etc/xapt/"; # sources below /var/lib/xapt/
+# use the real system status information.
+# we'd only have to copy it otherwise.
+$dpkgdir = "/var/lib/dpkg/";        # state
+$ignore_dep = "";
+# min ver of dpkg-cross for -m support
+$minver = "2.6.3~";
+
+while( @ARGV ) {
+	$_= shift( @ARGV );
+	last if m/^--$/;
+	if (!/^-/) {
+		unshift(@ARGV,$_);
+		last;
+	} elsif (/^(-\?|-h|--help|--version)$/) {
+	&usageversion();
+		exit 0;
+	} elsif (/^(-M|--mirror)$/) {
+		$mirror = shift(@ARGV);
+	} elsif (/^(-X)$/) {
+		$ignore_dep.=" -X ".shift(@ARGV);
+	} elsif (/^(-m|--multiarch)$/) {
+		$multiarch++;
+		my $cmd = 'dpkg-query -W -f \'${Version}\' dpkg-cross';
+		$installed = `$cmd 2>/dev/null`;
+		my $res = system ("dpkg --compare-versions $installed '>=' $minver");
+		$res >>= 8;
+		if ($res > 0) {
+			undef $multiarch;
+			warn sprintf (_g("Error: Multi-Arch support needs dpkg-cross (>= %s). Found %s"), $minver, $installed)."\n";
+		}
+	} elsif (/^(-a|--arch)$/) {
+		$arch = shift;
+	} elsif (/^(-S|--suite)$/) {
+		$suite = shift(@ARGV);
+	} elsif (/^(-V|--vendor)$/) {
+		$vendor = shift(@ARGV);
+	} elsif (/^(--check-newer)$/) {
+		$checknewer++;
+	} elsif (/^(-a|--arch)$/) {
+		$arch = shift (@ARGV);
+	} elsif (/^(--no-auth)$/) {
+		$noauth = " -o Apt::Get::AllowUnauthenticated=true";
+	} elsif (/^(--ignore-status)$/) {
+		$ignore_status++;
+	} elsif (/^(-k|--keep-cache)$/) {
+		$preserve = 1;
+	} elsif (/^(-c|--clean-cache)$/) {
+		$clean = 1;
+	} elsif (/^(-b|--build-only)$/) {
+		$build = 1;
+	} else {
+		&usageversion;
+		die RED, "$progname: "._g("Unknown option")." $_.", RESET, "\n";
+	}
+}
+
+# imply -k if -b in use.
+$preserve = 1 if (defined $build);
+
+# no point building if clean is also set.
+if ((defined $build) and (defined $clean)) {
+	print RED;
+	printf(_g("%s: Illogical options set.\n"), $progname);
+	print RESET;
+	printf( _g("%s: --build-only cannot be used with --clean-cache\n"), $progname);
+	exit 4;
+}
+
+if (defined $clean) {
+	print GREEN;
+	printf( _g("%s: Cleaning %s* \n"), $progname, $dir);
+	print RESET;
+	system ("rm -rf ${dir}*");
+	print GREEN;
+	printf( _g("%s: Done.\n\n"), $progname);
+	print RESET;
+	exit 0;
+}
+if (-f "/usr/bin/dpkg-vendor") {
+	$vendor_name = `dpkg-vendor --vendor $vendor --query vendor`;
+	chomp ($vendor_name);
+	$vendor_name = lc($vendor_name);
+} else {
+	$vendor_name = "debian";
+}
+die (RED, sprintf(_g("Cannot read /etc/xapt.d/%s.conf"), $vendor_name), RESET, "\n")
+	if (not -r "/etc/xapt.d/$vendor_name.conf");
+$configfile = "/etc/xapt.d/$vendor_name.conf";
+$config     = new Config::IniFiles( -file => $configfile );
+$mirror     = $config->val(lc($vendor_name), 'mirror') if (not defined $mirror);
+$suite      = $config->val(lc($vendor_name), 'suite') if (not defined $suite);
+$components = $config->val(lc($vendor_name), 'components');
+$noauth     = " -o Apt::Get::AllowUnauthenticated=true "
+	if ($config->val(lc($vendor_name), 'noauth') eq 'true');
+if ((not defined $checknewer) and (defined $config->val(lc($vendor_name), "checknewer"))) {
+	$checknewer++ if ($config->val(lc($vendor_name), "checknewer") eq 'true');
+}
+$mirror     = "http://cdn.debian.net/debian/" if ($mirror eq '');
+$components = "main contrib non-free" if ($components eq '');
+undef ($suite) if ($suite eq '');
+
+@files = @ARGV;
+
+if (scalar @files == 0) {
+	my $msg = sprintf(_g("ERROR: Please specify some packages for %s to convert.\n"), $progname);
+	warn (RED, $msg, RESET, "\n");
+	&usageversion;
+	exit (0);
+}
+
+if (not defined $arch) {
+	$arch = `debconf-show dpkg-cross 2>/dev/null|cut -d: -f2`;
+	if (defined $arch) {
+		chomp ($arch);
+		$arch =~ s/^ +//;
+		undef ($arch) if ($arch =~ /None/);
+	}
+}
+$arch = "armel" if (not defined $arch);
+my $msg = sprintf(_g("ERROR: %s: misconfiguration, '%s' missing.\n"),
+	$progname, $dir);
+die (RED, $msg, RESET) if (not -d "$dir");
+system ("mkdir -p ${dir}${etcdir}sources.list.d/");
+system ("mkdir -p ${dir}${etcdir}preferences.d/");
+unlink ("${dir}${etcdir}sources.list") if (-f "${dir}${etcdir}sources.list");
+system ("rm -f ${dir}${etcdir}sources.list.d/*");
+mkdir "$dir/lists" if (not -d "$dir/lists");
+mkdir "$dir/lists/partial" if (not -d "$dir/lists/partial");
+mkdir "$dir/archives" if (not -d "$dir/archives");
+mkdir "$dir/output" if (not -d "$dir/output");
+mkdir "$dir/archives/partial" if (not -d "$dir/archives/partial");
+@dirs = qw/ alternatives info parts updates/;
+@touch = qw/ available diversions statoverride status lock/;
+
+if (defined $suite) {
+	unlink "${dir}${etcdir}sources.list.d/xapt.list";
+	open (SOURCES, ">${dir}${etcdir}sources.list.d/xapt.list")
+		or die RED, _g("Cannot open sources list")." $!", RESET, "\n";
+	print SOURCES "deb $mirror $suite $components\n";
+	close SOURCES;
+} else {
+	&prepare_sources_list;
+}
+$host=`dpkg-architecture -qDEB_HOST_ARCH`;
+chomp ($host);
+$config_str = '';
+$config_str .= " -o Apt::Get::Download-Only=true";
+if (($arch ne $host) or (defined $ignore_status)) {
+	$dpkgdir = "${dir}/${arch}/dpkg/";
+	mkdir "$dir/$arch";
+	mkdir "$dir/$arch/dpkg";
+	system ("touch ${dir}/${arch}/dpkg/status");
+	$config_str .= " -y -o Apt::Architecture=$arch";
+} else {
+	$config_str .= " -y --reinstall -o Dir=$dir";
+}
+$config_str .= " -o Apt::Install-Recommends=false";
+$config_str .= " -o Dir::Etc=${dir}${etcdir}";
+$config_str .= " -o Dir::Etc::TrustedParts=/etc/apt/trusted.gpg.d";
+$config_str .= $noauth if (defined $noauth);
+$config_str .= " -o Dir::Etc::Trusted=/etc/apt/trusted.gpg"; 
+$config_str .= " -o Dir::Etc::SourceList=${dir}${etcdir}sources.list";
+$config_str .= " -o Dir::Etc::SourceParts=${dir}${etcdir}sources.list.d/";
+$config_str .= " -o Dir::State=${dir}";
+$config_str .= " -o Dir::State::Status=${dpkgdir}status";
+$config_str .= " -o Dir::Cache=${dir}";
+
+# use dpkg --print-foreign-architectures dpkg >= 1.16.2
+my $cmd = 'dpkg-query -W -f \'${Version}\' dpkg';
+$installed = `$cmd 2>/dev/null`;
+my $res = system ("dpkg --compare-versions $installed '>=' 1.16.2");
+$res >>= 8;
+if (($res == 0) and (not defined $multiarch)) {
+	$res = system("dpkg --print-foreign-architectures | grep $arch > /dev/null");
+	$res >>= 8;
+	if ($res == 0) {
+		$cmd = 'dpkg-query -W -f \'${Version}\' dpkg-cross';
+		$installed = `$cmd 2>/dev/null`;
+		$res = system ("dpkg --compare-versions $installed '>=' $minver");
+		$res >>= 8;
+		if ($res != 0) {
+			die ("Unsupported combination of old dpkg-cross and new dpkg!\n");
+		}
+		$multiarch++;
+		warn ("Warning: Multi-Arch support has been enabled.\n");
+	}
+}
+
+print "apt-get $config_str update\n";
+system ("apt-get $config_str update 2>/dev/null");
+my $str = join (" ", @files);
+print "apt-get $config_str install $str\n";
+system ("apt-get $config_str install $str");
+$msg = _g("Cannot read");
+opendir (DEBS, "${dir}archives/") or die (RED, "$msg ${dir}archives/ : $!", RESET, "\n");
+@list = grep(/\.deb$/, readdir DEBS);
+closedir (DEBS);
+chdir ("${dir}output/");
+my $support = (defined $multiarch) ? '-M' : '';
+foreach my $pkg (@list) {
+	system ("dpkg-cross -A $support -a $arch $ignore_dep -b ${dir}archives/$pkg");
+	unlink ("${dir}archives/$pkg") if (not defined $preserve);
+}
+opendir (DEBS, "${dir}output/") or die (RED, "$msg ${dir}output/ : $!", RESET, "\n");
+@list = grep(/\.deb$/, readdir DEBS);
+closedir (DEBS);
+if (defined $checknewer) {
+	print GREEN;
+	printf (_g("\nINF: Checking against currently installed cross packages....\n"));
+	print RESET;
+	foreach my $crosspkg (@list) {
+		my $cmd = 'dpkg-deb -W --showformat \'${Package}\n${Version}\n\''." ${dir}output/$crosspkg\n";
+		@crossdata = `$cmd`;
+		chomp(@crossdata);
+		# crossdata[0] is package name, crossdata[1] is candidate version
+		my $pkgname = $crossdata[0];
+		my $candidate = $crossdata[1];
+		if (($candidate =~ /^$/) or ($pkgname =~ /^$/)) {
+			print "error\n";
+			next;
+		}
+		$cmd = 'dpkg-query -W -f \'${Version}\' '.$pkgname;
+		$installed = `$cmd 2>/dev/null`;
+		next if ($installed =~ /^$/);
+		chomp ($installed);
+		$cmd = "dpkg --compare-versions $installed '>=' $candidate";
+		my $retval = system ($cmd);
+		$retval >>= 8;
+		if ($retval == 0) {
+			print GREEN;
+			printf (_g("INF: Skipping installation of %s - newer or same version already installed (%s).\n"), $crosspkg, $installed);
+			print RESET;
+			unlink "${dir}output/$crosspkg";
+		}
+		@crossdata=();
+	}
+	@list=();
+	opendir (DEBS, "${dir}output/") or die ("$msg ${dir}output/ : $!\n");
+	@list = grep(/\.deb$/, readdir DEBS);
+	closedir (DEBS);
+}
+system ("dpkg -i ${dir}output/*${arch}-cross*.deb")
+	if ((scalar @list > 0) and (not defined $build) and ($host ne $arch));
+
+system ("rm -rf ${dir}*") if (not defined $preserve);
+
+exit 0;
+
+sub prepare_sources_list {
+	# copy existing sources into our directories
+	if (-e "/etc/apt/sources.list") {
+		open (SOURCES, "/etc/apt/sources.list")
+			or die (RED, _g("cannot open apt sources list.")." $!", RESET, "\n");
+		@source_list = <SOURCES>;
+		close (SOURCES);
+		open (SOURCES, ">${dir}${etcdir}sources.list")
+			or die (RED, _g("cannot open apt sources list.")." $!", RESET, "\n");
+		print SOURCES @source_list;
+		close (SOURCES);
+	}
+	@source_list=();
+	if (-d "/etc/apt/sources.list.d/") {
+		opendir (FILES, "/etc/apt/sources.list.d/") or
+			die (RED, _g("cannot open apt sources.list directory"), "$!", RESET, "\n");
+		my @files = grep(!/^\.\.?$/, readdir FILES);
+		foreach my $f (@files) {
+			# just skip some obvious backups
+			next if ($f =~ /\.ucf-old$/);
+			next if ($f =~ /.*~/);
+			open (SOURCES, "/etc/apt/sources.list.d/$f") or
+				die (RED, _g("cannot open apt sources list.")." $!", RESET, "\n");
+			@source_list=<SOURCES>;
+			close (SOURCES);
+			open (SOURCES, ">${dir}${etcdir}sources.list.d/$f") or
+				die (RED, _g("cannot open apt sources list.")." $!", RESET, "\n");
+			print SOURCES @source_list;
+			close (SOURCES);
+		}
+		closedir (FILES);
+	}
+	@source_list=();
+}
+
+sub usageversion {
+	printf STDERR (_g("
+%s version %s
+
+Usage:
+ %s [-M|--mirror] [-S|--suite] [-k|--keep-cache] PACKAGES ...
+ %s -c|--clean-cache
+ %s -?|-h|--help|--version
+
+Commands:
+ -c|--clean-cache:        Remove any downloaded cache files and exit.
+
+Options:
+ -b|--build-only:         Get and process the packages, do not install
+                           (implies -k)
+ -M|--mirror:             A Debian mirror with the requested package(s)
+ -S|--suite:              Which suite to use for the package(s)
+ -k|--keep-cache:         Preserve the downloaded cache files to use again.
+ -a|--arch ARCHITECTURE:  Specify the architecture to download or install.
+    --ignore-status:      Ignore currently installed packages (native)
+    --check-newer:        Check if the same or newer version of the cross
+                          package is installed and skip installation.
+ -m|--multiarch:          Convert Multi-Arch packages to old dpkg-cross
+                           paths. Requires dpkg-cross (>= %s)
+
+xapt tidies up after itself by removing all temporary data and
+packages after installation, unless the --keep-cache option is used.
+(Converted packages are not preserved.)
+
+The archives will be downloaded into /var/lib/xapt/archives/ before
+being converted with dpkg-cross and installed using dpkg. Using
+--build-only implies --keep-cache. Converted packages are created in
+/var/lib/xapt/output/
+
+"), $progname, $ourversion, $progname, $progname, $progname, $minver);
+}
+
+sub scripts_version {
+	my $query = `dpkg-query -W -f='\${Version}' xapt 2>/dev/null`;
+	(defined $query) ? return $query : return "2.2.4";
+}
+
+sub _g {
+	return gettext(shift);
+}
+
+=pod
+
+=head1 NAME
+
+xapt - convert Debian packages to cross versions on-the-fly
+
+=head1 Synopsis
+
+ $ sudo xapt foo bar baz
+
+ $ sudo xapt -M http://ftp.fr.debian.org/debian/ foo bar baz
+ 
+ $ sudo xapt --clean-cache
+
+=head1 Description
+
+Downloading the Packages files can take a reasonable amount of time, so
+to grip a number of packages, either specify all packages in one command
+or use the C<--keep-cache> option for each run and use the
+C<--clean-cache> option at the end.
+
+Note also that, in common with the rest of Emdebian processing,
+Install-Recommends is always turned off, so if you need a package that
+is only recommended by packages in the list given to C<xapt>, that
+package will need to be added to the list explicitly.
+
+=head1 Limitations
+
+Installing any package from repositories outside the normal apt sources
+(especially if those packages are subsequently modified by dpkg-cross)
+will list those packages as "local or obsolete" in package managers.
+Converted packages cannot be upgraded without repeating the call to 
+C<xapt> because C<apt-get> does not know about the renaming of the
+package by C<dpkg-cross> when downloading the packages. This can cause
+problems if dependencies of such packages need to be upgraded. It is
+possible that the main system C<apt> will try to remove these local
+packages in order to proceed with the main system upgrade.
+
+The best option is to use C<xapt> inside a disposable chroot.
+
+=head1 Checking existing cross packages
+
+C<xapt>, by default, will not check to see if a particular cross package
+is already installed at a newer or equal version which can cause cross
+packages to be downgraded. To turn on this check, either use the
+C<--check-newer> option or set C<checknewer> to true in the vendor
+configuration file in F</etc/xapt.d/>.
+
+=head1 Using SecureApt 
+
+If your apt sources include a repository which does not use SecureApt,
+disable authentication in the vendor configuration file in F</etc/xapt.d/>
+Set noauth=true.
+
+=head1 Multiarch behaviour
+
+By default <dpkg-cross> does nothing with packages from Debian which already
+support Multi-Arch - the package is simply copied to the current work
+directory, if it does not already exist. Any package containing a Multi-Arch: 
+field in DEBIAN/control is skipped in this manner.
+
+C<xapt> uses the --multiarch option can pass the --convert-multiarch
+option down to dpkg-cross to instead force the generation of a 
+-<arch>-cross package with the files moved into the conventional 
+dpkg-cross locations.
+
+C<xapt> will check for dpkg-cross version 2.6.3 or higher when this
+option is set and report an error (unsetting the option) if a suitable
+version is not found.
+
+If you are using apt sources which specify an arch option, the 
+architecture list will need to include the architecture you wish to
+use with C<xapt>. If you have dpkg (>= 1.16.2) installed, then you
+need to ensure that the requested architecture is listed in your
+foreign dpkg architectures and that you have at least one mirror which
+can provide packages of that architecture.
+
+ dpkg --print-foreign-architectures
+
+=head1 Commands
+
+Commands:
+ -c|--clean-cache:        Remove any downloaded cache files and exit.
+
+Options:
+ -b|--build-only:         Get and process the packages, do not install
+                           (implies -k)
+ -M|--mirror:             A Debian mirror with the requested package(s)
+ -S|--suite:              Which suite to use for the package(s)
+ -k|--keep-cache:         Preserve the downloaded cache files to use again.
+ -a|--arch ARCHITECTURE:  Specify the architecture to download or install.
+    --ignore-status:      Ignore currently installed packages (native)
+    --check-newer:        Check if the same or newer version of the cross
+                          package is installed and skip installation.
+ -m|--multiarch:          Convert Multi-Arch packages to old dpkg-cross
+                           paths. Requires dpkg-cross (>= %s)
+
+xapt tidies up after itself by removing all temporary data and
+packages after installation, unless the --keep-cache option is used.
+(Converted packages are not preserved.)
+
+The archives will be downloaded into F</var/lib/xapt/archives/> before
+being converted with dpkg-cross and installed using dpkg. Using
+C<--build-only> implies C<--keep-cache>. Converted packages are created in
+F</var/lib/xapt/output/>
+
+=cut

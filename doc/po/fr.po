@@ -1,0 +1,993 @@
+# Translation of the emdebian-crush documentation to French.
+# Copyright (C) 2006-2010 Neil Williams.
+# This file is distributed under the same license as the emdebian-crush package.
+# Copyright (C) of this file 2012 Étienne Gilli <etienne.gilli@gmail.com>.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: emdebian-crush 2.2.18\n"
+"POT-Creation-Date: 2013-05-06 19:16+0200\n"
+"PO-Revision-Date: 2012-05-18 11:53+0200\n"
+"Last-Translator: Étienne Gilli <etienne.gilli@gmail.com>\n"
+"Language-Team: French <debian-l10n-french@lists.debian.org>\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. type: =head1
+#: emvendor:112 doc/pdebuild-pod/pdebuild-cross:3
+#: doc/pdebuild-pod/pdebuild-cross-create:3
+#: doc/pdebuild-pod/pdebuild-cross-update:3
+#: doc/pdebuild-pod/svn-pdebuild-cross:3
+msgid "Name"
+msgstr "Nom"
+
+#. type: textblock
+#: emvendor:114
+msgid "emvendor - retrieve vendor-specific package configuration strings"
+msgstr ""
+"emvendor - récupère les chaînes de configuration de paquet propres à "
+"l'éditeur"
+
+#. type: =head1
+#: emvendor:116 doc/pdebuild-pod/pdebuild-cross:7
+#: doc/pdebuild-pod/pdebuild-cross-create:7
+#: doc/pdebuild-pod/pdebuild-cross-update:7
+#: doc/pdebuild-pod/svn-pdebuild-cross:7 xapt/xapt:374
+msgid "Synopsis"
+msgstr "Synopsis"
+
+#. type: verbatim
+#: emvendor:118
+#, no-wrap
+msgid ""
+" emvendor -V|--vendor VENDOR -p|--package PACKAGE -k|--key KEY\n"
+" emvendor -?|-h|--help|--version\n"
+"\n"
+msgstr ""
+" emvendor -V|--vendor ÉDITEUR -p|--package PAQUET -k|--key CLÉ\n"
+" emvendor -?|-h|--help|--version\n"
+"\n"
+
+#. type: =head1
+#: emvendor:121 xapt/xapt:447
+msgid "Commands"
+msgstr "Commandes"
+
+#. type: verbatim
+#: emvendor:123
+#, no-wrap
+msgid ""
+" -v|--vendor VENDOR:    the vendor name from dpkg-vendor\n"
+" -p|--package PACKAGE:  the package name (usually source)\n"
+" -k|--key KEY:          arbitrary string for the key of the data\n"
+"\n"
+msgstr ""
+" -v|--vendor ÉDITEUR:  le nom de l'éditeur obtenu par dpkg-vendor\n"
+" -p|--package PAQUET:  le nom du paquet (habituellement source)\n"
+" -k|--key CLÉ:         chaîne arbitraire pour la clé des données\n"
+"\n"
+
+#. type: textblock
+#: emvendor:127
+msgid "All commands must be specified every time."
+msgstr "Toutes les commandes doivent être indiquées à chaque exécution."
+
+#. type: textblock
+#: emvendor:129
+msgid "On success, the string is printed and emvendor exits with zero."
+msgstr ""
+"En cas de succès, la chaîne de caractères est affichée et emvendor retourne "
+"zéro."
+
+#. type: textblock
+#: emvendor:131
+msgid ""
+"In the case of error, emvendor dies with an empty string on STDERR and exits "
+"with a non-zero return value."
+msgstr ""
+"En cas d'erreur, emvendor se termine avec une chaîne vide sur STDERR et "
+"renvoie une valeur différente de zéro."
+
+#. type: =head1
+#: emvendor:134 doc/pdebuild-pod/pdebuild-cross:11
+#: doc/pdebuild-pod/pdebuild-cross-create:11
+#: doc/pdebuild-pod/pdebuild-cross-update:11
+#: doc/pdebuild-pod/svn-pdebuild-cross:11 xapt/xapt:382 xapt/embuilddeps:817
+msgid "Description"
+msgstr "Description"
+
+#. type: textblock
+#: emvendor:136
+msgid ""
+"emvendor provides a way for debian/rules to call in a string for a "
+"particular package that fits into the rules for that package B<and> conforms "
+"to the requirements of the vendor."
+msgstr ""
+"emvendor permet à debian/rules de récupérer, pour un paquet précis, une "
+"chaîne de caractères qui s'intègre aux règles pour ce paquet B<et> qui est "
+"conforme aux conditions de l'éditeur (« vendor »)."
+
+#. type: textblock
+#: emvendor:140
+msgid "http://wiki.debian.org/EmdebianAuditDetail#Vendor"
+msgstr "http://wiki.debian.org/EmdebianAuditDetail#Vendor"
+
+#. type: textblock
+#: emvendor:142
+msgid ""
+"It is fairly obvious that specifying each vendor in the F<debian/rules> file "
+"of each package is not going to be particularly flexible."
+msgstr ""
+"Il est assez évident qu'indiquer chaque éditeur dans le fichier F<debian/"
+"rules> pour chaque paquet ne va pas être particulièrement flexible."
+
+#. type: verbatim
+#: emvendor:145
+#, no-wrap
+msgid ""
+" DEB_VENDOR=$(shell dpkg-vendor --query vendor)\n"
+" ifeq (Debian,$(DEB_VENDOR))\n"
+"  # Debian build\n"
+"  EXCONFARGS=--disable-mono --disable-monodoc\n"
+" else\n"
+"  # any-vendor build\n"
+"  EXCONFARGS=$(shell emvendor --vendor $(DEB_VENDOR) --package avahi --key EXCONFARGS)\n"
+" endif\n"
+"\n"
+msgstr ""
+" DEB_VENDOR=$(shell dpkg-vendor --query vendor)\n"
+" ifeq (Debian,$(DEB_VENDOR))\n"
+"  # Debian build\n"
+"  EXCONFARGS=--disable-mono --disable-monodoc\n"
+" else\n"
+"  # any-vendor build\n"
+"  EXCONFARGS=$(shell emvendor --vendor $(DEB_VENDOR) --package avahi --key EXCONFARGS)\n"
+" endif\n"
+"\n"
+
+#. type: textblock
+#: emvendor:154
+msgid "or use the short options:"
+msgstr "ou utiliser les options courtes :"
+
+#. type: verbatim
+#: emvendor:156
+#, no-wrap
+msgid ""
+" EXCONFARGS=$(shell foo-bar -V $(DEB_VENDOR) -p avahi -k EXCONFARGS)\n"
+"\n"
+msgstr ""
+" EXCONFARGS=$(shell foo-bar -V $(DEB_VENDOR) -p avahi -k EXCONFARGS)\n"
+"\n"
+
+#. type: textblock
+#: emvendor:158
+msgid ""
+"The values themselves are in a vendor-specific conf file in F</etc/emvendor."
+"d/>"
+msgstr ""
+"Les valeurs elles-mêmes sont dans un fichier de configuration spécifique à "
+"l'éditeur dans F</etc/emvendor.d/>"
+
+#. type: verbatim
+#: emvendor:161
+#, no-wrap
+msgid ""
+" $ cat /etc/foo-bar.d/emdebian-crush\n"
+" [avahi]\n"
+" EXCONFARGS=--disable-mono --disable-monodoc --disable-python\n"
+" --disable-doxygen-doc --disable-pygtk --disable-python-dbus\n"
+" --disable-core-docs --disable-qt3 --disable-qt4 --disable-gobject\n"
+" --with-distro debian \n"
+"\n"
+msgstr ""
+" $ cat /etc/foo-bar.d/emdebian-crush\n"
+" [avahi]\n"
+" EXCONFARGS=--disable-mono --disable-monodoc --disable-python\n"
+" --disable-doxygen-doc --disable-pygtk --disable-python-dbus\n"
+" --disable-core-docs --disable-qt3 --disable-qt4 --disable-gobject\n"
+" --with-distro debian \n"
+"\n"
+
+#. type: verbatim
+#: emvendor:168
+#, no-wrap
+msgid ""
+" [busybox]\n"
+" foo=\n"
+"\n"
+msgstr ""
+" [busybox]\n"
+" foo=\n"
+"\n"
+
+#. type: textblock
+#: emvendor:171
+msgid ""
+"(Note that the value has to be all on one line which is a little awkward - "
+"also note that values are not able to include the equals sign which could be "
+"more of an issue.)"
+msgstr ""
+"(À noter : la valeur doit être sur une seule ligne, ce qui est peu commode - "
+"à noter également : les valeurs ne peuvent pas contenir le signe égal ce qui "
+"peut être plus gênant.)"
+
+#. type: textblock
+#: emvendor:175
+msgid ""
+"Packages that need two strings can do so - the key string is entirely "
+"arbitrary as long as it fits in the style of a typical ini file."
+msgstr ""
+"Les paquets qui nécessitent deux chaînes peuvent faire ainsi - la chaîne "
+"« clé » est complètement arbitraire tant qu'elle correspond au style d'un "
+"fichier « ini » typique."
+
+#. type: textblock
+#: emvendor:178
+msgid "Therefore, the key can be matched to the needs of the relevant package."
+msgstr ""
+"Par conséquent, la clé peut être adaptée aux besoins du paquet concerné."
+
+#. type: textblock
+#: emvendor:180
+msgid ""
+"C<emdebian-buildsupport> provides F</etc/emvendor.d/emdebian-crush> with all "
+"the content for all packages that need such details."
+msgstr ""
+"C<emdebian-buildsupport> renseigne F</etc/emvendor.d/emdebian-crush> avec "
+"tout le contenu pour tous les paquets qui nécessitent de tels détails."
+
+#. type: =head1
+#: emvendor:183
+msgid "emvendor and dpkg-vendor"
+msgstr "emvendor et dpkg-vendor"
+
+#. type: textblock
+#: emvendor:185
+msgid ""
+"F<dpkg-vendor> supports vendor functionality but F<emvendor> adds an extra "
+"hierarchy, organised by Debian source package name. It would be possible to "
+"include the relevant strings in F</etc/dpkg/origins/vendor> but each "
+"identifier string would need to be unique across all packages for each "
+"vendor, which is an unrealistic limitation."
+msgstr ""
+"F<dpkg-vendor> gère la fonctionnalité des éditeurs mais F<emvendor> ajoute "
+"une hiérarchie supplémentaire, organisée par nom de paquet Debian source. Il "
+"serait possible d'inclure les chaînes correspondantes dans F</etc/dpkg/"
+"origins/éditeur> mais chaque chaîne de l'identifiant devrait être unique "
+"parmi tous les paquets pour chaque éditeur, ce qui est une contrainte "
+"irréaliste."
+
+#. type: textblock
+#: doc/pdebuild-pod/pdebuild-cross:5
+msgid "pdebuild-cross - simple pbuilder wrapper for crossbuild support"
+msgstr ""
+"pdebuild-cross - simple encapsulation de pbuilder pour la construction "
+"croisée"
+
+#. type: verbatim
+#: doc/pdebuild-pod/pdebuild-cross:9
+#, no-wrap
+msgid ""
+" pdebuild-cross [pbuilder options]\n"
+"\n"
+msgstr ""
+" pdebuild-cross [options pbuilder]\n"
+"\n"
+
+#. type: textblock
+#: doc/pdebuild-pod/pdebuild-cross:13
+#: doc/pdebuild-pod/pdebuild-cross-create:13
+msgid ""
+"C<pdebuild-cross> wraps pdebuild to support cross-building inside a pbuilder "
+"chroot. C<pdebuild-cross> needs to be run in the top level source directory "
+"of the package (where it can find F<debian/changelog>)."
+msgstr ""
+"C<pdebuild-cross> encapsule pdebuild pour la gestion de la construction "
+"croisée dans un chroot pbuilder. C<pdebuild-cross> doit être exécuté dans le "
+"répertoire de plus haut niveau des sources du paquet (où il peut trouver "
+"F<debian/changelog>)."
+
+#. type: =head1
+#: doc/pdebuild-pod/pdebuild-cross:17
+#: doc/pdebuild-pod/pdebuild-cross-create:17
+#: doc/pdebuild-pod/pdebuild-cross-update:15
+#: doc/pdebuild-pod/svn-pdebuild-cross:22 xapt/embuilddeps:805
+msgid "Options"
+msgstr "Options"
+
+#. type: textblock
+#: doc/pdebuild-pod/pdebuild-cross:19
+msgid ""
+"C<pdebuild-cross> supports no options itself, any options specified will be "
+"passed untouched to F<pdebuild --debbuildopts options>."
+msgstr ""
+"C<pdebuild-cross> ne gère aucune option propre ; toutes les options "
+"indiquées seront passées sans modification à F<pdebuild --debbuildopts "
+"options>."
+
+#. type: =head1
+#: doc/pdebuild-pod/pdebuild-cross:22
+#: doc/pdebuild-pod/pdebuild-cross-create:23
+#: doc/pdebuild-pod/svn-pdebuild-cross:27
+msgid "Architecture"
+msgstr "Architecture"
+
+#. type: textblock
+#: doc/pdebuild-pod/pdebuild-cross:24
+msgid ""
+"F</etc/pdebuild-cross/pdebuild-cross.rc> defaults to C<armel> - edit the F</"
+"etc/pdebuild-cross/pdebuild-cross.rc> configuration file to change the "
+"architecture. See also F<pdebuild-cross-create> (1)"
+msgstr ""
+"F</etc/pdebuild-cross/pdebuild-cross.rc> prend par défaut la valeur C<armel> "
+"- éditer le fichier de configuration F</etc/pdebuild-cross/pdebuild-cross."
+"rc> pour changer l'architecture. Voir aussi F<pdebuild-cross-create> (1)"
+
+#. type: =head1
+#: doc/pdebuild-pod/pdebuild-cross:28 doc/pdebuild-pod/svn-pdebuild-cross:34
+msgid "Creating the chroot"
+msgstr "Création du chroot"
+
+#. type: textblock
+#: doc/pdebuild-pod/pdebuild-cross:30 doc/pdebuild-pod/svn-pdebuild-cross:36
+msgid ""
+"Use C<pdebuild-cross-create> to build a suitable chroot tgz using multistrap."
+msgstr ""
+"Utiliser C<pdebuild-cross-create> pour construire un tgz de chroot adapté en "
+"utilisant multistrap."
+
+#. type: textblock
+#: doc/pdebuild-pod/pdebuild-cross-create:5
+msgid "pdebuild-cross-create - pbuilder wrapper to create a crossbuild chroot"
+msgstr ""
+"pdebuild-cross-create - encapsulation de pbuilder pour créer un chroot de "
+"construction croisée"
+
+#. type: verbatim
+#: doc/pdebuild-pod/pdebuild-cross-create:9
+#, no-wrap
+msgid ""
+" pdebuild-cross-create\n"
+"\n"
+msgstr ""
+" pdebuild-cross-create\n"
+"\n"
+
+#. type: textblock
+#: doc/pdebuild-pod/pdebuild-cross-create:19
+msgid ""
+"C<pdebuild-cross-create> supports no options. Edit the F</etc/pdebuild-cross/"
+"pdebuild-cross.rc> configuration file to change how C<pdebuild-cross-create> "
+"behaves."
+msgstr ""
+"C<pdebuild-cross-create> ne gère aucune option. Éditer le fichier de "
+"configuration F</etc/pdebuild-cross/pdebuild-cross.rc> pour modifier le "
+"comportement de C<pdebuild-cross-create>."
+
+#. type: textblock
+#: doc/pdebuild-pod/pdebuild-cross-create:25
+msgid ""
+"F</etc/pdebuild-cross/pdebuild-cross.rc> defaults to C<armel> - edit the F</"
+"etc/pdebuild-cross/pdebuild-cross.rc> configuration file to change the "
+"architecture. Ensure that the C<MULTISTRAPFILE> configuration value is also "
+"modified to specify a C<multistrap> configuration file suitable for the "
+"architecture required."
+msgstr ""
+"F</etc/pdebuild-cross/pdebuild-cross.rc> prend par défaut la valeur C<armel> "
+"- éditer le fichier de configuration F</etc/pdebuild-cross/pdebuild-cross."
+"rc> pour changer d'architecture. Vérifier que la valeur du paramètre "
+"C<MULTISTRAPFILE> est modifiée pour indiquer un fichier de configuration "
+"C<multistrap> adapté à l'architecture requise."
+
+#. type: textblock
+#: doc/pdebuild-pod/pdebuild-cross-create:31
+msgid ""
+"However, the current pbuilder hooks also default to C<armel> and would need "
+"to be replaced for other architectures."
+msgstr ""
+"Cependant, les points d'entrée (« hooks ») actuels de pbuilder prennent "
+"également par défaut la valeur C<armel> et devraient être remplacés pour "
+"d'autres architectures."
+
+#. type: textblock
+#: doc/pdebuild-pod/pdebuild-cross-update:5
+msgid "pdebuild-cross-update - pbuilder wrapper to update a crossbuild chroot"
+msgstr ""
+"pdebuild-cross-update - encapsulation de pbuilder pour mettre à jour un "
+"chroot de construction croisée"
+
+#. type: verbatim
+#: doc/pdebuild-pod/pdebuild-cross-update:9
+#, no-wrap
+msgid ""
+" pdebuild-cross-update\n"
+"\n"
+msgstr ""
+" pdebuild-cross-update\n"
+"\n"
+
+#. type: textblock
+#: doc/pdebuild-pod/pdebuild-cross-update:13
+msgid "Simply wraps C<pbuilder update> to use the F<pdebuild-cross> tarball."
+msgstr ""
+"Encapsule tout simplement C<pbuilder update> pour utiliser l'archive tar de "
+"F<pdebuild-cross>"
+
+#. type: textblock
+#: doc/pdebuild-pod/pdebuild-cross-update:17
+msgid ""
+"C<pdebuild-cross-update> supports no options. Edit the F</etc/pdebuild-cross/"
+"pdebuild-cross.rc> configuration file to change the tarball to update."
+msgstr ""
+"C<pdebuild-cross-update> ne gère aucune option. Éditer le fichier de "
+"configuration F</etc/pdebuild-cross/pdebuild-cross.rc> pour changer "
+"l'archive tar à mettre à jour."
+
+#. type: textblock
+#: doc/pdebuild-pod/svn-pdebuild-cross:5
+msgid ""
+"svn-pdebuild-cross - simple svn-buildpackage wrapper for crossbuild support"
+msgstr ""
+"svn-pdebuild-cross - simple encapsulation de svn-buildpackage pour la "
+"construction croisée"
+
+#. type: verbatim
+#: doc/pdebuild-pod/svn-pdebuild-cross:9
+#, no-wrap
+msgid ""
+" svn-pdebuild-cross [svn-buildpackage options]\n"
+"\n"
+msgstr ""
+" svn-pdebuild-cross [options svn-buildpackage]\n"
+"\n"
+
+#. type: textblock
+#: doc/pdebuild-pod/svn-pdebuild-cross:13
+msgid ""
+"C<svn-pdebuild-cross> wraps svn-buildpackage to support cross-building "
+"inside a pbuilder chroot. C<svn-pdebuild-cross> needs to be run in the top "
+"level source directory of the package (where it can find F<debian/"
+"changelog>)."
+msgstr ""
+"C<svn-pdebuild-cross> encapsule svn-buildpackage pour gérer la construction "
+"croisée dans un chroot pbuilder. C<svn-pdebuild-cross> doit être exécuté "
+"dans le répertoire de plus haut niveau des sources du paquet (où il peut "
+"trouver F<debian/changelog>)."
+
+#. type: textblock
+#: doc/pdebuild-pod/svn-pdebuild-cross:18
+msgid "The script is a little (but just a little) more than an alias for:"
+msgstr "Le script est un peu (mais à peine) plus qu'un alias pour :"
+
+#. type: verbatim
+#: doc/pdebuild-pod/svn-pdebuild-cross:20
+#, no-wrap
+msgid ""
+" svn-buildpackage -aarmel --svn-builder /usr/bin/pdebuild-cross --svn-rm-prev-dir\n"
+"\n"
+msgstr ""
+" svn-buildpackage -aarmel --svn-builder /usr/bin/pdebuild-cross --svn-rm-prev-dir\n"
+"\n"
+
+#. type: textblock
+#: doc/pdebuild-pod/svn-pdebuild-cross:24
+msgid ""
+"C<svn-pdebuild-cross> supports no options itself, any options specified will "
+"be passed untouched to F<svn-buildpackage>."
+msgstr ""
+"C<svn-pdebuild-cross> ne gère aucune option propre : toutes les options "
+"indiquées seront passées sans modification à F<svn-buildpackage>."
+
+#. type: textblock
+#: doc/pdebuild-pod/svn-pdebuild-cross:29
+#, fuzzy
+#| msgid ""
+#| "F</etc/pdebuild-cross/pdebuild-cross> defaults to your default dpkg-cross "
+#| "architecture selection - edit the F</etc/pdebuild-cross/pdebuild-cross."
+#| "rc> configuration file to change the architecture. See also F<pdebuild-"
+#| "cross-create> (1)"
+msgid ""
+"F</etc/pdebuild-cross/pbuilder.rc> defaults to your default dpkg-cross "
+"architecture selection - edit the F</etc/pdebuild/pdebuild-cross.rc> "
+"configuration file to change the architecture. See also F<pdebuild-cross-"
+"create> (1)"
+msgstr ""
+"F</etc/pdebuild-cross/pdebuild-cross.rc> prend par défaut l'architecture "
+"sélectionnée pour dpkg-cross - éditer le fichier de configuration F</etc/"
+"pdebuild-cross/pdebuild-cross.rc> pour changer d'architecture. Voir aussi "
+"F<pdebuild-cross-create> (1)"
+
+#. type: =head1
+#: xapt/xapt:370 xapt/embuilddeps:795
+msgid "NAME"
+msgstr "NOM"
+
+#. type: textblock
+#: xapt/xapt:372
+msgid "xapt - convert Debian packages to cross versions on-the-fly"
+msgstr "xapt - convertir à la volée des paquets Debian en versions croisées"
+
+#. type: verbatim
+#: xapt/xapt:376
+#, no-wrap
+msgid ""
+" $ sudo xapt foo bar baz\n"
+"\n"
+msgstr ""
+" $ sudo xapt foo bar baz\n"
+"\n"
+
+#. type: verbatim
+#: xapt/xapt:378
+#, no-wrap
+msgid ""
+" $ sudo xapt -M http://ftp.fr.debian.org/debian/ foo bar baz\n"
+" \n"
+msgstr ""
+" $ sudo xapt -M http://ftp.fr.debian.org/debian/ foo bar baz\n"
+" \n"
+
+#. type: verbatim
+#: xapt/xapt:380
+#, no-wrap
+msgid ""
+" $ sudo xapt --clean-cache\n"
+"\n"
+msgstr ""
+" $ sudo xapt --clean-cache\n"
+"\n"
+
+#. type: textblock
+#: xapt/xapt:384
+msgid ""
+"Downloading the Packages files can take a reasonable amount of time, so to "
+"grip a number of packages, either specify all packages in one command or use "
+"the C<--keep-cache> option for each run and use the C<--clean-cache> option "
+"at the end."
+msgstr ""
+"Le téléchargement des fichiers « Packages » peut prendre un certain temps ; "
+"pour récupérer plusieurs paquets, il est préférable soit d'indiquer tous les "
+"paquets dans une seule commande, soit d'utiliser l'option C<--keep-cache> à "
+"chaque exécution et d'utiliser l'option C<--clean-cache> à la fin."
+
+#. type: textblock
+#: xapt/xapt:389
+msgid ""
+"Note also that, in common with the rest of Emdebian processing, Install-"
+"Recommends is always turned off, so if you need a package that is only "
+"recommended by packages in the list given to C<xapt>, that package will need "
+"to be added to the list explicitly."
+msgstr ""
+"À noter également : comme pour le reste des traitements d'Emdebian, Install-"
+"Recommends est toujours désactivé. C'est pourquoi, si un paquet à traiter "
+"est seulement recommandé par des paquets dans la liste passée à C<xapt>, il "
+"faut indiquer explicitement ce paquet dans la liste."
+
+#. type: =head1
+#: xapt/xapt:394
+msgid "Limitations"
+msgstr "Limitations"
+
+#. type: textblock
+#: xapt/xapt:396
+msgid ""
+"Installing any package from repositories outside the normal apt sources "
+"(especially if those packages are subsequently modified by dpkg-cross)  will "
+"list those packages as \"local or obsolete\" in package managers.  Converted "
+"packages cannot be upgraded without repeating the call to C<xapt> because "
+"C<apt-get> does not know about the renaming of the package by C<dpkg-cross> "
+"when downloading the packages. This can cause problems if dependencies of "
+"such packages need to be upgraded. It is possible that the main system "
+"C<apt> will try to remove these local packages in order to proceed with the "
+"main system upgrade."
+msgstr ""
+"L'installation de paquets depuis des référentiels différents des sources "
+"normales d'apt (notamment si ces paquets sont modifiés par dpkg-cross par la "
+"suite) entraînera le statut « local ou obsolète » de ces paquets dans les "
+"gestionnaires de paquets. Les paquets convertis ne peuvent pas être mis à "
+"niveau sans répéter l'appel à C<xapt> car C<apt-get> n'est pas informé du "
+"renommage du paquet par C<dpkg-cross> lors du téléchargement des paquets. "
+"Cela peut poser des problèmes si des dépendances de ces paquets doivent être "
+"mises à niveau. Il est possible que l'C<apt> du système principal essaie de "
+"désinstaller ces paquets locaux pour effectuer une mise à niveau du système "
+"principal."
+
+#. type: textblock
+#: xapt/xapt:406
+msgid "The best option is to use C<xapt> inside a disposable chroot."
+msgstr ""
+"La meilleure solution consiste à utiliser C<xapt> à l'intérieur d'un chroot "
+"jetable."
+
+#. type: =head1
+#: xapt/xapt:408
+msgid "Checking existing cross packages"
+msgstr "Vérification des paquets croisés existants"
+
+#. type: textblock
+#: xapt/xapt:410
+msgid ""
+"C<xapt>, by default, will not check to see if a particular cross package is "
+"already installed at a newer or equal version which can cause cross packages "
+"to be downgraded. To turn on this check, either use the C<--check-newer> "
+"option or set C<checknewer> to true in the vendor configuration file in F</"
+"etc/xapt.d/>."
+msgstr ""
+"C<xapt> ne vérifiera pas par défaut si un paquet croisé donné est déjà "
+"installé dans une version plus récente ou identique, ce qui peut entraîner "
+"un abaissement de niveau (« downgrade ») de paquets croisés. Pour activer "
+"cette vérification, il faut soit utiliser l'option C<--check-newer>, soit "
+"valoriser C<checknewer> à « true » dans le fichier de configuration de "
+"l'éditeur dans F</etc/xapt.d/>."
+
+#. type: =head1
+#: xapt/xapt:416
+msgid "Using SecureApt"
+msgstr "Utilisation de SecureApt"
+
+#. type: textblock
+#: xapt/xapt:418
+msgid ""
+"If your apt sources include a repository which does not use SecureApt, "
+"disable authentication in the vendor configuration file in F</etc/xapt.d/> "
+"Set noauth=true."
+msgstr ""
+"Si les sources d'apt contiennent un référentiel qui n'utilise pas SecureApt, "
+"désactiver l'authentification dans le fichier de configuration de l'éditeur "
+"dans F</etc/xapt.d/> : Set noauth=true."
+
+#. type: =head1
+#: xapt/xapt:422
+msgid "Multiarch behaviour"
+msgstr "Comportement multi-architecture"
+
+#. type: textblock
+#: xapt/xapt:424
+msgid ""
+"By default <dpkg-cross> does nothing with packages from Debian which already "
+"support Multi-Arch - the package is simply copied to the current work "
+"directory, if it does not already exist. Any package containing a Multi-"
+"Arch: field in DEBIAN/control is skipped in this manner."
+msgstr ""
+"Par défaut, <dpkg-cross> ne fait rien avec les paquets Debian qui supportent "
+"déjà « Multi-Arch » ; les paquets sont seulement copiés dans le répertoire "
+"de travail courant, s'ils n'existent pas déjà. Tout paquet dont le fichier "
+"DEBIAN/control contient un champ « Multi-Arch: » est ainsi ignoré."
+
+#. type: textblock
+#: xapt/xapt:429
+msgid ""
+"C<xapt> uses the --multiarch option can pass the --convert-multiarch option "
+"down to dpkg-cross to instead force the generation of a -<arch>-cross "
+"package with the files moved into the conventional dpkg-cross locations."
+msgstr ""
+"C<xapt>, avec l'option --multiarch, passe l'option --convert-multiarch à "
+"dpkg-cross pour forcer à la place la génération d'un paquet « -<arch>-"
+"cross » avec les fichiers déplacés dans les emplacements habituels de dpkg-"
+"cross."
+
+#. type: textblock
+#: xapt/xapt:434
+msgid ""
+"C<xapt> will check for dpkg-cross version 2.6.3 or higher when this option "
+"is set and report an error (unsetting the option) if a suitable version is "
+"not found."
+msgstr ""
+"C<xapt> vérifiera que la version de dpkg-cross est bien supérieure ou égale "
+"à 2.6.3 lorsque cette option est passée, et affichera une erreur (et "
+"désactivera l'option) si aucune version correspondante n'est trouvée."
+
+#. type: textblock
+#: xapt/xapt:438
+msgid ""
+"If you are using apt sources which specify an arch option, the architecture "
+"list will need to include the architecture you wish to use with C<xapt>. If "
+"you have dpkg (>= 1.16.2) installed, then you need to ensure that the "
+"requested architecture is listed in your foreign dpkg architectures and that "
+"you have at least one mirror which can provide packages of that architecture."
+msgstr ""
+
+#. type: verbatim
+#: xapt/xapt:445
+#, no-wrap
+msgid ""
+" dpkg --print-foreign-architectures\n"
+"\n"
+msgstr ""
+
+#. type: verbatim
+#: xapt/xapt:449
+#, no-wrap
+msgid ""
+"Commands:\n"
+" -c|--clean-cache:        Remove any downloaded cache files and exit.\n"
+"\n"
+msgstr ""
+
+#. type: verbatim
+#: xapt/xapt:452
+#, no-wrap
+msgid ""
+"Options:\n"
+" -b|--build-only:         Get and process the packages, do not install\n"
+"                           (implies -k)\n"
+" -M|--mirror:             A Debian mirror with the requested package(s)\n"
+" -S|--suite:              Which suite to use for the package(s)\n"
+" -k|--keep-cache:         Preserve the downloaded cache files to use again.\n"
+" -a|--arch ARCHITECTURE:  Specify the architecture to download or install.\n"
+"    --ignore-status:      Ignore currently installed packages (native)\n"
+"    --check-newer:        Check if the same or newer version of the cross\n"
+"                          package is installed and skip installation.\n"
+" -m|--multiarch:          Convert Multi-Arch packages to old dpkg-cross\n"
+"                           paths. Requires dpkg-cross (>= %s)\n"
+"\n"
+msgstr ""
+
+#. type: textblock
+#: xapt/xapt:465
+msgid ""
+"xapt tidies up after itself by removing all temporary data and packages "
+"after installation, unless the --keep-cache option is used.  (Converted "
+"packages are not preserved.)"
+msgstr ""
+
+#. type: textblock
+#: xapt/xapt:469
+msgid ""
+"The archives will be downloaded into F</var/lib/xapt/archives/> before being "
+"converted with dpkg-cross and installed using dpkg. Using C<--build-only> "
+"implies C<--keep-cache>. Converted packages are created in F</var/lib/xapt/"
+"output/>"
+msgstr ""
+
+#. type: textblock
+#: xapt/embuilddeps:797
+msgid "embuilddeps - handle native and cross build-dependency installation."
+msgstr ""
+"embuilddeps - gérer l'installation de dépendances de construction natives et "
+"croisées"
+
+#. type: =head1
+#: xapt/embuilddeps:799
+msgid "Usage"
+msgstr "Utilisation"
+
+#. type: verbatim
+#: xapt/embuilddeps:801
+#, no-wrap
+msgid ""
+" embuilddeps [-a|--arch] [--use-sudo]\n"
+"\n"
+msgstr ""
+" embuilddeps [-a|--arch] [--use-sudo]\n"
+"\n"
+
+#. type: verbatim
+#: xapt/embuilddeps:803
+#, no-wrap
+msgid ""
+" embuilddeps -?|-h|--help|--version\n"
+"\n"
+msgstr ""
+" embuilddeps -?|-h|--help|--version\n"
+"\n"
+
+#. type: verbatim
+#: xapt/embuilddeps:807
+#, no-wrap
+msgid ""
+" -a|--arch:          Install cross packages for the specified arch.\n"
+" -d|--dir DIR:       Location of the unpacked source (./debian/control)\n"
+"    --dsc DSCFILE:   Path to a .dsc file for the package.\n"
+" -m|--multiarch:     Make dpkg-cross convert Multi-Arch packages.\n"
+" -k|--preserve:      Pass the -k option down to xapt.\n"
+" -v|--verbose:       Make the output more verbose\n"
+" -q|--quiet:         Make the output less verbose\n"
+" -n|--dry-run:       Only output the commands which would be used.\n"
+" --use-sudo:         Call apt-get using sudo.\n"
+"\n"
+msgstr ""
+" -a|--arch:          Installe les paquets croisés pour l'architecture\n"
+"                      indiquée\n"
+" -d|--dir DIR:       Emplacement des sources non-empaquetées\n"
+"                      (./debian/control)\n"
+"    --dsc DSCFILE:   Chemin d'un fichier .dsc pour le paquet\n"
+" -m|--multiarch:     Active la conversion des paquets Multi-Arch par\n"
+"                      dpkg-cross\n"
+" -k|--preserve:      Passe l'option -k à xapt\n"
+" -v|--verbose:       Active la sortie détaillée\n"
+" -q|--quiet:         Active la sortie silencieuse\n"
+" -n|--dry-run:       Affiche les commandes qui seraient utilisées sans les\n"
+"                      exécuter\n"
+" --use-sudo:         Appelle apt-get en utilisant sudo\n"
+"\n"
+
+#. type: textblock
+#: xapt/embuilddeps:819
+msgid ""
+"C<embuilddeps> is a simple build dependency checker for cross-building.  "
+"Native build dependencies are checked using the F<debian/control> file in "
+"the source package being built and installed with C<apt-get>."
+msgstr ""
+"C<embuilddeps> est un simple vérificateur de dépendances de construction "
+"pour la construction croisée. Les dépendances de construction natives sont "
+"vérifiées en utilisant le fichier F<debian/control> dans le paquet source en "
+"cours de construction et d'installation par C<apt-get>."
+
+#. type: textblock
+#: xapt/embuilddeps:823
+msgid ""
+"Cross build dependencies are checked using a F<debian/xcontrol> file or the "
+"F<debian/control> file if no xcontrol file exists."
+msgstr ""
+"Les dépendances de construction croisée sont vérifiées en utilisant le "
+"fichier F<debian/xcontrol> ou le fichier F<debian/control> si le fichier "
+"xcontrol n'existe pas."
+
+#. type: textblock
+#: xapt/embuilddeps:826
+msgid "C<embuilddeps> uses C<xapt> to install cross build dependencies."
+msgstr ""
+"C<embuilddeps> utilise C<xapt> pour installer les dépendances de "
+"construction croisée."
+
+#. type: =head1
+#: xapt/embuilddeps:828
+msgid "Output"
+msgstr "Sortie"
+
+#. type: textblock
+#: xapt/embuilddeps:830
+msgid ""
+"To see more about what is going on (and to check the results of parsing the "
+"dependencies and architecture limits."
+msgstr ""
+"Pour observer ce qui se passe (et pour vérifier les résultats de l'analyse "
+"(« parsing ») des dépendances et des limites d'architecture)."
+
+#. type: textblock
+#: xapt/embuilddeps:833
+msgid "See also Term::ANSIColor (3) for information on ANSI_COLORS_DISABLED."
+msgstr ""
+"Voir aussi Term::ANSIColor (3) pour des informations sur "
+"ANSI_COLORS_DISABLED."
+
+#. type: =head1
+#: xapt/embuilddeps:835
+msgid "pbuilder"
+msgstr "pbuilder"
+
+#. type: textblock
+#: xapt/embuilddeps:837
+msgid ""
+"C<embuilddeps> can be used as a native and cross-dependency resolver in a "
+"pbuilder chroot using C<pbuilder>, C<pdebuild> or C<pdebuild-cross> and "
+"supports pbuilder options to locate the chroot and execute calls within the "
+"chroot."
+msgstr ""
+"C<embuilddeps> peut être utilisé en tant que solveur de dépendances natives  "
+"et croisées dans un chroot pbuilder en utilisant C<pbuilder>, C<pdebuild> ou "
+"C<pdebuild-cross>. Il gère les options de pbuilder pour situer le chroot et "
+"effectuer des appels à l'intérieur du chroot."
+
+#. type: verbatim
+#: xapt/embuilddeps:842
+#, no-wrap
+msgid ""
+" --control indicates the location of the .dsc file\n"
+" --internal-chrootexec indicates the command to execute inside the chroot\n"
+" --chroot indicates the location of the chroot\n"
+" --binary-all is supported as a no-op by C<embuilddeps>.\n"
+"\n"
+msgstr ""
+" --control indique l'emplacement du fichier .dsc\n"
+" --internal-chrootexec indique la commande à exécuter dans le chroot\n"
+" --chroot indique l'emplacement du chroot\n"
+" --binary-all est pris en charge par C<embuilddeps> mais ne fait rien.\n"
+"\n"
+
+#. type: textblock
+#: xapt/embuilddeps:847
+msgid ""
+"If other build tools need particular options to be supported, please file a "
+"wishlist bug against C<xapt> and describe the exact options which are "
+"necessary."
+msgstr ""
+"Si d'autres outils de construction nécessitent la prise en charge d'options "
+"particulières, veuillez soumettre un rapport de bogue de gravité « liste de "
+"souhaits » (« wishlist ») pour le paquet C<xapt> et décrire précisément les "
+"options nécessaires."
+
+#. type: textblock
+#: xapt/embuilddeps:851
+msgid ""
+"C<embuilddeps> does require that C<xapt> is installed inside the chroot - it "
+"will try to install it for you but it is much easier if you install it once "
+"and for all. C<pdebuild-cross> will add C<xapt> when creating a new chroot. "
+"See pdebuild-cross (1) for more information on how to manipulate a pdebuild-"
+"cross chroot after creation."
+msgstr ""
+"C<embuilddeps> ne nécessite pas que C<xapt> soit installé dans le chroot ; "
+"il essaiera de l'installer automatiquement mais il est bien plus simple de "
+"l'installer manuellement une fois pour toutes. C<pdebuild-cross> ajoutera "
+"C<xapt> lors de la création d'un nouveau chroot. Voir pdebuild-cross (1) "
+"pour plus d'informations sur la manipulation d'un chroot de pdebuild-cross "
+"après sa création."
+
+#. type: =head1
+#: xapt/embuilddeps:858
+msgid "Source packages and dsc files"
+msgstr "Paquets source et fichiers dsc"
+
+#. type: textblock
+#: xapt/embuilddeps:860
+msgid ""
+"C<embuilddeps> can also parse the build dependencies of a package via the F<."
+"dsc> file. The rest of the source package (the files listed in the F<.dsc>) "
+"do B<not> need to exist and the source does not need to have been unpacked. "
+"Use the C<embuilddeps --dsc FILE> option."
+msgstr ""
+"C<embuilddeps> peut également analyser les dépendances de construction d'un "
+"paquet via le fichier F<.dsc>. Le reste du paquet (les fichiers listés dans "
+"le F<.dsc>) n'est B<pas> nécessaire et les sources n'ont pas besoin d'être "
+"dépaquetées. Utiliser l'option C<embuilddeps --dsc FICHIER>."
+
+#. type: textblock
+#: xapt/embuilddeps:865
+msgid ""
+"The alternative method is to parse the F<./debian/control> file at the "
+"location specified by the C<--dir> option which defaults to the current "
+"working directory."
+msgstr ""
+"L'autre méthode consiste à analyser le fichier F<./debian/control> à "
+"l'emplacement indiqué avec l'option C<--dir> qui prend pour valeur par "
+"défaut le répertoire de travail courant."
+
+#. type: =head1
+#: xapt/embuilddeps:869
+msgid "Multi-Arch transition"
+msgstr "Transition Multi-Arch"
+
+#. type: textblock
+#: xapt/embuilddeps:871
+msgid ""
+"Some packages already have multi-arch paths which dpkg-cross does not "
+"normally convert. This can cause missing dependencies when trying to install "
+"the converted packages. Use the C<--multiarch> option to C<embuilddeps> to "
+"pass this down to C<xapt> and hence to C<dpkg-cross>."
+msgstr ""
+"Certains paquets ont déjà des chemins multi-architecture que dpkg-cross ne "
+"convertit habituellement pas. Cela peut entraîner des dépendances manquantes "
+"lors de l'installation de paquets convertis. Utiliser l'option C<--"
+"multiarch> de C<embuilddeps> pour la passer à C<xapt> et donc à C<dpkg-"
+"cross>."
+
+#. type: =head1
+#: xapt/embuilddeps:876
+msgid "Retaining downloaded binaries"
+msgstr "Conserver les binaires téléchargés"
+
+#. type: textblock
+#: xapt/embuilddeps:878
+msgid ""
+"C<embuilddeps> can pass the C<-k> option to C<xapt> to retain the foreign "
+"architecture packages downloaded by C<xapt> and the packages built using "
+"C<dpkg-cross>."
+msgstr ""
+"C<embuilddeps> peut passer l'option C<-k> à C<xapt> pour conserver les "
+"paquets pour les autres architectures téléchargés par C<xapt> et les paquets "
+"construits avec C<dpkg-cross>."
+
+#. type: textblock
+#: xapt/embuilddeps:882
+msgid ""
+"Note that C<xapt> should be asked to clean up the downloaded files once "
+"these lists have been handled by calling the C<xapt -c> option which removes "
+"the contents of F</var/lib/xapt/*>."
+msgstr ""
+"À noter : C<xapt> devrait être appelé pour nettoyer les fichiers téléchargés "
+"une fois que ces listes ont été gérées par l'appel de l'option C<xapt -c>, "
+"qui supprime le contenu de F</var/lib/xapt/*>."

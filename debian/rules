@@ -1,0 +1,18 @@
+#!/usr/bin/make -f
+# Sample debian/rules that uses cdbs.  Originally written by Robert Millan.
+# This file is public domain.
+  
+include /usr/share/cdbs/1/class/makefile.mk
+include /usr/share/cdbs/1/rules/debhelper.mk
+
+install/emdebian-crush::
+	po4a --rm-backups doc/po4a.config
+
+install/pdebuild-cross::
+	$(MAKE) install
+
+clean::
+	$(RM) -r doc/lib/ doc/rootfs/ doc/qa doc/man/man1 doc/man/man3 \
+		doc/grip doc/tdeb doc/pod/ doc/pdebuild/ doc/emdebian-crush \
+		doc/pdebuild-cross doc/xapt
+	$(RM) stamp-makefile-check stamp-patched pod2htmd.tmp pod2htmi.tmp

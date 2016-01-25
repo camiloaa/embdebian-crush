@@ -1,0 +1,21 @@
+=pod
+
+=head1 Name
+
+pdebuild-cross-update - pbuilder wrapper to update a crossbuild chroot
+
+=head1 Synopsis
+
+ pdebuild-cross-update
+
+=head1 Description
+
+Simply wraps C<pbuilder update> to use the F<pdebuild-cross> tarball.
+
+=head1 Options
+
+C<pdebuild-cross-update> supports no options. Edit the
+F</etc/pdebuild-cross/pdebuild-cross.rc> configuration file to change the
+tarball to update.
+
+=cut

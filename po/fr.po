@@ -1,0 +1,529 @@
+# Translation of emdebian-crush to French
+# Copyright (C) 2010-2012 Debian French l10n team <debian-l10n-french@lists.debian.org>.
+# This file is distributed under the same license as the emdebian-crush package.
+# Étienne Gilli <etienne.gilli@gmail.com>, 2010-2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: emdebian-crush 2.2.18\n"
+"Report-Msgid-Bugs-To: emdebian-crush@packages.debian.org\n"
+"POT-Creation-Date: 2013-05-06 19:15+0100\n"
+"PO-Revision-Date: 2012-04-25 19:11+0200\n"
+"Last-Translator: Étienne Gilli <etienne.gilli@gmail.com>\n"
+"Language-Team: French <debian-l10n-french@lists.debian.org>\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: ../buildd/pdebuild-cross:27
+msgid ""
+"You must run this from inside a debian source tree (debian/changelog not "
+"found)"
+msgstr ""
+"Vous devez lancer ce script depuis une arborescence de source Debian (debian/"
+"changelog non trouvé)"
+
+#: ../buildd/pdebuild-cross:34 ../buildd/pdebuild-cross-create:28
+#: ../buildd/pdebuild-cross-update:27 ../buildd/svn-pdebuild-cross:35
+msgid "$cfg does not exist!"
+msgstr "$cfg n'existe pas !"
+
+#: ../buildd/pdebuild-cross:44 ../buildd/pdebuild-cross-update:37
+msgid "Need to create a new pbuilder crossbuilding chroot first."
+msgstr ""
+"Il est nécessaire de créer d'abord un nouveau chroot de construction croisée "
+"pour pbuilder."
+
+#: ../buildd/pdebuild-cross:45 ../buildd/pdebuild-cross-update:38
+msgid "Use pdebuild-cross-create to create one."
+msgstr "Utiliser pdebuild-cross-create pour en créer un."
+
+#: ../buildd/pdebuild-cross-create:34
+msgid "Broken config, no BUILDPLACE set in '$cfg'."
+msgstr "Mauvaise configuration, BUILDPLACE non défini dans « $cfg »."
+
+#: ../buildd/pdebuild-cross-create:39
+msgid ""
+"$BASETGZ exists! If you want to create a new one, delete or move '$BASETGZ'."
+msgstr ""
+"$BASETGZ existe ! Pour en créer un nouveau, supprimer ou déplacer "
+"« $BASETGZ »."
+
+#: ../buildd/pdebuild-cross-create:40
+msgid ""
+"Otherwise, use 'pbuilder login --configfile /etc/pdebuild-cross/pdebuild-"
+"cross.rc --save-after-login'"
+msgstr ""
+"Sinon, utiliser « pbuilder login --configfile /etc/pdebuild-cross/pdebuild-"
+"cross.rc --save-after-login »"
+
+#: ../buildd/pdebuild-cross-create:41
+msgid "to make changes within the existing $BASETGZ."
+msgstr "pour appliquer des modifications à $BASETGZ."
+
+#: ../buildd/pdebuild-cross-update:42
+msgid "Enter your sudo password if prompted"
+msgstr "Entrez votre mot de passe sudo s'il vous est demandé"
+
+#: ../emvendor:54 ../xapt/embuilddeps:113 ../xapt/embuilddeps:135
+#: ../xapt/xapt:91
+msgid "Unknown option"
+msgstr "Option inconnue"
+
+#: ../emvendor:87
+#, perl-format
+msgid ""
+"\n"
+"%s version %s\n"
+"\n"
+"Usage:\n"
+" %s -V|--vendor VENDOR -p|--package PACKAGE -k|--key KEY\n"
+" %s -?|-h|--help|--version\n"
+"\n"
+"Commands:\n"
+" -v|--vendor VENDOR:    the vendor name from dpkg-vendor\n"
+" -p|--package PACKAGE:  the package name (usually source)\n"
+" -k|--key KEY:          arbitrary string for the key of the data\n"
+"\n"
+"All commands need to be specified.\n"
+"\n"
+"On success, the string is printed and %s exits with zero.\n"
+"\n"
+"In the case of error, %s dies with an empty string on STDERR\n"
+"and exits with a non-zero return value.\n"
+"\n"
+msgstr ""
+"\n"
+"%s version %s\n"
+"\n"
+"Utilisation :\n"
+" %s -V|--vendor ÉDITEUR -p|--package PAQUET -k|--key CLÉ\n"
+" %s -?|-h|--help|--version\n"
+"\n"
+"Commandes :\n"
+" -v|--vendor ÉDITEUR : le nom de l'éditeur donné par dpkg-vendor\n"
+" -p|--package PAQUET : le nom du paquet (habituellement le paquet source)\n"
+" -k|--key CLÉ :        chaîne arbitraire pour la clé des données\n"
+"\n"
+"Toutes les commandes doivent être indiquées.\n"
+"\n"
+"En cas de succès, la chaîne est affichée et %s quitte avec une valeur de\n"
+"retour égale à zéro.\n"
+"\n"
+"En cas d'erreur, %s se termine avec une chaîne vide sur STDERR et quitte\n"
+"avec une valeur de retour différente de zéro.\n"
+"\n"
+
+#: ../xapt/embuilddeps:83
+#, perl-format
+msgid "Unknown architecture: %s"
+msgstr "Architecture inconnue : %s"
+
+#: ../xapt/embuilddeps:92
+#, perl-format
+msgid "Unable to find '%s' directory"
+msgstr "Impossible de trouver le répertoire « %s »"
+
+#: ../xapt/embuilddeps:98
+msgid "Please specify a .dsc file"
+msgstr "Veuillez indiquer un fichier .dsc"
+
+#: ../xapt/embuilddeps:126 ../xapt/xapt:124
+#, perl-format
+msgid "Cannot read /etc/xapt.d/%s.conf"
+msgstr "Impossible de lire /etc/xapt.d/%s.conf"
+
+#: ../xapt/embuilddeps:152
+#, perl-format
+msgid "Unable to open .dsc file: '%s'"
+msgstr "Impossible d'ouvrir le fichier .dsc : « %s »"
+
+#: ../xapt/embuilddeps:172
+#, perl-format
+msgid "Checking that build dependencies '%s' for %s are installed.\n"
+msgstr ""
+"Vérification de l'installation des dépendances de construction « %s » pour "
+"%s.\n"
+
+#: ../xapt/embuilddeps:191
+#, perl-format
+msgid "No build dependencies to install for %s\n"
+msgstr "Aucune dépendance de construction à installer pour %s\n"
+
+#: ../xapt/embuilddeps:198 ../xapt/embuilddeps:244
+#, perl-format
+msgid "%s needs dependencies installed:\n"
+msgstr "%s nécessite l'installation de dépendances :\n"
+
+#. Translators: fields are architecture and package.
+#: ../xapt/embuilddeps:234 ../xapt/embuilddeps:422
+#, perl-format
+msgid "Architecture limit: [!%s] %s\n"
+msgstr "Limite d'architecture : [!%s] %s\n"
+
+#: ../xapt/embuilddeps:253
+#, perl-format
+msgid "No cross dependencies to install for %s\n"
+msgstr "Aucune dépendance croisée à installer pour %s\n"
+
+#: ../xapt/embuilddeps:261
+#, perl-format
+msgid "Checking that cross build dependencies '%s' for %s are installed.\n"
+msgstr ""
+"Vérification de l'installation des dépendances de construction croisée "
+"« %s » pour %s.\n"
+
+#: ../xapt/embuilddeps:271 ../xapt/embuilddeps:292
+#, perl-format
+msgid "'%s' needs %d cross dependency installed: %s\n"
+msgid_plural "'%s' needs %d cross dependencies installed: %s\n"
+msgstr[0] "%s nécessite l'installation de %d dépendance croisée : %s\n"
+msgstr[1] "%s nécessite l'installation de %d dépendances croisées : %s\n"
+
+#: ../xapt/embuilddeps:365
+#, perl-format
+msgid "Checking Build-Conflict between '%s' and '%s'\n"
+msgstr ""
+"Vérification des conflits de construction (« Build-Conflict ») entre « %s » "
+"et « %s »\n"
+
+#: ../xapt/embuilddeps:383 ../xapt/embuilddeps:394
+#, perl-format
+msgid "%s: Error: Cannot build '%s': build conflict found with '%s'\n"
+msgstr ""
+"%s : Erreur : impossible de construire « %s » : conflit de construction avec "
+"« %s »\n"
+
+#. Translators: fields are architecture and package.
+#: ../xapt/embuilddeps:435
+#, perl-format
+msgid "Architecture limit: [%s]  %s\n"
+msgstr "Limite d'architecture : [%s] %s\n"
+
+#. Translators: fields are package, architecture, requirement
+#: ../xapt/embuilddeps:467
+#, perl-format
+msgid "Skipping %s, %s does not match %s\n"
+msgstr "Abandon de %s, %s ne satisfait pas %s\n"
+
+#. Translators: fields are package and architecture
+#: ../xapt/embuilddeps:475 ../xapt/embuilddeps:495
+#, perl-format
+msgid "Using %s for %s\n"
+msgstr "Utilisation de %s pour %s\n"
+
+#. Translators: fields are package, architecture and alternative
+#: ../xapt/embuilddeps:505
+#, perl-format
+msgid "Omitting %s for %s - already selected %s\n"
+msgstr "Omission de %s pour %s - %s déjà sélectionné\n"
+
+#: ../xapt/embuilddeps:584
+#, perl-format
+msgid ""
+"Constraint '%s' is a virtual package provided by 'type-handling', omitting "
+"%s for %s\n"
+msgstr ""
+"La contrainte « %s » est un paquet virtuel fourni par « type-handling », "
+"omission de %s pour %s\n"
+
+#: ../xapt/embuilddeps:630
+#, perl-format
+msgid ""
+"Constraint '%s' is a virtual package provided by 'type-handling', omitting.\n"
+msgstr ""
+"La contrainte « %s » est un paquet virtuel fourni par « type-handling », "
+"omission.\n"
+
+#: ../xapt/embuilddeps:639
+#, perl-format
+msgid ""
+"Constraint '%s' is not available, omitting. (This could be a virtual package "
+"or a bug.)\n"
+msgstr ""
+"La contrainte « %s » n'est pas disponible, omission (cela peut être un "
+"paquet virtuel ou un bug).\n"
+
+#: ../xapt/embuilddeps:660
+#, perl-format
+msgid "%s: Failed to read apt-cache policy for '%s'\n"
+msgstr "%s : Échec de la lecture d'« apt-cache policy %s »\n"
+
+#: ../xapt/embuilddeps:671
+#, perl-format
+msgid "Unable to satisfy 'Build-Depends: %s (%s %s)' for %s."
+msgstr "Impossible de satisfaire « Build-Depends: %s (%s %s) » pour %s."
+
+#: ../xapt/embuilddeps:674
+#, perl-format
+msgid "Latest available version of %s is %s"
+msgstr "La dernière version disponible de %s est %s"
+
+#: ../xapt/embuilddeps:676
+#, perl-format
+msgid "'%s' does not appear to be available to apt!"
+msgstr "« %s » n'est pas disponible pour apt !"
+
+#: ../xapt/embuilddeps:731
+#, perl-format
+msgid "error occurred while parsing %s"
+msgstr "une erreur est survenue lors de l'analyse (« parsing ») de %s"
+
+#: ../xapt/embuilddeps:755
+#, perl-format
+msgid ""
+"\n"
+"%s version %s\n"
+"\n"
+"Usage:\n"
+" %s [-a|--arch] [-d|--dir] [-q|--quiet] [-n|--dry-run]\n"
+" %s -?|-h|--help|--version\n"
+"\n"
+"Options:\n"
+" -a|--arch:          Install cross packages for the specified arch.\n"
+" -d|--dir DIR:       Location of the unpacked source (./debian/control)\n"
+"    --dsc DSCFILE:   Path to a .dsc file for the package.\n"
+" -m|--multiarch:     Make dpkg-cross convert Multi-Arch packages.\n"
+" -v|--verbose:       Make the output more verbose\n"
+" -q|--quiet:         Make the output less verbose\n"
+" -n|--dry-run:       Only output the commands which would be used.\n"
+" --use-sudo:         Call apt-get using sudo.\n"
+"\n"
+"%s is a simple build dependency checker for cross-building.\n"
+"Native build dependencies are checked using the debian/control file\n"
+"in the source package being built and installed with apt-get.\n"
+"\n"
+"Cross build dependencies are checked using a debian/xcontrol file\n"
+"or the debian/control file if no xcontrol file exists.\n"
+"\n"
+"%s uses xapt to install cross build dependencies.\n"
+"\n"
+msgstr ""
+"\n"
+"%s version %s\n"
+"\n"
+"Utilisation :\n"
+" %s [-a|--arch] [-d|--dir] [-q|--quiet] [-n|--dry-run]\n"
+" %s -?|-h|--help|--version\n"
+"\n"
+"Options :\n"
+" -a|--arch:          Installe les paquets croisés pour l'architecture\n"
+"                      indiquée\n"
+" -d|--dir DIR:       Emplacement des sources non-empaquetées\n"
+"                      (./debian/control)\n"
+"    --dsc DSCFILE:   Chemin d'un fichier .dsc pour le paquet\n"
+" -m|--multiarch:     Active la conversion des paquets Multi-Arch par\n"
+"                      dpkg-cross\n"
+" -v|--verbose:       Active la sortie détaillée\n"
+" -q|--quiet:         Active la sortie silencieuse\n"
+" -n|--dry-run:       Afficher les commandes qui seraient utilisées sans les\n"
+"                      exécuter\n"
+" --use-sudo:         Appelle apt-get en utilisant sudo\n"
+"\n"
+"%s est un simple vérificateur de dépendances de construction pour la\n"
+"construction croisée.\n"
+"Les dépendances de construction natives sont vérifiées en utilisant le\n"
+"fichier debian/control dans le paquet source en cours de construction et\n"
+"d'installation par apt-get.\n"
+"\n"
+"Les dépendances de construction croisée sont vérifiées en utilisant le\n"
+"fichier debian/xcontrol ou le fichier debian/control si le fichier xcontrol\n"
+"n'existe pas.\n"
+"\n"
+"%s utilise xapt pour installer les dépendances de construction croisée.\n"
+"\n"
+
+#: ../xapt/xapt:67
+#, perl-format
+msgid "Error: Multi-Arch support needs dpkg-cross (>= %s). Found %s"
+msgstr ""
+"Erreur : le support de Multi-Arch nécessite dpkg-cross (>= %s). %s trouvée"
+
+#: ../xapt/xapt:101
+#, perl-format
+msgid "%s: Illogical options set.\n"
+msgstr "%s : Liste d'options incohérente.\n"
+
+#: ../xapt/xapt:103
+#, perl-format
+msgid "%s: --build-only cannot be used with --clean-cache\n"
+msgstr "%s : --build-only ne peut pas être utilisé avec --clean-cache\n"
+
+#: ../xapt/xapt:109
+#, perl-format
+msgid "%s: Cleaning %s* \n"
+msgstr "%s : Nettoyage de %s* \n"
+
+#: ../xapt/xapt:113
+#, perl-format
+msgid ""
+"%s: Done.\n"
+"\n"
+msgstr ""
+"%s : Terminé.\n"
+"\n"
+
+#: ../xapt/xapt:143
+#, perl-format
+msgid "ERROR: Please specify some packages for %s to convert.\n"
+msgstr "ERREUR : Veuillez indiquer les paquets à convertir par %s.\n"
+
+#: ../xapt/xapt:158
+#, perl-format
+msgid "ERROR: %s: misconfiguration, '%s' missing.\n"
+msgstr "ERREUR : %s : mauvaise configuration, « %s » manquant.\n"
+
+#: ../xapt/xapt:176
+msgid "Cannot open sources list"
+msgstr "Impossible d'ouvrir la liste des sources"
+
+#: ../xapt/xapt:232
+msgid "Cannot read"
+msgstr "Impossible de lire"
+
+#: ../xapt/xapt:247
+msgid ""
+"\n"
+"INF: Checking against currently installed cross packages....\n"
+msgstr ""
+"\n"
+"INF : Vérification des paquets croisés actuellement installés...\n"
+
+#: ../xapt/xapt:269
+#, perl-format
+msgid ""
+"INF: Skipping installation of %s - newer or same version already installed "
+"(%s).\n"
+msgstr ""
+"INF : Abandon de l'installation de %s - une version identique ou plus "
+"récente est déjà installée (%s).\n"
+
+#: ../xapt/xapt:291 ../xapt/xapt:295 ../xapt/xapt:309 ../xapt/xapt:313
+msgid "cannot open apt sources list."
+msgstr "Impossible d'ouvrir la liste des sources d'apt."
+
+#: ../xapt/xapt:302
+msgid "cannot open apt sources.list directory"
+msgstr "Impossible d'ouvrir le répertoire sources.list d'apt."
+
+#: ../xapt/xapt:323
+#, perl-format
+msgid ""
+"\n"
+"%s version %s\n"
+"\n"
+"Usage:\n"
+" %s [-M|--mirror] [-S|--suite] [-k|--keep-cache] PACKAGES ...\n"
+" %s -c|--clean-cache\n"
+" %s -?|-h|--help|--version\n"
+"\n"
+"Commands:\n"
+" -c|--clean-cache:        Remove any downloaded cache files and exit.\n"
+"\n"
+"Options:\n"
+" -b|--build-only:         Get and process the packages, do not install\n"
+"                           (implies -k)\n"
+" -M|--mirror:             A Debian mirror with the requested package(s)\n"
+" -S|--suite:              Which suite to use for the package(s)\n"
+" -k|--keep-cache:         Preserve the downloaded cache files to use again.\n"
+" -a|--arch ARCHITECTURE:  Specify the architecture to download or install.\n"
+"    --ignore-status:      Ignore currently installed packages (native)\n"
+"    --check-newer:        Check if the same or newer version of the cross\n"
+"                          package is installed and skip installation.\n"
+" -m|--multiarch:          Convert Multi-Arch packages to old dpkg-cross\n"
+"                           paths. Requires dpkg-cross (>= %s)\n"
+"\n"
+"xapt tidies up after itself by removing all temporary data and\n"
+"packages after installation, unless the --keep-cache option is used.\n"
+"(Converted packages are not preserved.)\n"
+"\n"
+"The archives will be downloaded into /var/lib/xapt/archives/ before\n"
+"being converted with dpkg-cross and installed using dpkg. Using\n"
+"--build-only implies --keep-cache. Converted packages are created in\n"
+"/var/lib/xapt/output/\n"
+"\n"
+msgstr ""
+"\n"
+"%s version %s\n"
+"\n"
+"Utilisation :\n"
+" %s [-M|--mirror] [-S|--suite] [-k|--keep-cache] PAQUETS …\n"
+" %s -c|--clean-cache\n"
+" %s -?|-h|--help|--version\n"
+"\n"
+"Commandes :\n"
+" -c|--clean-cache :       Supprime le cache des fichiers téléchargés et\n"
+"                          quitte\n"
+"\n"
+"Options :\n"
+" -b|--build-only :        Télécharge et traite les paquets, sans les \n"
+"                          installer (implique -k)\n"
+" -M|--mirror :            Un miroir Debian avec le(s) paquet(s) requis\n"
+" -S|--suite :             La distribution à utiliser pour le(s) paquet(s)\n"
+" -k|--keep-cache :        Conserve le cache des fichiers téléchargés pour\n"
+"                          réutilisation ultérieure\n"
+" -a|--arch ARCHITECTURE : Indique l'architecture à télécharger ou installer\n"
+"    --ignore-status :     Ignore les paquets actuellement installés\n"
+"                          (nativement)\n"
+"    --check-newer:        Vérifie si une version identique ou plus récente\n"
+"                          du paquet croisé est installée et saute\n"
+"                          l'installation\n"
+" -m|--multiarch:          Convertit les paquets Multi-Arch vers les anciens\n"
+"                           chemins de dpkg-cross.\n"
+"                           Nécessite dpkg-cross (>= %s)\n"
+"\n"
+"xapt nettoie après exécution en supprimant tous les paquets et les données\n"
+"temporaires après installation, sauf si l'option --keep-cache est utilisée.\n"
+"(Les paquets convertis ne sont pas conservés.)\n"
+"\n"
+"Les archives seront téléchargées dans /var/lib/xapt/archives/ avant\n"
+"d'être converties par dpkg-cross et installées avec dpkg. L'utilisation\n"
+"de --build-only implique --keep-cache. Les paquets convertis sont créés\n"
+"dans /var/lib/xapt/output/\n"
+"\n"
+
+#~ msgid "%s: Must have apt to proceed!\n"
+#~ msgstr "%s : apt doit se poursuivre !\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "%s version %s\n"
+#~ "\n"
+#~ "Usage:\n"
+#~ " %s [-a|--arch] [--use-sudo]\n"
+#~ " %s -?|-h|--help|--version\n"
+#~ "\n"
+#~ "Options:\n"
+#~ " -a|--arch:          Install cross packages for the specified arch.\n"
+#~ " --use-sudo:         Call apt-get using sudo.\n"
+#~ "\n"
+#~ "When used outside a chroot or as a user, set the --use-sudo option.\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "%s version %s\n"
+#~ "\n"
+#~ "Utilisation :\n"
+#~ " %s [-a|--arch] [--use-sudo]\n"
+#~ " %s -?|-h|--help|--version\n"
+#~ "\n"
+#~ "Options :\n"
+#~ " -a|--arch :         Installe les paquets croisés pour l'architecture\n"
+#~ "                     indiquée\n"
+#~ " --use-sudo :        Appelle apt-get avec sudo\n"
+#~ "\n"
+#~ "Pour une exécution hors d'un chroot, ou en tant qu'utilisateur, utiliser "
+#~ "l'option --use-sudo.\n"
+#~ "\n"
+
+#~ msgid "No build tools need to be installed\n"
+#~ msgstr "Aucun outil de construction n'a besoin d'être installé\n"
+
+#~ msgid "%s: dpkg-checkbuilddeps failed with return value: %s\n"
+#~ msgstr "%s : dpkg-checkbuilddeps a échoué avec la valeur de retour : %s\n"
+
+#, fuzzy
+#~ msgid "Cannot open xapt sources list"
+#~ msgstr "Impossible d'ouvrir la liste des sources d'apt."

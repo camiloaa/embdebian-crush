@@ -1,0 +1,63 @@
+#!/bin/sh
+
+set -e
+
+#  Copyright 2010 Neil Williams <codehelp@debian.org>
+#
+#  This package is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+. gettext.sh
+TEXTDOMAIN="xapt"
+export TEXTDOMAIN
+TEXTDOMAINDIR="/usr/share/locale/"
+export TEXTDOMAINDIR
+
+# use parsechangelog to ensure we're in a debian source tree
+dpkg-parsechangelog >/dev/null 2>&1
+opts=
+for cmd in $@; do
+	opts="${opts} $cmd"
+done
+
+cfg="/etc/pdebuild-cross/pdebuild-cross.rc"
+if [ ! -f $cfg ]; then
+	eval_gettext "\$cfg does not exist!"; echo
+	exit 1
+fi
+. $cfg
+
+if [ -z "$CROSSARCH" ]; then
+	# get crossarch from dpkg-cross - check if it is not None
+	if [ -f /etc/dpkg-cross/cross-compile ]; then
+		DEFARCH=`grep "^default_arch" /etc/dpkg-cross/cross-compile|sed -e 's/default_arch *= *\(.*\)/\1/'`
+		if [ -z "$DEFARCH" -o "$DEFARCH" != "None" ]; then
+			eval_gettext "No CROSSARCH set in '\$cfg' and no dpkg-cross default: using armel."; echo
+			CROSSARCH="armel"
+		else
+			CROSSARCH="$DEFARCH"
+		fi
+	else
+		eval_gettext "No CROSSARCH set in '\$cfg' and no dpkg-cross default: using armel."; echo
+		CROSSARCH="armel"
+	fi
+fi
+
+# svn-buildpackage is too careful for its own good sometimes
+# so the svn-builder command has to be a single script, not a command with options.
+if [ -x /usr/bin/svn-buildpackage ]; then
+	# need svn-bp 0.8.1 before can drop the extra -a$CROSSARCH
+	DEB_BUILD_OPTIONS="${DEB_BUILD_OPTIONS} nocheck" svn-buildpackage -uc -us -a$CROSSARCH --svn-arch $CROSSARCH --svn-builder /usr/bin/pdebuild-cross --svn-rm-prev-dir $opts
+else
+	/usr/bin/pdebuild-cross --architecture $CROSSARCH $opts
+fi

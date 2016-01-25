@@ -1,0 +1,112 @@
+emdebian-tools (2.2.5.1) unstable; urgency=low
+
+  The emdebian-crush binary package has been slimmed down again for
+  Squeeze. This release removes support for apt-cross which has been
+  removed from Squeeze, drops emchain but retains
+  /usr/share/pdebuild-cross/xapt, which is used inside a pbuilder
+  chroot by the pdebuild-cross package.
+
+  To use xapt outside a chroot, use version 2.2.6 or later. Debian
+  experimental will have 2.2.6 in due course. The Emdebian toolchain
+  repository already has 2.2.6 for unstable.
+  
+  http://www.emdebian.org/debian/pool/main/e/emdebian-crush/
+
+ -- Neil Williams <codehelp@debian.org>  Sat, 30 Oct 2010 19:55:03 +0100
+
+emdebian-tools (2.2.0) experimental; urgency=low
+
+  The source package and all binary packages have been greatly slimmed
+  down so that Emdebian builds rely more on standard Debian tools.
+
+  emdebian-tools has been renamed emdebian-crush and is refocused on
+  just implementing functional changes necessary to adapt hand-picked
+  Debian packages and then base the rest of the system on Emdebian Grip.
+
+  The previous debconf questions have been removed, there is no longer
+  a fixed working directory and the emdebian toolchain archive is no
+  longer automatically added to your apt sources. Instead, the new
+  emdebian-crush package contains the apt source as a configuration
+  file. The apt source is not needed for other packages.
+
+ -- Neil Williams <codehelp@debian.org>  Thu, 22 Apr 2010 22:30:15 +0100
+
+emdebian-tools (1.4.11) unstable; urgency=low
+
+  Two new packages have been created : emdebian-grip and emdebian-tdeb.
+  
+  emdebian-tdeb will act as a home for various scripts related to TDeb
+  support in Debian and Emdebian, including the conversion of Debian
+  TDebs into Emdebian TDebs and the creation of a diff1.gz to retain
+  the translation sources to support independent uploads. em_installtdeb
+  has migrated to the new package and a new script, dpkg-gentdeb has been
+  built from the em_installtdeb code to try to create a suitable script
+  for dpkg-dev to build Debian TDebs during the course of the normal
+  build process. (This requires changes to debian/control by the
+  Debian maintainer.)
+
+  emdebian-grip contains emgrip, built from the dpkg-cross code but not
+  dependent on either dpkg-cross or libdebian-dpkgcross-perl. This script
+  may migrate to a different source package in due course. As yet, it is
+  only packaged in /usr/share/emdebian-tools/ as it is not ready for
+  mainstream use. Please read the POD content embedded in the script for
+  more information on emgrip.
+
+  See http://www.emdebian.org/emdebian/flavours.html for more information
+  on Emdebian Grip itself.
+
+ -- Neil Williams <codehelp@debian.org>  Tue, 28 Oct 2008 13:08:06 +0000
+
+emdebian-tools (0.7.3) unstable; urgency=low
+
+  emlocale has been removed from emdebian-tools.
+
+  emlocale has been replaced by em_installtdeb which operates without
+  $pkg-locale-$lang files and emdebian-$pkg-locale patch files and without
+  changes to debian/control. em_installtdeb runs at the end of the build (acting
+  as a second build if the first completes successfully) and the results of the
+  em_installtdeb run are checked with the same emdebuild build checks as before.
+  This provides a second .changes file, a second .dsc file and a stripped down
+  .tdeb.tar.gz tarball containing (hopefully) enough files for translators to
+  prepare independent tdeb uploads. Emdebian has support for the necessary
+  'locale' repository and the tdeb .changes file must NOT be uploaded to the
+  normal Emdebian target repository, neither should tdeb files be uploaded to
+  Debian at this time. See em_installtdeb (1).
+
+  This change also means that debian/control patches will disappear for some
+  packages, allowing smoother updates.
+
+  Also, gccross support from dpkg-cross is now optional. Most packages will
+  build successfully without it. Packages that build and link against internal
+  libraries will need to use 'X-Build-Cross-Libtool: yes' in debian/xcontrol.
+  See emdebuild (1).
+
+ -- Neil Williams <codehelp@debian.org>  Tue, 01 Jan 2008 15:44:57 +0000
+
+emdebian-tools (1.4.11) unstable; urgency=low
+
+  emlocale has been removed from emdebian-tools.
+
+  emlocale has been replaced by em_installtdeb which operates without
+  $pkg-locale-$lang files and emdebian-$pkg-locale patch files and without
+  changes to debian/control. em_installtdeb runs at the end of the build (acting
+  as a second build if the first completes successfully) and the results of the
+  em_installtdeb run are checked with the same emdebuild build checks as before.
+  This provides a second .changes file, a second .dsc file and a stripped down
+  .tdeb.tar.gz tarball containing (hopefully) enough files for translators to
+  prepare independent tdeb uploads. Emdebian has support for the necessary
+  'locale' repository and the tdeb .changes file must NOT be uploaded to the
+  normal Emdebian target repository, neither should tdeb files be uploaded to
+  Debian at this time. See em_installtdeb (1).
+
+  This change also means that debian/control patches will disappear for some
+  packages, allowing smoother updates.
+
+  Also, gccross support from dpkg-cross is now optional. Most packages will
+  build successfully without it. Packages that build and link against internal
+  libraries will need to use 'X-Build-Cross-Libtool: yes' in debian/xcontrol.
+  See emdebuild (1).
+
+  
+
+ -- Neil Williams <codehelp@debian.org>  Tue, 28 Oct 2008 13:08:06 +0000

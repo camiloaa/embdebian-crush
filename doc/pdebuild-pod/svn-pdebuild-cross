@@ -1,0 +1,39 @@
+=pod
+
+=head1 Name
+
+svn-pdebuild-cross - simple svn-buildpackage wrapper for crossbuild support
+
+=head1 Synopsis
+
+ svn-pdebuild-cross [svn-buildpackage options]
+
+=head1 Description
+
+C<svn-pdebuild-cross> wraps svn-buildpackage to support cross-building
+inside a pbuilder chroot. C<svn-pdebuild-cross> needs to be run in the
+top level source directory of the package (where it can find
+F<debian/changelog>).
+
+The script is a little (but just a little) more than an alias for:
+
+ svn-buildpackage -aarmel --svn-builder /usr/bin/pdebuild-cross --svn-rm-prev-dir
+
+=head1 Options
+
+C<svn-pdebuild-cross> supports no options itself, any options specified
+will be passed untouched to F<svn-buildpackage>.
+
+=head1 Architecture
+
+F</etc/pdebuild-cross/pbuilder.rc> defaults to your default
+dpkg-cross architecture selection - edit the
+F</etc/pdebuild/pdebuild-cross.rc> configuration file to change the
+architecture. See also F<pdebuild-cross-create> (1)
+
+=head1 Creating the chroot
+
+Use C<pdebuild-cross-create> to build a suitable chroot tgz using
+multistrap.
+
+=cut

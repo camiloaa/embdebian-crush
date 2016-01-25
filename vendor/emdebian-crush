@@ -1,0 +1,10 @@
+Vendor: emdebian-crush
+Vendor-Name: Emdebian Crush
+Vendor-URL: http://www.emdebian.org/crush/
+Bugs: debbugs://bugs.debian.org
+Bugs-Package: buildd.emdebian.org
+Cross-Compiling: yes
+Grip-Build-Option: usecrush
+Blacklist: coreutils perl python ldap adduser
+Parent: Debian
+Short-Desc-Suffix: crushed

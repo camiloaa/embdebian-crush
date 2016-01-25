@@ -1,0 +1,290 @@
+# emdebian -- lintian check script  -*- perl -*-
+
+#  Copyright (C) 2008,2009  Neil Williams <codehelp@debian.org>
+#
+#  If at all possible, this script should only use perl modules
+#  that lintian itself would use - or functions that can be migrated
+#  into such modules.
+#
+#  This package is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+package Lintian::emdebian;
+use strict;
+use warnings;
+use Lintian::Tags qw(tag);
+use Util;
+use vars qw( %archdetecttable);
+
+# debug
+use Data::Dumper;
+
+# need to make this table more accessible in Debian::DpkgCross
+# and then do the comparison in that module (which can migrate into
+# dpkg-dev).
+%archdetecttable = (
+	'i386' => 'ELF 32-bit LSB .* 80386',
+	'sparc' => 'ELF 32-bit MSB .* SPARC',
+	'sparc64' => 'ELF 64-bit MSB .* SPARC',
+	'alpha' => 'ELF 64-bit LSB .* Alpha',
+	'm68k' => 'ELF 32-bit MSB .* 680[02]0',
+	'arm' => 'ELF 32-bit LSB .* ARM',
+	'armeb' => 'ELF 32-bit MSB .* ARM',
+	'armel' => 'ELF 32-bit LSB .* SYSV',
+	'powerpc' => 'ELF 32-bit MSB .* PowerPC',
+	'powerpc64' => 'ELF 64-bit MSB .* PowerPC',
+	'mips' => 'ELF 32-bit MSB .* MIPS',
+	'mipsel' => 'ELF 32-bit LSB .* MIPS',
+	'hppa' => 'ELF 32-bit MSB .* PA-RISC',
+	's390' => 'ELF 32-bit MSB .* S.390',
+	's390x' => 'ELF 64-bit MSB .* S.390',
+	'ia64' => 'ELF 64-bit LSB .* IA-64',
+ 	'm32r' => 'ELF 32-bit MSB .* M32R',
+	'amd64' => 'ELF 64-bit LSB .* x86-64',
+	'w32-i386' => '80386 COFF',
+	'AR' => 'current ar archive');
+
+# currently unused, pending changes in lintian.
+# for lintian 2.3.0 support, drop this whole sub and
+# implement using --suppress-tags-from-file
+# i.e. a global override file for emdebian
+sub set {
+	our $arch;
+	my $pkg = shift;
+	my $type = shift;
+	my $tdeb = 0;
+	my $build = `dpkg-architecture -qDEB_BUILD_ARCH`;
+	chomp($build);
+	$tdeb = 1 if ($pkg =~ /locale/);
+	# only use any of the following if this is an Emdebian package.
+	my $version = "";
+	open (VERSION, '<', 'fields/version') or return;
+	$version = <VERSION>;
+	close (VERSION);
+	return unless $version =~ /em[0-9]+$/;
+}
+
+# there are problems with some of these tests - the number of results
+# is higher than the number of detections because certain tests get
+# repeated for unrelated files unpacked alongside problematic files.
+
+sub run {
+
+	our ($arch, %RPATH);
+	my $pkg = shift;
+	my $type = shift;
+	my $tdeb = 0;
+	my $build = `dpkg-architecture -qDEB_BUILD_ARCH`;
+	chomp($build);
+	$tdeb = 1 if ($pkg =~ /locale/);
+	my %seen=();
+	# read architecture file
+	if (open(IN, '<', "fields/architecture")) {
+		chop($arch = <IN>);
+		close(IN);
+	}
+	# only use any of the following if this is an Emdebian package.
+	my $version = "";
+	open (VERSION, '<', 'fields/version') or return;
+	$version = <VERSION>;
+	close (VERSION);
+	return unless $version =~ /em[0-9]+$/;
+	if ($type eq "source")
+	{
+		return;
+	}
+	open (CONTROL, '<', "control/control") or fail ("cannot open lintian control: $!");
+	while (<CONTROL>)
+	{
+		tag ("emdebian-package-cannot-be-essential") if (/^Essential:\syes$/);
+	}
+	close (CONTROL);
+	# process all files in package
+	open(IN,, '<', "file-info")
+		or fail("cannot find file-info for $type package $pkg");
+	while (<IN>)
+	{
+		chop;
+		next if (m:directory:);
+		m/^(.+?):?\s+(.*)$/o
+			or fail("an error in the file '$pkg' is preventing ".
+			"lintian from checking this package: $_");
+		my ($file,$info) = ($1,$2);
+		tag ("emdebian-package-contains-docs", "$file")
+			if (($file =~ m:/usr/share/doc/:) and ($info !~ /symbolic link/)
+			and ($file !~ m:/usr/share/doc/\Q$pkg\E/copyright\.gz:));
+		tag ("emdebian-copyright-not-compressed", "$file")
+			if (($file =~ m:/usr/share/doc/\Q$pkg\E/copyright:)
+			and ($file !~ m:/usr/share/doc/\Q$pkg\E/copyright\.gz:));
+		tag ("emdebian-package-contains-manpages", "$file")
+			if (($file =~ m:/usr/share/man/man./.+gz$:)
+			and ($info !~ /symbolic link/));
+		tag ("emdebian-package-contains-manpages", "$file")
+			if (($file =~ m:/usr/share/man/[a-z]{2}/man./.+gz$:)
+			and ($info !~ /symbolic link/));
+		tag ("unnecessary-linda-overrides", "$file")
+			if (($file =~ m:/usr/share/linda/overrides/:)
+			and ($info !~ /directory/));
+		# binary or object file?
+		if ($info =~ m/^[^,]*\bELF\b/)
+		{
+			# rpath is mandatory when cross building.
+			if (exists $RPATH{$file} and
+				grep { !m,^/usr/lib/(games/)?\Q$pkg\E(?:/|\z), } split(/:/, $RPATH{$file}))
+			{
+				tag "binary-or-shlib-omits-rpath", "$file $RPATH{$file}";
+			}
+			if (/\Q$file\E/)
+			{
+				my $bin_name = $_;
+				$bin_name =~ s/\s{2,}//;
+				if ($arch eq "armel")
+				{
+					tag "binary-is-wrong-architecture", "$bin_name"
+						unless (/ARM, version 1 \(SYSV\)/);
+				}
+				elsif ($arch eq "i386")
+				{
+					tag "binary-is-wrong-architecture", "$bin_name"
+						unless (/x86-64, version 1 \(SYSV\)/) or
+						(/$archdetecttable{$arch}/);
+				}
+				else
+				{
+					tag "binary-is-wrong-architecture", "$bin_name"
+						unless (/$archdetecttable{$arch}/);
+				}
+			}
+		}
+		elsif (($info =~ /GNU message catalog/) and ($tdeb == 0))
+		{
+			tag "emdebian-package-contains-translations";
+		}
+		elsif (($info =~ /GNU message catalog/) and ($tdeb > 0))
+		{
+			if ($pkg =~ /\-locale\-(.*)$/)
+			{
+				$pkg =~ /\-locale\-(.*)$/;
+				delete $seen{$1};
+			}
+			next;
+		}
+		elsif (!/directory$/)
+		{
+			my $check = $_;
+			my $bin_name = $_;
+			# any package can have maintainer scripts, not just arch-dep ones
+			my @b = (split(/ /, $bin_name));
+			my $info = $bin_name;
+			$bin_name = $b[0];
+			$info =~ s/\Q$bin_name\E +//;
+			$bin_name =~ s/:.*$//;
+			my @f = (split(/:/, $bin_name));
+			$f[0] =~ s:\./::;
+			tag "unsupported-interpreter-in-binary", $bin_name
+				if ((($info =~ m:/usr/bin/python:) or ($info =~ m:/usr/bin/perl/:))
+					or ($info =~ m:perl script text executable:)
+					and ($info !~ /directory$/));
+			if ((-f "unpacked/$bin_name") and ($info =~ m:script text:))
+			{
+				open(UNPACKED, '<', "unpacked/$bin_name")
+				 or fail("cannot open lintian unpacked/$bin_name file: $!");
+				while (<UNPACKED>) {
+					chomp;
+					next if (/^\s*#/);
+					# shell scripts can call bash internally even if they
+					# pretend to use #!/bin/sh at the start. Catch these too.
+					tag "unsupported-interpreter-in-binary", $bin_name
+						if ((/bash/) or (m:/usr/bin/perl:));
+				}
+				close (UNPACKED);
+			}
+			# package directories end up here.
+			# log that this locales has been seen
+			if ($check =~ m%^\./usr/share/locale/([^/]*)/:%)
+			{
+				my $lang = $1;
+				$pkg =~ /\-locale\-(.*)$/;
+				$seen{$1} = $lang;
+			}
+		}
+	}
+	close (IN);
+	# only check the maintainer scripts once per package.
+	my $control_loc;
+	$control_loc = (-f "control-index") ? "control-index" : "control-scripts";
+	if (-f "$control_loc")
+	{
+		open(SCRIPTS, '<', "$control_loc")
+		 or fail("cannot open lintian $control_loc file: $!");
+		while (<SCRIPTS>) {
+			chomp;
+			next unless (/(config|postinst|preinst|prerm|postrm)/);
+			my $filename = "control/$1";
+			my $scriptname = $1;
+			# now scan the file contents themselves
+			open (C, '<', "$filename") or fail("cannot open maintainer script".
+				" $filename for reading: $!");
+			while (<C>)
+			{
+				tag "unsupported-interpreter-in-maintainer-script",
+					"$scriptname contains #!/usr/bin/perl" if (m:#!/usr/bin/perl:);
+				tag "unsupported-interpreter-in-maintainer-script", 
+					"$scriptname contains #!/bin/bash" if (m:#! ?/bin/bash:);
+				next if m,^\s*$,;  # skip empty lines
+				next if m,^\s*\#,; # skip comment lines
+				s/\#.*$//;         # eat comments
+				chomp();
+				tag "maintainer-scripts-calls-replaced-binary",
+					"$scriptname" if /install-info/;
+				tag "maintainer-scripts-tries-to-process-a-manpage",
+					"$scriptname" if m:/usr/share/man/man1/:;
+				tag "maintainer-scripts-calls-unsupported-executable",
+					"$scriptname: update-pangox-aliases" if /update-pangox-aliases/;
+				tag "maintainer-scripts-calls-replaced-binary",
+					"$scriptname: update-alternatives" if /update-alternatives/;
+				tag "maintainer-scripts-calls-unsupported-executable",
+					"$scriptname: getopts" if / getopts /;
+				tag "maintainer-scripts-calls-replaced-binary",
+					"$scriptname: fmt" if / fmt /;
+				tag "maintainer-scripts-calls-replaced-binary",
+					"$scriptname: /usr/bin/fmt" if (m: /usr/bin/fmt :);
+				tag "unsupported-options-in-maintainer-script", 
+					"$scriptname: mkdir --mode" if (m:mkdir.*\-\-mode:);
+				tag "unsupported-options-in-maintainer-script", 
+					"$scriptname: mkdir --mode=" if (m:mkdir.*\-\-mode=:);
+				tag "unsupported-options-in-maintainer-script", 
+					"$scriptname: mkdir -m=" if (m:mkdir.*\-m=:);
+				tag "unsupported-options-in-maintainer-script", 
+					"$scriptname: mkdir --parents" if (m:mkdir.*\-\-parents:);
+				tag "unsupported-options-in-maintainer-script", 
+					"$scriptname: readlink -e" if (m:readlink.*-e:);
+				tag "unsupported-options-in-maintainer-script", 
+					"$scriptname: grep -x $_" if (m:grep\s*-[a-z]*x:);
+				tag "unsupported-options-in-maintainer-script", 
+					"$scriptname: fgrep -x" if (m:fgrep\s*-[a-z]*x:);
+				tag "unsupported-options-in-maintainer-script", 
+					"$scriptname: grep -w" if (m:grep\s*-[a-z]*w:);
+				tag "unsupported-options-in-maintainer-script", 
+					"$scriptname: fgrep -w" if (m:fgrep\s*-[a-z]*w:);
+				tag "unsupported-options-in-maintainer-script", 
+					"$scriptname: kill -s" if (m:kill\s*-[a-z]*s:);
+			}
+			close (C);
+		}
+		close (SCRIPTS);
+	}
+	tag "emdebian-tdeb-without-messages" if ((%seen) and ($tdeb > 0));
+}
+
+1;

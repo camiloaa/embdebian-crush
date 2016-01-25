@@ -1,0 +1,191 @@
+#!/usr/bin/perl
+
+# Copyright (C) 2009,2010  Neil Williams <codehelp@debian.org>
+
+# This package is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+use strict;
+use warnings;
+use Config::Auto;
+use File::Basename;
+use POSIX qw(locale_h);
+use Term::ANSIColor qw(:constants);
+use Locale::gettext;
+use vars qw/ $progname $ourversion $vendor $package $key $cfile
+ $config $value $query /;
+setlocale(LC_MESSAGES, "");
+textdomain("pdebuild-cross");
+$progname = basename($0);
+$ourversion = &tools_version();
+
+while( @ARGV ) {
+	$_= shift( @ARGV );
+	last if m/^--$/;
+	if (!/^-/) {
+		unshift(@ARGV,$_);
+		last;
+	}
+	elsif (/^(-\?|-h|--help|--version)$/) {
+		&usageversion();
+		exit 0;
+	}
+	elsif (/^(-V|--vendor)$/) {
+		$vendor = shift;
+	}
+	elsif (/^(-p|--package)$/) {
+		$package = shift;
+	}
+	elsif (/^(-k|--key)$/) {
+		$key = shift;
+	}
+	else {
+		&usageversion();
+		die RED, "$progname: "._g("Unknown option")." $_.\n", RESET;
+	}
+}
+
+# get the dpkg-vendor value.
+$vendor = $ENV{"DEB_VENDOR"} if (defined $ENV{"DEB_VENDOR"});
+chomp ($vendor) if (defined $vendor);
+
+die ("\n") if ((not defined $vendor) or (not defined $package) or 
+	(not defined $key));
+
+# this is the real code.
+
+$cfile = "/etc/emvendor.d/$vendor.conf";
+die ("\n") if (not -f "$cfile");
+$config = Config::Auto::parse("$cfile", format => "ini");
+$value = $config->{"$package"}->{"$key"};
+die ("\n") if (not defined $value);
+print "$value\n";
+exit (0);
+
+# and we're done.
+
+sub tools_version {
+	$query = `dpkg-query -W -f='\${Version}' emdebian-crush`;
+	(defined $query) ? return $query : return "2.2.0";
+}
+
+sub _g {
+	return gettext(shift);
+}
+
+sub usageversion {
+	printf STDERR (_g("
+%s version %s
+
+Usage:
+ %s -V|--vendor VENDOR -p|--package PACKAGE -k|--key KEY
+ %s -?|-h|--help|--version
+
+Commands:
+ -v|--vendor VENDOR:    the vendor name from dpkg-vendor
+ -p|--package PACKAGE:  the package name (usually source)
+ -k|--key KEY:          arbitrary string for the key of the data
+
+All commands need to be specified.
+
+On success, the string is printed and %s exits with zero.
+
+In the case of error, %s dies with an empty string on STDERR
+and exits with a non-zero return value.
+
+"), $progname, $ourversion, $progname, $progname,
+	$progname, $progname);
+}
+
+=pod
+
+=head1 Name
+
+emvendor - retrieve vendor-specific package configuration strings
+
+=head1 Synopsis
+
+ emvendor -V|--vendor VENDOR -p|--package PACKAGE -k|--key KEY
+ emvendor -?|-h|--help|--version
+
+=head1 Commands
+
+ -v|--vendor VENDOR:    the vendor name from dpkg-vendor
+ -p|--package PACKAGE:  the package name (usually source)
+ -k|--key KEY:          arbitrary string for the key of the data
+
+All commands must be specified every time.
+
+On success, the string is printed and emvendor exits with zero.
+
+In the case of error, emvendor dies with an empty string on STDERR
+and exits with a non-zero return value.
+
+=head1 Description
+
+emvendor provides a way for debian/rules to call in a string for a
+particular package that fits into the rules for that package B<and>
+conforms to the requirements of the vendor.
+
+http://wiki.debian.org/EmdebianAuditDetail#Vendor
+
+It is fairly obvious that specifying each vendor in the F<debian/rules>
+file of each package is not going to be particularly flexible.
+
+ DEB_VENDOR=$(shell dpkg-vendor --query vendor)
+ ifeq (Debian,$(DEB_VENDOR))
+  # Debian build
+  EXCONFARGS=--disable-mono --disable-monodoc
+ else
+  # any-vendor build
+  EXCONFARGS=$(shell emvendor --vendor $(DEB_VENDOR) --package avahi --key EXCONFARGS)
+ endif
+
+or use the short options:
+
+ EXCONFARGS=$(shell foo-bar -V $(DEB_VENDOR) -p avahi -k EXCONFARGS)
+
+The values themselves are in a vendor-specific conf file in
+F</etc/emvendor.d/>
+
+ $ cat /etc/foo-bar.d/emdebian-crush
+ [avahi]
+ EXCONFARGS=--disable-mono --disable-monodoc --disable-python
+ --disable-doxygen-doc --disable-pygtk --disable-python-dbus
+ --disable-core-docs --disable-qt3 --disable-qt4 --disable-gobject
+ --with-distro debian 
+
+ [busybox]
+ foo=
+
+(Note that the value has to be all on one line which is a little
+awkward - also note that values are not able to include the equals
+sign which could be more of an issue.)
+
+Packages that need two strings can do so - the key string is entirely
+arbitrary as long as it fits in the style of a typical ini file.
+
+Therefore, the key can be matched to the needs of the relevant package.
+
+C<emdebian-buildsupport> provides F</etc/emvendor.d/emdebian-crush> with
+all the content for all packages that need such details.
+
+=head1 emvendor and dpkg-vendor
+
+F<dpkg-vendor> supports vendor functionality but F<emvendor> adds an
+extra hierarchy, organised by Debian source package name. It would be
+possible to include the relevant strings in F</etc/dpkg/origins/vendor>
+but each identifier string would need to be unique across all packages
+for each vendor, which is an unrealistic limitation.
+
+=cut
